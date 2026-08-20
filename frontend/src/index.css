@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* DEFAULT (Argus Dark Theme) */
+    --bg: #0A0E17;
+    --bg-elev: #0F1522;
+    --surface: #141B2B;
+    --surface-2: #1A2338;
+    --surface-hover: #202A42;
+    --border: #26314A;
+    --border-soft: #1D2740;
+    --text: #E8EAF1;
+    --text-dim: #8891A8;
+    --text-faint: #5B6479;
+    
+    --brand: #C6A15B; /* Gold */
+    --brand-bright: #E3C077;
+    
+    --accent: #4FA8B8; /* Teal */
+    --accent-bright: #7CCBDA;
+    
+    --danger: #C4453A;
+    --danger-bright: #E36D5F;
+    --success: #4C9A6A;
+    --warning: #D69A3E;
+  }
+
+  .theme-light {
+    /* Veritas Light Theme */
+    --bg: #E7E5DD;
+    --bg-elev: #F1EFE7;
+    --surface: #FBFAF6;
+    --surface-2: #F1EFE7;
+    --surface-hover: #E7E5DD;
+    --border: #D3D0C4;
+    --border-soft: #B8B4A4;
+    --text: #1C2333;
+    --text-dim: #4A5063;
+    --text-faint: #8A8D9B;
+    
+    --brand: #93732E; /* Gold */
+    --brand-bright: #B3915A;
+    
+    --accent: #1F2E4D; /* Navy */
+    --accent-bright: #33487A;
+    
+    --danger: #8E3A30; /* Brick */
+    --danger-bright: #B14E41;
+    --success: #4A6B4F;
+    --warning: #D69A3E;
+  }
+
+  * {
+    @apply border-border-soft;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+    @apply antialiased transition-colors duration-300;
+    min-height: 100vh;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--border);
+    @apply rounded-full;
+  }
+}
+
+@layer components {
+  .glass {
+    background-color: var(--surface);
+    border: 1px solid var(--border-soft);
+    @apply shadow-sm;
+  }
+
+  .glass-hover {
+    @apply transition-all duration-300 hover:shadow-md;
+    border-color: var(--border);
+  }
+
+  .text-gradient {
+    background: linear-gradient(to right, var(--brand), var(--brand-bright));
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+}
