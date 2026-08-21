@@ -15,17 +15,17 @@ export function Login() {
   const [password, setPassword] = useState('Demo@123');
   const [error, setError] = useState('');
 
-  // Prefill logic
+  // Prefill logic with Odisha credentials
   useEffect(() => {
     if (selectedRole === 'SUPER_ADMIN') {
-      setUserId('KSP-HQ-001');
+      setUserId('OP-HQ-001');
       setStationCode('');
     } else if (selectedRole === 'STATION_ADMIN') {
-      setUserId('IIC-BLR-01');
-      setStationCode('KSP-BLR-CEN');
+      setUserId('IIC-BBSR-01');
+      setStationCode('OP-BBSR-CAP');
     } else if (selectedRole === 'OFFICER') {
-      setUserId('INV-BLR-001');
-      setStationCode('KSP-BLR-CEN');
+      setUserId('INV-BBSR-001');
+      setStationCode('OP-BBSR-CAP');
     }
   }, [selectedRole]);
 
@@ -67,7 +67,7 @@ export function Login() {
             &larr; Back to Role Selection
           </button>
 
-          {/* Argus Badge */}
+          {/* Odisha Police Shield Badge */}
           <svg className="w-[52px] h-[52px] mx-auto mb-[18px] block" viewBox="0 0 60 60" fill="none">
             <path d="M30 3 L54 14 V30 C54 44 44 53 30 57 C16 53 6 44 6 30 V14 Z" className="stroke-brand" strokeWidth="1.6"/>
             <circle cx="30" cy="27" r="8.5" className="stroke-brand" strokeWidth="1.4"/>
@@ -77,7 +77,7 @@ export function Login() {
           
           <div className="font-display text-[22px] font-bold text-center tracking-[0.04em] text-text">CRIMELENS</div>
           <div className="font-mono text-[10.5px] text-text-faint text-center tracking-[0.12em] uppercase mt-[6px] mb-[30px]">
-             {selectedRole === 'SUPER_ADMIN' ? 'State Command Login' : selectedRole === 'STATION_ADMIN' ? 'Station Command Login' : 'Investigator Login'}
+            Odisha Police · {selectedRole === 'SUPER_ADMIN' ? 'State Command Login' : selectedRole === 'STATION_ADMIN' ? 'Station Command Login' : 'Investigator Login'}
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
@@ -123,13 +123,13 @@ export function Login() {
             )}
 
             <button type="submit" className="w-full mt-2 bg-brand text-bg py-[11px] font-bold text-[13.5px] rounded hover:bg-brand-bright transition-colors flex items-center justify-center gap-2">
-              <Shield size={16} /> Secure sign in
+              <Shield size={16} /> Secure Sign In
             </button>
           </form>
 
           <div className="mt-[22px] pt-[16px] border-t border-border-soft flex justify-between text-[11px] text-text-faint font-mono">
-            <span>v2.4.0 • Authorized Use</span>
-            <span>Need access?</span>
+            <span>v2.4.0 · ODISHA POLICE</span>
+            <span>Authorized Use Only</span>
           </div>
         </div>
       </div>
@@ -250,14 +250,17 @@ function RoleSelectionScreen({ onSelect }: { onSelect: (role: UserRole) => void 
             CRIMELENS
           </h1>
           <p className="text-brand font-mono text-sm tracking-[0.3em] uppercase drop-shadow-md">
-            State Crime Intelligence Network
+            Odisha Police Intelligence Network
+          </p>
+          <p className="text-white/40 font-mono text-[10px] tracking-[0.2em] uppercase mt-2">
+            State Crime Intelligence Network · Demonstration Prototype
           </p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-6 text-left">
-          <RoleCard icon={Shield} title="STATE POLICE / HQ" desc="Super Admin Access" onClick={() => onSelect('SUPER_ADMIN')} />
+          <RoleCard icon={Shield} title="STATE POLICE / HQ" desc="Super Admin · State Command" onClick={() => onSelect('SUPER_ADMIN')} />
           <RoleCard icon={Building} title="POLICE STATION" desc="IIC / Station Admin Access" onClick={() => onSelect('STATION_ADMIN')} />
-          <RoleCard icon={User} title="INVESTIGATOR" desc="Officer Access" onClick={() => onSelect('OFFICER')} />
+          <RoleCard icon={User} title="INVESTIGATING OFFICER" desc="Officer Field Console" onClick={() => onSelect('OFFICER')} />
         </div>
       </div>
     </div>

@@ -130,7 +130,7 @@ export function Stations() {
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-text-dim uppercase mb-1">Station Code (ID)</label>
-                  <input required type="text" value={newStation.id} onChange={e => setNewStation({...newStation, id: e.target.value})} className="w-full bg-surface-2 border border-border rounded p-2 text-sm text-text outline-none font-mono focus:border-brand" placeholder="e.g. KSP-NEW-01" />
+                  <input required type="text" value={newStation.id} onChange={e => setNewStation({...newStation, id: e.target.value})} className="w-full bg-surface-2 border border-border rounded p-2 text-sm text-text outline-none font-mono focus:border-brand" placeholder="e.g. OP-NEW-01" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-text-dim uppercase mb-1">District</label>

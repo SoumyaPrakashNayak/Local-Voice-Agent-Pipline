@@ -3,7 +3,7 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, Shield, FilePlus, Search, ShieldAlert,
   Network, Sparkles, Scale, FileText, FileBarChart,
-  Bell, LogOut, Moon, Sun, Lock, Building, Users
+  Bell, LogOut, Moon, Sun, Lock, Building, Users, Mic
 } from 'lucide-react';
 import { useMockState } from '../../mockServices/MockStateContext';
 
@@ -37,55 +37,99 @@ export function SIHLayout() {
     r.targetStationId === state.currentUser?.stationId && r.status === 'PENDING'
   ).length;
 
+  const outgoingRequestsCount = state.accessRequests.filter(r => 
+    r.requestingOfficerId === state.currentUser?.id
+  ).length;
+
   return (
     <div className="flex h-screen bg-bg text-text font-sans">
       {/* Sidebar Navigation */}
       <aside className="w-64 flex flex-col bg-bg-elev border-r border-border-soft">
         <div className="p-5 border-b border-border-soft">
           <h1 className="text-xl font-display font-bold text-gradient tracking-tight">CRIMELENS</h1>
-          <p className="text-[10px] text-text-dim uppercase tracking-wider font-mono mt-1">Intelligence OS</p>
+          <p className="text-[10px] text-text-dim uppercase tracking-wider font-mono mt-1">Odisha Police Intelligence</p>
         </div>
 
         <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-          <div className="text-[10px] uppercase font-bold text-text-faint px-3 mb-2 tracking-wider">Core Operations</div>
-          <NavItem to="/dashboard" icon={LayoutDashboard} label="Command Center" />
-          
           {isSuperAdmin && (
             <>
-              <NavItem to="/stations" icon={Building} label="Stations" />
-              <NavItem to="/cases" icon={Search} label="Global Cases" />
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">STATE COMMAND</div>
+              <NavItem to="/dashboard" icon={LayoutDashboard} label="Command Center" />
+              
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">POLICE ADMINISTRATION</div>
+              <NavItem to="/stations" icon={Building} label="Police Stations" />
+              
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">CASE INTELLIGENCE</div>
+              <NavItem to="/cases" icon={Search} label="State Case Registry" />
               <NavItem to="/intelligence/alerts" icon={ShieldAlert} label="State Alerts" badge={unreadAlerts} />
-              <NavItem to="/network" icon={Network} label="Network Explorer" />
-              <NavItem to="/reports" icon={FileBarChart} label="Reports" />
+              
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">NETWORK INTELLIGENCE</div>
+              <NavItem to="/network" icon={Network} label="State Network Explorer" />
+              
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">REPORTS</div>
+              <NavItem to="/reports" icon={FileBarChart} label="Monthly Crime Reports" />
             </>
           )}
 
           {role === 'STATION_ADMIN' && (
             <>
-              <NavItem to="/cases" icon={Search} label="Station Cases" />
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">COMMAND</div>
+              <NavItem to="/dashboard" icon={LayoutDashboard} label="Dashboard" />
+              
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">INVESTIGATIONS</div>
+              <NavItem to="/cases" icon={Search} label="All Cases" />
+              <NavItem to="/cases?status=INVESTIGATING" icon={Building} label="Active Investigations" />
               <NavItem to="/cases/new" icon={FilePlus} label="Register FIR" />
-              <NavItem to="/investigators" icon={Users} label="Investigators" />
               <NavItem to="/evidence" icon={FileText} label="Evidence Vault" />
-              <NavItem to="/intelligence/alerts" icon={ShieldAlert} label="Intelligence" badge={unreadAlerts} />
+              
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">INTELLIGENCE</div>
+              <NavItem to="/reports" icon={FileBarChart} label="Station Intelligence" />
               <NavItem to="/network" icon={Network} label="Network Explorer" />
-              <NavItem to="/requests" icon={Lock} label="Access Requests" badge={pendingRequests} />
+              <NavItem to="/legal" icon={Scale} label="Similar Cases" />
               <NavItem to="/assistant" icon={Sparkles} label="AI Assistant" />
-              <NavItem to="/legal" icon={Scale} label="Legal Intelligence" />
-              <NavItem to="/reports" icon={FileBarChart} label="Reports" />
+              
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">OPERATIONS</div>
+              <NavItem to="/investigators" icon={Users} label="Officers" />
+              <NavItem to="/dashboard?action=assign" icon={FilePlus} label="Case Assignment" />
+              <NavItem to="/requests" icon={Lock} label="Access Requests" badge={pendingRequests} />
+              
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">REPORTS</div>
+              <NavItem to="/reports?type=station" icon={FileBarChart} label="Station Reports" />
+              <NavItem to="/reports?type=investigation" icon={FileBarChart} label="Investigation Reports" />
+
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">SYSTEM</div>
+              <NavItem to="/dashboard" icon={Bell} label="Notifications" badge={unreadAlerts} />
+              <NavItem to="/dashboard" icon={Users} label="Profile" />
             </>
           )}
 
           {role === 'OFFICER' && (
             <>
-              <NavItem to="/cases" icon={Search} label="My Cases" />
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">MY DESK</div>
+              <NavItem to="/dashboard" icon={LayoutDashboard} label="Dashboard" />
+              <NavItem to="/cases" icon={Search} label="My Investigations" />
+              <NavItem to="/requests" icon={Lock} label="Access Requests" badge={outgoingRequestsCount} />
+              <NavItem to="/dashboard" icon={FileText} label="My Tasks" />
+              
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">INVESTIGATE</div>
               <NavItem to="/cases/new" icon={FilePlus} label="Register FIR" />
               <NavItem to="/evidence" icon={FileText} label="Evidence Vault" />
-              <NavItem to="/intelligence/alerts" icon={ShieldAlert} label="Intelligence" badge={unreadAlerts} />
+              <NavItem to="/cases" icon={Search} label="Case Search" />
+              <NavItem to="/legal" icon={Scale} label="Similar Cases" />
+              
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">INTELLIGENCE</div>
+              <NavItem to="/network" icon={Network} label="Knowledge Graph" />
               <NavItem to="/network" icon={Network} label="Network Explorer" />
-              <NavItem to="/assistant" icon={Sparkles} label="AI Assistant" />
+              <NavItem to="/reports" icon={FileBarChart} label="Crime Intelligence" />
               <NavItem to="/legal" icon={Scale} label="Legal Intelligence" />
-              <NavItem to="/requests" icon={Lock} label="Access Requests" />
-              <NavItem to="/reports" icon={FileBarChart} label="Reports" />
+              
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">ASSISTANCE</div>
+              <NavItem to="/assistant" icon={Sparkles} label="AI Assistant" />
+              <NavItem to="/dashboard" icon={Mic} label="Voice Assistant" />
+
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">REPORTS</div>
+              <NavItem to="/reports" icon={FileBarChart} label="Case Reports" />
+              <NavItem to="/reports" icon={FileBarChart} label="Charge Sheet Drafts" />
             </>
           )}
         </nav>
@@ -128,7 +172,7 @@ export function SIHLayout() {
               </div>
             ) : (
               <div className="flex items-center gap-2 text-xs font-mono bg-brand/10 text-brand px-3 py-1.5 rounded-md border border-brand/30">
-                <Shield size={14} /> STATE COMMAND ACTIVE
+                <Shield size={14} /> ODISHA POLICE · STATE COMMAND
               </div>
             )}
             

@@ -7,7 +7,7 @@ export function EvidenceVault() {
   const { state, dispatch } = useMockState();
   
   const [selectedCase, setSelectedCase] = useState('');
-  const [evidenceText, setEvidenceText] = useState("Found a parking receipt near the crime scene. The vehicle registration was KA-01-AB-1234.");
+  const [evidenceText, setEvidenceText] = useState("Found a parking receipt near the crime scene. The vehicle registration was OD-02-AB-1234.");
   const [isProcessing, setIsProcessing] = useState(false);
 
   const myCases = state.cases.filter(c => c.investigatorId === state.currentUser?.id);

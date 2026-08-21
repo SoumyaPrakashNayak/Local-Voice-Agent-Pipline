@@ -7,11 +7,11 @@ export const intelligenceService = {
 
     const extractedEntities: Entity[] = [];
     if (narrative.includes('9876543210')) {
-      extractedEntities.push({ id: `ENT-${Date.now()}`, type: 'PHONE', value: '9876543210' });
+      extractedEntities.push({ id: `ENT-${Date.now()}`, type: 'PHONE', value: '+91-9876543210' });
     }
     
-    // Always extract some dummy entities for demo
-    extractedEntities.push({ id: `ENT-${Date.now()+1}`, type: 'LOCATION', value: '100ft Road' });
+    // Always extract some demo entities
+    extractedEntities.push({ id: `ENT-${Date.now()+1}`, type: 'LOCATION', value: 'Bhubaneswar' });
 
     return {
       crimeClassification: 'Residential Burglary',
@@ -20,7 +20,7 @@ export const intelligenceService = {
       recommendedActions: [
         'Obtain nearby CCTV footage',
         'Identify suspicious vehicles in the area',
-        'Check similar incidents in neighboring stations',
+        'Check similar incidents in neighboring Odisha Police stations',
       ],
       crimeSignature: ['residential target', 'night occurrence', 'forced entry'],
       extractedEntities,
@@ -31,8 +31,8 @@ export const intelligenceService = {
     await new Promise((resolve) => setTimeout(resolve, 1500));
     
     for (const entity of entities) {
-      if (entity.value === '9876543210') {
-        // Look for this entity in other stations' cases
+      // Match on phone number or Odisha vehicle plate
+      if (entity.value === '+91-9876543210' || entity.value === 'OD-02-AB-1234') {
         const matchingCase = allCases.find(
           (c) => c.stationId !== currentStationId && c.entities.some((e) => e.value === entity.value)
         );
@@ -43,11 +43,28 @@ export const intelligenceService = {
             targetCaseId: matchingCase.id,
             targetStationId: matchingCase.stationId,
             confidence: 96,
-            reason: `Same mobile number (${entity.value}) detected.`,
+            reason: `Same ${entity.type === 'PHONE' ? 'mobile number' : 'vehicle registration'} (${entity.value}) detected across Odisha Police stations.`,
           };
         }
       }
     }
+
+    // Also check any shared entity value across stations
+    for (const entity of entities) {
+      const matchingCase = allCases.find(
+        (c) => c.stationId !== currentStationId && c.entities.some((e) => e.value === entity.value)
+      );
+      if (matchingCase) {
+        return {
+          matchFound: true,
+          targetCaseId: matchingCase.id,
+          targetStationId: matchingCase.stationId,
+          confidence: 88,
+          reason: `Matching ${entity.type} entity (${entity.value}) found across stations.`,
+        };
+      }
+    }
+
     return { matchFound: false };
   },
 
@@ -56,15 +73,15 @@ export const intelligenceService = {
     
     const entities: Entity[] = [];
     if (description.toLowerCase().includes('9876543210')) {
-      entities.push({ id: `ENT-${Date.now()}`, type: 'PHONE', value: '9876543210' });
+      entities.push({ id: `ENT-${Date.now()}`, type: 'PHONE', value: '+91-9876543210' });
     }
-    if (description.toLowerCase().includes('ka-01')) {
-      entities.push({ id: `ENT-${Date.now()+1}`, type: 'VEHICLE', value: 'KA-01-AB-1234' });
+    if (description.toLowerCase().includes('od-02') || description.toLowerCase().includes('od-') || description.toLowerCase().includes('vehicle')) {
+      entities.push({ id: `ENT-${Date.now()+1}`, type: 'VEHICLE', value: 'OD-02-AB-1234' });
     }
     
     return {
       entitiesExtracted: entities,
-      summary: 'Evidence analyzed successfully. Entities extracted for intelligence graph.',
+      summary: 'Evidence analyzed successfully. Entities extracted for Odisha Police intelligence graph.',
     };
   },
 };

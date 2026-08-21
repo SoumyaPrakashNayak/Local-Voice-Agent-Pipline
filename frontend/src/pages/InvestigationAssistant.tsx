@@ -2,41 +2,53 @@ import React, { useState } from 'react';
 import { Bot, User, Sparkles, Scale, Search, FileText } from 'lucide-react';
 import { useMockState } from '../mockServices/MockStateContext';
 import { useNavigate } from 'react-router-dom';
+import { LegalProvision, FIR_ANALYSIS_PROVISIONS } from '../mockServices/legalProvisionMockData';
+import { ProvisionCard } from '../components/legal/ProvisionCard';
+import { ProvisionDetailsDrawer } from '../components/legal/ProvisionDetailsDrawer';
 
 export function InvestigationAssistant() {
   const { state } = useMockState();
   const navigate = useNavigate();
 
-  const [messages, setMessages] = useState<{role: 'USER'|'AI', text: string, actions?: any[]}[]>([
+  const myStation = state.stations.find(s => s.id === state.currentUser?.stationId);
+  const stationName = myStation?.name ?? 'Khandagiri Police Station';
+
+  const [messages, setMessages] = useState<{role: 'USER'|'AI', text: string, actions?: any[], provisions?: LegalProvision[]}[]>([
     {
       role: 'AI',
-      text: "I am your Legal & Investigation Intelligence Assistant. I am connected to the state intelligence database. How can I assist you today?"
+      text: `I am your Legal & Investigation Intelligence Assistant, connected to the Odisha Police state intelligence database. I am context-aware of your station (${stationName}) and your active cases. How can I assist you today?`
     }
   ]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [drawerProvision, setDrawerProvision] = useState<LegalProvision | null>(null);
 
   const handleSend = () => {
     if (!input.trim()) return;
     
-    setMessages(prev => [...prev, { role: 'USER', text: input }]);
+    const userMsg = input;
+    setMessages(prev => [...prev, { role: 'USER', text: userMsg }]);
     setInput("");
     setIsTyping(true);
 
     setTimeout(() => {
-      let responseText = "Based on the evidence, this fits the pattern of a residential burglary. I recommend reviewing nearby CCTV footage.";
+      let responseText = "Based on evidence patterns in the Odisha Police database, this incident shows characteristics consistent with organized vehicle theft networks. I recommend coordinating with neighboring stations.";
       let responseActions: any[] = [];
       
-      const lowerInput = input.toLowerCase();
+      const lower = userMsg.toLowerCase();
       
-      if (lowerInput.includes('vehicle') || lowerInput.includes('car') || lowerInput.includes('plate')) {
-        responseText = `2 vehicle relationships identified across the state network.
+      if (lower.includes('vehicle') || lower.includes('car') || lower.includes('plate') || lower.includes('od-')) {
+        responseText = `2 vehicle relationships identified across Odisha Police station records.
 
-1. **KA-01-AB-1234**
-Source: Evidence EV-001 (Bengaluru Central)
+1. **OD-02-AB-1234**
+Source: Evidence EV-BBSR-001 (Khandagiri Police Station)
+Linked Case: OD-BBSR-2026-0001
 
-2. **KA-05-XY-7777**
-Source: Related Case CR-KOR-25-0981 (Koramangala)`;
+2. **OD-05-XY-7777**
+Source: Cross-Station Match — Cuttack City PS
+Linked Case: OD-CTC-2026-00981
+
+⚠ Cross-station relationship active. Access request recommended.`;
 
         responseActions = [
           { label: 'View Knowledge Graph', onClick: () => navigate('/network') },
@@ -44,29 +56,52 @@ Source: Related Case CR-KOR-25-0981 (Koramangala)`;
           { label: 'Request Access', onClick: () => navigate('/requests'), primary: true }
         ];
       } 
-      else if (lowerInput.includes('bns') || lowerInput.includes('legal') || lowerInput.includes('charge')) {
-        responseText = `Under the Bharatiya Nyaya Sanhita (BNS), Theft in a dwelling house is covered under **Section 305 BNS**. If forced entry was used at night, **Section 331 BNS (House-trespass)** also applies. 
-
-Investigation procedure requires filing a report under **Section 173 BNSS**.`;
+      else if (lower.includes('bns') || lower.includes('legal') || lower.includes('charge') || lower.includes('section') || lower.includes('provision')) {
+        responseText = `Based on the current case facts, CrimeLens identified the following potentially applicable BNS provisions. Click any card to inspect the full legal basis.`;
         
         responseActions = [
           { label: 'View Legal Intelligence', onClick: () => navigate('/legal'), primary: true },
           { label: 'Generate Draft', onClick: () => navigate('/reports') }
         ];
+        
+        setMessages(prev => [...prev, {
+          role: 'AI',
+          text: responseText,
+          actions: responseActions,
+          provisions: FIR_ANALYSIS_PROVISIONS
+        }]);
+        setIsTyping(false);
+        return;
       }
-      else if (lowerInput.includes('phone') || lowerInput.includes('call') || lowerInput.includes('number')) {
-        responseText = `1 phone number relationship identified.
+      else if (lower.includes('phone') || lower.includes('call') || lower.includes('number') || lower.includes('9876')) {
+        responseText = `1 phone number relationship identified across Odisha Police records.
 
 1. **+91-9876543210**
-Source: Cross-Station Match (Mysuru City to Koramangala)`;
+Source: Cross-Station Match — Khandagiri Police Station → Cuttack City PS
+Cases: OD-BBSR-2026-0001 / OD-CTC-2026-00981
+Match Confidence: 96%
+
+⚠ This phone number appears in two active investigations across different Odisha stations.`;
 
         responseActions = [
           { label: 'View Knowledge Graph', onClick: () => navigate('/network') },
           { label: 'Request Access', onClick: () => navigate('/requests'), primary: true }
         ];
       }
+      else if (lower.includes('case') || lower.includes('fir') || lower.includes('investigation')) {
+        const myCases = state.cases.filter(c => c.investigatorId === state.currentUser?.id);
+        responseText = `${myCases.length} case(s) assigned to your profile at ${stationName}.
+
+${myCases.slice(0,3).map((c, i) => `${i+1}. **${c.id}**\n   FIR: ${c.firNumber} · Status: ${c.status} · Priority: ${c.priority}`).join('\n\n')}
+
+${myCases.length > 3 ? `... and ${myCases.length - 3} more cases.` : ''}`;
+
+        responseActions = [
+          { label: 'View My Cases', onClick: () => navigate('/cases'), primary: true },
+        ];
+      }
       else {
-         responseText = "I have scanned the intelligence database. No immediate high-confidence patterns match your query. Consider providing a specific vehicle number, phone number, or requesting BNS procedures.";
+         responseText = "I have scanned the Odisha Police intelligence database. No immediate high-confidence patterns match your query. Try asking about:\n\n• Vehicle or phone entities\n• BNS/BNSS legal provisions\n• Active case status\n• Cross-station relationships";
       }
 
       setMessages(prev => [...prev, { role: 'AI', text: responseText, actions: responseActions }]);
@@ -76,11 +111,14 @@ Source: Cross-Station Match (Mysuru City to Koramangala)`;
 
   return (
     <div className="max-w-4xl mx-auto h-[calc(100vh-120px)] flex flex-col animate-fade-in">
+      {/* Legal Provision Details Drawer */}
+      <ProvisionDetailsDrawer provision={drawerProvision} onClose={() => setDrawerProvision(null)} />
+
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-text font-display flex items-center gap-2">
-          <Sparkles className="text-brand" /> AI Intelligence Assistant
+          <Sparkles className="text-brand" /> AI Investigation Assistant
         </h2>
-        <p className="text-sm text-text-dim mt-1">Context-aware investigative and legal reasoning.</p>
+        <p className="text-sm text-text-dim mt-1">Odisha Police · Context-aware investigative and legal reasoning. <span className="text-text-faint">Demonstration data only.</span></p>
       </div>
 
       <div className="flex-1 bg-surface border border-border-soft rounded-2xl flex flex-col overflow-hidden shadow-card">
@@ -93,8 +131,10 @@ Source: Cross-Station Match (Mysuru City to Koramangala)`;
               }`}>
                 {msg.role === 'USER' ? <User size={16} /> : <Bot size={16} />}
               </div>
-              <div className={`max-w-[80%] rounded-2xl p-4 text-sm ${
-                msg.role === 'USER' ? 'bg-brand text-bg rounded-tr-none' : 'glass rounded-tl-none text-text leading-relaxed'
+              <div className={`rounded-2xl p-4 text-sm ${
+                msg.role === 'USER'
+                  ? 'bg-brand text-bg rounded-tr-none max-w-[80%]'
+                  : 'glass rounded-tl-none text-text leading-relaxed w-full max-w-[90%]'
               }`}>
                 {msg.text.split('\n').map((line, idx) => (
                   <React.Fragment key={idx}>
@@ -106,8 +146,26 @@ Source: Cross-Station Match (Mysuru City to Koramangala)`;
                     {idx < msg.text.split('\n').length - 1 && <br/>}
                   </React.Fragment>
                 ))}
+
+                {/* Interactive Provision Cards */}
+                {msg.provisions && msg.provisions.length > 0 && (
+                  <div className="mt-4 space-y-2 border-t border-border-soft pt-4">
+                    <div className="text-[10px] uppercase font-bold text-text-faint tracking-wider mb-2 flex items-center gap-1">
+                      <Scale size={10} /> Applicable BNS Provisions — Click to inspect
+                    </div>
+                    <div className="grid grid-cols-1 gap-2">
+                      {msg.provisions.map((provision) => (
+                        <ProvisionCard
+                          key={provision.section}
+                          provision={provision}
+                          onViewDetails={setDrawerProvision}
+                          compact
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
                 
-                {/* Actionable Navigation Injection */}
                 {msg.actions && msg.actions.length > 0 && (
                   <div className="mt-4 flex flex-wrap gap-2 pt-3 border-t border-border-soft">
                     {msg.actions.map((act, actIdx) => (
@@ -156,7 +214,7 @@ Source: Cross-Station Match (Mysuru City to Koramangala)`;
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleSend()}
-              placeholder="Ask about cases, legal provisions, or evidence..."
+              placeholder="Ask about cases, vehicles, legal provisions, or cross-station intelligence..."
               className="flex-1 bg-surface border border-border-soft rounded-full px-4 py-2.5 text-sm focus:border-brand outline-none"
             />
             <button 

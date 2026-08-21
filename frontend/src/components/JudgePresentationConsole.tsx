@@ -19,7 +19,7 @@ export default function JudgePresentationConsole() {
       title: "Step 1: Intelligence Mission Control",
       path: "/dashboard",
       engine: "FastAPI REST Gateway & SQLite Persistent Store",
-      summary: "Real-time dashboard tracking Karnataka State Police active cases, spatial incident alerts, and recent AI findings.",
+      summary: "Real-time dashboard tracking Odisha Police active cases, spatial incident alerts, and recent AI findings.",
       actionLabel: "Next: Crime Intelligence"
     },
     {
@@ -94,7 +94,7 @@ export default function JudgePresentationConsole() {
               </div>
               <div>
                 <h3 className="text-xs font-bold uppercase tracking-wider text-white">Judge Presentation Flow</h3>
-                <span className="text-[9px] font-semibold text-slate-400">Karnataka State Police CrimeLens AI</span>
+                <span className="text-[9px] font-semibold text-slate-400">Odisha Police · CrimeLens Intelligence Network</span>
               </div>
             </div>
             

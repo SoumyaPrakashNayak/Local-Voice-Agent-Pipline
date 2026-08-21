@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Bot, FileText, CheckCircle, AlertTriangle, Sparkles } from 'lucide-react';
 import { useMockState } from '../mockServices/MockStateContext';
 import { intelligenceService } from '../mockServices/intelligenceService';
+import { FIR_ANALYSIS_PROVISIONS } from '../mockServices/legalProvisionMockData';
+import { LegalProvisionList } from '../components/legal/LegalProvisionList';
 
 export function RegisterFIR() {
   const { state, dispatch } = useMockState();
@@ -30,9 +32,9 @@ export function RegisterFIR() {
     
     // Create the case in mock state
     const newCase = {
-      id: `CR-A-2025-${Math.floor(Math.random() * 1000)}`,
-      firNumber: `FIR/2025/${Math.floor(Math.random() * 10000)}`,
-      stationId: state.currentUser.stationId || 'ST-A',
+      id: 'CR-KHD-2026-004821',
+      firNumber: 'CR-KHD-2026-004821',
+      stationId: state.currentUser.stationId || 'OP-BBSR-CAP',
       investigatorId: state.currentUser.id,
       title: analysisResult.crimeClassification,
       description: narrative,
@@ -147,17 +149,16 @@ export function RegisterFIR() {
                     </div>
                   </div>
 
-                  <div className="glass p-4 rounded-xl border-brand/30">
-                    <p className="text-xs font-bold text-brand uppercase tracking-wider mb-3 flex items-center gap-2">
-                      <AlertTriangle size={14} /> Legal Provisions (BNS)
+                  <div className="glass p-4 rounded-xl border-brand/30 col-span-2">
+                    <p className="text-xs font-bold text-brand uppercase tracking-wider mb-4 flex items-center gap-2">
+                      <AlertTriangle size={14} /> Legal Intelligence (BNS)
                     </p>
-                    <ul className="space-y-2">
-                      {analysisResult?.bnsProvisions.map((p: string, i: number) => (
-                        <li key={i} className="text-sm text-text-dim flex items-start gap-2">
-                          <CheckCircle size={14} className="text-success mt-0.5 shrink-0" /> {p}
-                        </li>
-                      ))}
-                    </ul>
+                    <LegalProvisionList
+                      provisions={FIR_ANALYSIS_PROVISIONS}
+                      title="Applicable Provisions"
+                      showDisclaimer={false}
+                      compact={false}
+                    />
                   </div>
                 </div>
 

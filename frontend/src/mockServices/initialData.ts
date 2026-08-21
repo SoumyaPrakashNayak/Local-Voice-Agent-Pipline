@@ -2,596 +2,604 @@ import { AppState, User, Station, CaseRecord, Evidence, AccessRequest, Intellige
 
 const stations: Station[] = [
   {
-    "id": "KSP-BLR-CEN",
-    "name": "Bengaluru Central",
-    "district": "Bengaluru Urban",
-    "city": "Bengaluru",
+    "id": "OP-BBSR-CAP",
+    "name": "Khandagiri Police Station",
+    "district": "Khordha",
+    "city": "Bhubaneswar",
     "status": "ACTIVE"
   },
   {
-    "id": "KSP-MYS-CTY",
-    "name": "Mysuru City",
-    "district": "Mysuru",
-    "city": "Mysuru",
+    "id": "OP-CTC-CITY",
+    "name": "Cuttack City PS",
+    "district": "Cuttack",
+    "city": "Cuttack",
     "status": "ACTIVE"
   },
   {
-    "id": "KSP-MNG-NTH",
-    "name": "Mangaluru North",
-    "district": "Dakshina Kannada",
-    "city": "Mangaluru",
+    "id": "OP-RKL-CEN",
+    "name": "Rourkela Central PS",
+    "district": "Sundargarh",
+    "city": "Rourkela",
     "status": "ACTIVE"
   },
   {
-    "id": "KSP-HUB-CEN",
-    "name": "Hubballi Central",
-    "district": "Dharwad",
-    "city": "Hubballi",
+    "id": "OP-BAM-TWN",
+    "name": "Berhampur Town PS",
+    "district": "Ganjam",
+    "city": "Berhampur",
     "status": "ACTIVE"
   },
   {
-    "id": "KSP-BEL-CTY",
-    "name": "Belagavi City",
-    "district": "Belagavi",
-    "city": "Belagavi",
+    "id": "OP-PURI-TWN",
+    "name": "Puri Town PS",
+    "district": "Puri",
+    "city": "Puri",
     "status": "ACTIVE"
   },
   {
-    "id": "KSP-SHV-TWN",
-    "name": "Shivamogga Town",
-    "district": "Shivamogga",
-    "city": "Shivamogga",
+    "id": "OP-SBP-CEN",
+    "name": "Sambalpur Central PS",
+    "district": "Sambalpur",
+    "city": "Sambalpur",
     "status": "ACTIVE"
   },
   {
-    "id": "KSP-TUM-CEN",
-    "name": "Tumakuru Central",
-    "district": "Tumakuru",
-    "city": "Tumakuru",
+    "id": "OP-BLS-TOW",
+    "name": "Balasore Town PS",
+    "district": "Balasore",
+    "city": "Balasore",
     "status": "ACTIVE"
   },
   {
-    "id": "KSP-BAL-CTY",
-    "name": "Ballari City",
-    "district": "Ballari",
-    "city": "Ballari",
+    "id": "OP-ANG-CEN",
+    "name": "Angul Central PS",
+    "district": "Angul",
+    "city": "Angul",
     "status": "ACTIVE"
   },
   {
-    "id": "KSP-BLR-KOR",
-    "name": "Koramangala",
-    "district": "Bengaluru Urban",
-    "city": "Bengaluru",
+    "id": "OP-JHG-TWN",
+    "name": "Jharsuguda Town PS",
+    "district": "Jharsuguda",
+    "city": "Jharsuguda",
     "status": "ACTIVE"
   },
   {
-    "id": "KSP-BLR-IND",
-    "name": "Indiranagar",
-    "district": "Bengaluru Urban",
-    "city": "Bengaluru",
+    "id": "OP-KRP-CEN",
+    "name": "Koraput Central PS",
+    "district": "Koraput",
+    "city": "Koraput",
     "status": "ACTIVE"
   },
   {
-    "id": "KSP-UUD-TWN",
-    "name": "Udupi Town",
-    "district": "Udupi",
-    "city": "Udupi",
+    "id": "OP-RYG-TWN",
+    "name": "Rayagada Town PS",
+    "district": "Rayagada",
+    "city": "Rayagada",
     "status": "ACTIVE"
   },
   {
-    "id": "KSP-GLB-CEN",
-    "name": "Kalaburagi Central",
-    "district": "Kalaburagi",
-    "city": "Kalaburagi",
+    "id": "OP-JYP-TWN",
+    "name": "Jeypore Town PS",
+    "district": "Koraput",
+    "city": "Jeypore",
     "status": "ACTIVE"
   }
 ];
 const users: User[] = [
   {
-    "id": "KSP-HQ-001",
-    "name": "Comm. Sharma",
+    "id": "OP-HQ-001",
+    "name": "Comm. Mahapatra",
     "role": "SUPER_ADMIN",
     "status": "ACTIVE",
     "rank": "Commissioner"
   },
   {
-    "id": "IIC-BLR-01",
-    "name": "Insp. Ramesh",
+    "id": "IIC-BBSR-01",
+    "name": "IIC Ramesh",
     "role": "STATION_ADMIN",
-    "stationId": "KSP-BLR-CEN",
+    "stationId": "OP-BBSR-CAP",
     "status": "ACTIVE",
     "rank": "Inspector"
   },
   {
-    "id": "INV-BLR-001",
-    "name": "SI Anita Iyer",
+    "id": "INV-BBSR-001",
+    "name": "SI Ranjan Samal",
     "role": "OFFICER",
-    "stationId": "KSP-BLR-CEN",
+    "stationId": "OP-BBSR-CAP",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "INV-BLR-002",
-    "name": "SI Gowda Rao",
+    "id": "INV-BBSR-002",
+    "name": "SI Ashok Mishra",
     "role": "OFFICER",
-    "stationId": "KSP-BLR-CEN",
+    "stationId": "OP-BBSR-CAP",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "INV-BLR-003",
-    "name": "SI Kumar Naidu",
+    "id": "INV-BBSR-003",
+    "name": "SI Monalisa Dash",
     "role": "OFFICER",
-    "stationId": "KSP-BLR-CEN",
+    "stationId": "OP-BBSR-CAP",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "INV-BLR-004",
-    "name": "SI Anita Nair",
+    "id": "INV-BBSR-004",
+    "name": "SI Sanjukta Behera",
     "role": "OFFICER",
-    "stationId": "KSP-BLR-CEN",
+    "stationId": "OP-BBSR-CAP",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "INV-BLR-005",
-    "name": "SI Ramesh Naidu",
+    "id": "INV-BBSR-005",
+    "name": "SI Monalisa Mishra",
     "role": "OFFICER",
-    "stationId": "KSP-BLR-CEN",
+    "stationId": "OP-BBSR-CAP",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "IIC-MYS-01",
-    "name": "Insp. Gowda",
+    "id": "IIC-CTC-01",
+    "name": "Insp. Prakash",
     "role": "STATION_ADMIN",
-    "stationId": "KSP-MYS-CTY",
+    "stationId": "OP-CTC-CITY",
     "status": "ACTIVE",
     "rank": "Inspector"
   },
   {
-    "id": "INV-MYS-006",
-    "name": "SI Vikram Iyer",
+    "id": "INV-CTC-006",
+    "name": "SI Sanjukta Sahoo",
     "role": "OFFICER",
-    "stationId": "KSP-MYS-CTY",
+    "stationId": "OP-CTC-CITY",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "INV-MYS-007",
-    "name": "SI Ramesh Desai",
+    "id": "INV-CTC-007",
+    "name": "SI Ramesh Samal",
     "role": "OFFICER",
-    "stationId": "KSP-MYS-CTY",
+    "stationId": "OP-CTC-CITY",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "INV-MYS-008",
-    "name": "SI Manjunath Menon",
+    "id": "INV-CTC-008",
+    "name": "SI Ashok Rout",
     "role": "OFFICER",
-    "stationId": "KSP-MYS-CTY",
+    "stationId": "OP-CTC-CITY",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "INV-MYS-009",
-    "name": "SI Pratap Hegde",
-    "role": "OFFICER",
-    "stationId": "KSP-MYS-CTY",
-    "status": "ACTIVE",
-    "rank": "Sub-Inspector"
-  },
-  {
-    "id": "IIC-MNG-01",
-    "name": "Insp. Vikram",
+    "id": "IIC-RKL-01",
+    "name": "Insp. Bikash",
     "role": "STATION_ADMIN",
-    "stationId": "KSP-MNG-NTH",
+    "stationId": "OP-RKL-CEN",
     "status": "ACTIVE",
     "rank": "Inspector"
   },
   {
-    "id": "INV-MNG-010",
-    "name": "SI Priya Desai",
+    "id": "INV-RKL-009",
+    "name": "SI Anil Pradhan",
     "role": "OFFICER",
-    "stationId": "KSP-MNG-NTH",
+    "stationId": "OP-RKL-CEN",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "INV-MNG-011",
-    "name": "SI Kumar Rao",
+    "id": "INV-RKL-010",
+    "name": "SI Saroj Rout",
     "role": "OFFICER",
-    "stationId": "KSP-MNG-NTH",
+    "stationId": "OP-RKL-CEN",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "INV-MNG-012",
-    "name": "SI Rajesh Bhat",
+    "id": "INV-RKL-011",
+    "name": "SI Ashok Bhoi",
     "role": "OFFICER",
-    "stationId": "KSP-MNG-NTH",
+    "stationId": "OP-RKL-CEN",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "INV-MNG-013",
-    "name": "SI Ramesh Gowda",
+    "id": "INV-RKL-012",
+    "name": "SI Sanjay Mishra",
     "role": "OFFICER",
-    "stationId": "KSP-MNG-NTH",
+    "stationId": "OP-RKL-CEN",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "INV-MNG-014",
-    "name": "SI Priya Singh",
-    "role": "OFFICER",
-    "stationId": "KSP-MNG-NTH",
-    "status": "ACTIVE",
-    "rank": "Sub-Inspector"
-  },
-  {
-    "id": "IIC-HUB-01",
-    "name": "Insp. Anjali",
+    "id": "IIC-BAM-01",
+    "name": "Insp. Sanjay",
     "role": "STATION_ADMIN",
-    "stationId": "KSP-HUB-CEN",
+    "stationId": "OP-BAM-TWN",
     "status": "ACTIVE",
     "rank": "Inspector"
   },
   {
-    "id": "INV-HUB-015",
-    "name": "SI Gowda Bhat",
+    "id": "INV-BAM-013",
+    "name": "SI Smita Bhoi",
     "role": "OFFICER",
-    "stationId": "KSP-HUB-CEN",
+    "stationId": "OP-BAM-TWN",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "INV-HUB-016",
-    "name": "SI Ramesh Shetty",
+    "id": "INV-BAM-014",
+    "name": "SI Smita Dash",
     "role": "OFFICER",
-    "stationId": "KSP-HUB-CEN",
+    "stationId": "OP-BAM-TWN",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "INV-HUB-017",
-    "name": "SI Pratap Hegde",
+    "id": "INV-BAM-015",
+    "name": "SI Subrat Sahoo",
     "role": "OFFICER",
-    "stationId": "KSP-HUB-CEN",
+    "stationId": "OP-BAM-TWN",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "INV-HUB-018",
-    "name": "SI Venkatesh Patil",
+    "id": "INV-BAM-016",
+    "name": "SI Pradeep Patra",
     "role": "OFFICER",
-    "stationId": "KSP-HUB-CEN",
+    "stationId": "OP-BAM-TWN",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "INV-HUB-019",
-    "name": "SI Manjunath Iyer",
+    "id": "INV-BAM-017",
+    "name": "SI Arun Behera",
     "role": "OFFICER",
-    "stationId": "KSP-HUB-CEN",
+    "stationId": "OP-BAM-TWN",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "IIC-BEL-01",
-    "name": "Insp. Karthik",
+    "id": "IIC-PURI-01",
+    "name": "Insp. Arun",
     "role": "STATION_ADMIN",
-    "stationId": "KSP-BEL-CTY",
+    "stationId": "OP-PURI-TWN",
     "status": "ACTIVE",
     "rank": "Inspector"
   },
   {
-    "id": "INV-BEL-020",
-    "name": "SI Deepak Desai",
+    "id": "INV-PURI-018",
+    "name": "SI Bikash Behera",
     "role": "OFFICER",
-    "stationId": "KSP-BEL-CTY",
+    "stationId": "OP-PURI-TWN",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "INV-BEL-021",
-    "name": "SI Gowda Rao",
+    "id": "INV-PURI-019",
+    "name": "SI Monalisa Nayak",
     "role": "OFFICER",
-    "stationId": "KSP-BEL-CTY",
+    "stationId": "OP-PURI-TWN",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "INV-BEL-022",
-    "name": "SI Karthik Bhat",
+    "id": "INV-PURI-020",
+    "name": "SI Sanjay Swain",
     "role": "OFFICER",
-    "stationId": "KSP-BEL-CTY",
+    "stationId": "OP-PURI-TWN",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "IIC-SHV-01",
-    "name": "Insp. Rajesh",
+    "id": "INV-PURI-021",
+    "name": "SI Anil Sahoo",
+    "role": "OFFICER",
+    "stationId": "OP-PURI-TWN",
+    "status": "ACTIVE",
+    "rank": "Sub-Inspector"
+  },
+  {
+    "id": "IIC-SBP-01",
+    "name": "Insp. Ranjan",
     "role": "STATION_ADMIN",
-    "stationId": "KSP-SHV-TWN",
+    "stationId": "OP-SBP-CEN",
     "status": "ACTIVE",
     "rank": "Inspector"
   },
   {
-    "id": "INV-SHV-023",
-    "name": "SI Suresh Menon",
+    "id": "INV-SBP-022",
+    "name": "SI Ramesh Pradhan",
     "role": "OFFICER",
-    "stationId": "KSP-SHV-TWN",
+    "stationId": "OP-SBP-CEN",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "INV-SHV-024",
-    "name": "SI Gowda Gowda",
+    "id": "INV-SBP-023",
+    "name": "SI Ranjan Nayak",
     "role": "OFFICER",
-    "stationId": "KSP-SHV-TWN",
+    "stationId": "OP-SBP-CEN",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "INV-SHV-025",
-    "name": "SI Rajesh Naidu",
+    "id": "INV-SBP-024",
+    "name": "SI Smita Sahoo",
     "role": "OFFICER",
-    "stationId": "KSP-SHV-TWN",
+    "stationId": "OP-SBP-CEN",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "IIC-TUM-01",
-    "name": "Insp. Meera",
+    "id": "INV-SBP-025",
+    "name": "SI Sanjay Bhoi",
+    "role": "OFFICER",
+    "stationId": "OP-SBP-CEN",
+    "status": "ACTIVE",
+    "rank": "Sub-Inspector"
+  },
+  {
+    "id": "IIC-BLS-01",
+    "name": "Insp. Smita",
     "role": "STATION_ADMIN",
-    "stationId": "KSP-TUM-CEN",
+    "stationId": "OP-BLS-TOW",
     "status": "ACTIVE",
     "rank": "Inspector"
   },
   {
-    "id": "INV-TUM-026",
-    "name": "SI Pratap Shetty",
+    "id": "INV-BLS-026",
+    "name": "SI Ramesh Patra",
     "role": "OFFICER",
-    "stationId": "KSP-TUM-CEN",
+    "stationId": "OP-BLS-TOW",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "INV-TUM-027",
-    "name": "SI Nandini Rao",
+    "id": "INV-BLS-027",
+    "name": "SI Sagar Sahoo",
     "role": "OFFICER",
-    "stationId": "KSP-TUM-CEN",
+    "stationId": "OP-BLS-TOW",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "INV-TUM-028",
-    "name": "SI Siddharth Rao",
+    "id": "INV-BLS-028",
+    "name": "SI Bikash Samal",
     "role": "OFFICER",
-    "stationId": "KSP-TUM-CEN",
+    "stationId": "OP-BLS-TOW",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "INV-TUM-029",
-    "name": "SI Arjun Bhat",
+    "id": "INV-BLS-029",
+    "name": "SI Bipin Samal",
     "role": "OFFICER",
-    "stationId": "KSP-TUM-CEN",
+    "stationId": "OP-BLS-TOW",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "IIC-BAL-01",
-    "name": "Insp. Arjun",
+    "id": "IIC-ANG-01",
+    "name": "Insp. Monalisa",
     "role": "STATION_ADMIN",
-    "stationId": "KSP-BAL-CTY",
+    "stationId": "OP-ANG-CEN",
     "status": "ACTIVE",
     "rank": "Inspector"
   },
   {
-    "id": "INV-BAL-030",
-    "name": "SI Anita Desai",
+    "id": "INV-ANG-030",
+    "name": "SI Monalisa Nayak",
     "role": "OFFICER",
-    "stationId": "KSP-BAL-CTY",
+    "stationId": "OP-ANG-CEN",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "INV-BAL-031",
-    "name": "SI Rajesh Menon",
+    "id": "INV-ANG-031",
+    "name": "SI Monalisa Mishra",
     "role": "OFFICER",
-    "stationId": "KSP-BAL-CTY",
+    "stationId": "OP-ANG-CEN",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "INV-BAL-032",
-    "name": "SI Nandini Hegde",
+    "id": "INV-ANG-032",
+    "name": "SI Arun Samal",
     "role": "OFFICER",
-    "stationId": "KSP-BAL-CTY",
+    "stationId": "OP-ANG-CEN",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "INV-BAL-033",
-    "name": "SI Ramesh Menon",
+    "id": "INV-ANG-033",
+    "name": "SI Anil Pradhan",
     "role": "OFFICER",
-    "stationId": "KSP-BAL-CTY",
+    "stationId": "OP-ANG-CEN",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "IIC-BLR-01",
-    "name": "Insp. Kumar",
+    "id": "IIC-JHG-01",
+    "name": "Insp. Rakesh",
     "role": "STATION_ADMIN",
-    "stationId": "KSP-BLR-KOR",
+    "stationId": "OP-JHG-TWN",
     "status": "ACTIVE",
     "rank": "Inspector"
   },
   {
-    "id": "INV-BLR-034",
-    "name": "SI Kumar Menon",
+    "id": "INV-JHG-034",
+    "name": "SI Prakash Pradhan",
     "role": "OFFICER",
-    "stationId": "KSP-BLR-KOR",
+    "stationId": "OP-JHG-TWN",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "INV-BLR-035",
-    "name": "SI Ramesh Desai",
+    "id": "INV-JHG-035",
+    "name": "SI Bikash Sahoo",
     "role": "OFFICER",
-    "stationId": "KSP-BLR-KOR",
+    "stationId": "OP-JHG-TWN",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "INV-BLR-036",
-    "name": "SI Karthik Rao",
+    "id": "INV-JHG-036",
+    "name": "SI Priyanka Samal",
     "role": "OFFICER",
-    "stationId": "KSP-BLR-KOR",
+    "stationId": "OP-JHG-TWN",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "INV-BLR-037",
-    "name": "SI Kiran Bhat",
-    "role": "OFFICER",
-    "stationId": "KSP-BLR-KOR",
-    "status": "ACTIVE",
-    "rank": "Sub-Inspector"
-  },
-  {
-    "id": "IIC-BLR-01",
-    "name": "Insp. Priya",
-    "role": "STATION_ADMIN",
-    "stationId": "KSP-BLR-IND",
-    "status": "ACTIVE",
-    "rank": "Inspector"
-  },
-  {
-    "id": "INV-BLR-038",
-    "name": "SI Nandini Menon",
-    "role": "OFFICER",
-    "stationId": "KSP-BLR-IND",
-    "status": "ACTIVE",
-    "rank": "Sub-Inspector"
-  },
-  {
-    "id": "INV-BLR-039",
-    "name": "SI Ramesh Bhat",
-    "role": "OFFICER",
-    "stationId": "KSP-BLR-IND",
-    "status": "ACTIVE",
-    "rank": "Sub-Inspector"
-  },
-  {
-    "id": "INV-BLR-040",
-    "name": "SI Pratap Singh",
-    "role": "OFFICER",
-    "stationId": "KSP-BLR-IND",
-    "status": "ACTIVE",
-    "rank": "Sub-Inspector"
-  },
-  {
-    "id": "IIC-UUD-01",
-    "name": "Insp. Deepak",
-    "role": "STATION_ADMIN",
-    "stationId": "KSP-UUD-TWN",
-    "status": "ACTIVE",
-    "rank": "Inspector"
-  },
-  {
-    "id": "INV-UUD-041",
-    "name": "SI Suresh Iyer",
-    "role": "OFFICER",
-    "stationId": "KSP-UUD-TWN",
-    "status": "ACTIVE",
-    "rank": "Sub-Inspector"
-  },
-  {
-    "id": "INV-UUD-042",
-    "name": "SI Meera Rao",
-    "role": "OFFICER",
-    "stationId": "KSP-UUD-TWN",
-    "status": "ACTIVE",
-    "rank": "Sub-Inspector"
-  },
-  {
-    "id": "INV-UUD-043",
-    "name": "SI Siddharth Menon",
-    "role": "OFFICER",
-    "stationId": "KSP-UUD-TWN",
-    "status": "ACTIVE",
-    "rank": "Sub-Inspector"
-  },
-  {
-    "id": "INV-UUD-044",
-    "name": "SI Kumar Hegde",
-    "role": "OFFICER",
-    "stationId": "KSP-UUD-TWN",
-    "status": "ACTIVE",
-    "rank": "Sub-Inspector"
-  },
-  {
-    "id": "IIC-GLB-01",
+    "id": "IIC-KRP-01",
     "name": "Insp. Suresh",
     "role": "STATION_ADMIN",
-    "stationId": "KSP-GLB-CEN",
+    "stationId": "OP-KRP-CEN",
     "status": "ACTIVE",
     "rank": "Inspector"
   },
   {
-    "id": "INV-GLB-045",
-    "name": "SI Anita Shetty",
+    "id": "INV-KRP-037",
+    "name": "SI Rakesh Rout",
     "role": "OFFICER",
-    "stationId": "KSP-GLB-CEN",
+    "stationId": "OP-KRP-CEN",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "INV-GLB-046",
-    "name": "SI Kumar Shetty",
+    "id": "INV-KRP-038",
+    "name": "SI Suresh Rout",
     "role": "OFFICER",
-    "stationId": "KSP-GLB-CEN",
+    "stationId": "OP-KRP-CEN",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "INV-GLB-047",
-    "name": "SI Siddharth Singh",
+    "id": "INV-KRP-039",
+    "name": "SI Suresh Bhoi",
     "role": "OFFICER",
-    "stationId": "KSP-GLB-CEN",
+    "stationId": "OP-KRP-CEN",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   },
   {
-    "id": "INV-GLB-048",
-    "name": "SI Manjunath Bhat",
+    "id": "INV-KRP-040",
+    "name": "SI Sagar Sahoo",
     "role": "OFFICER",
-    "stationId": "KSP-GLB-CEN",
+    "stationId": "OP-KRP-CEN",
+    "status": "ACTIVE",
+    "rank": "Sub-Inspector"
+  },
+  {
+    "id": "INV-KRP-041",
+    "name": "SI Sanjukta Behera",
+    "role": "OFFICER",
+    "stationId": "OP-KRP-CEN",
+    "status": "ACTIVE",
+    "rank": "Sub-Inspector"
+  },
+  {
+    "id": "IIC-RYG-01",
+    "name": "Insp. Ashok",
+    "role": "STATION_ADMIN",
+    "stationId": "OP-RYG-TWN",
+    "status": "ACTIVE",
+    "rank": "Inspector"
+  },
+  {
+    "id": "INV-RYG-042",
+    "name": "SI Sagar Patra",
+    "role": "OFFICER",
+    "stationId": "OP-RYG-TWN",
+    "status": "ACTIVE",
+    "rank": "Sub-Inspector"
+  },
+  {
+    "id": "INV-RYG-043",
+    "name": "SI Bipin Sahoo",
+    "role": "OFFICER",
+    "stationId": "OP-RYG-TWN",
+    "status": "ACTIVE",
+    "rank": "Sub-Inspector"
+  },
+  {
+    "id": "INV-RYG-044",
+    "name": "SI Sanjukta Patra",
+    "role": "OFFICER",
+    "stationId": "OP-RYG-TWN",
+    "status": "ACTIVE",
+    "rank": "Sub-Inspector"
+  },
+  {
+    "id": "INV-RYG-045",
+    "name": "SI Prakash Mohanty",
+    "role": "OFFICER",
+    "stationId": "OP-RYG-TWN",
+    "status": "ACTIVE",
+    "rank": "Sub-Inspector"
+  },
+  {
+    "id": "IIC-JYP-01",
+    "name": "Insp. Priyanka",
+    "role": "STATION_ADMIN",
+    "stationId": "OP-JYP-TWN",
+    "status": "ACTIVE",
+    "rank": "Inspector"
+  },
+  {
+    "id": "INV-JYP-046",
+    "name": "SI Bikash Swain",
+    "role": "OFFICER",
+    "stationId": "OP-JYP-TWN",
+    "status": "ACTIVE",
+    "rank": "Sub-Inspector"
+  },
+  {
+    "id": "INV-JYP-047",
+    "name": "SI Prakash Nayak",
+    "role": "OFFICER",
+    "stationId": "OP-JYP-TWN",
+    "status": "ACTIVE",
+    "rank": "Sub-Inspector"
+  },
+  {
+    "id": "INV-JYP-048",
+    "name": "SI Prakash Rout",
+    "role": "OFFICER",
+    "stationId": "OP-JYP-TWN",
+    "status": "ACTIVE",
+    "rank": "Sub-Inspector"
+  },
+  {
+    "id": "INV-JYP-049",
+    "name": "SI Subrat Dash",
+    "role": "OFFICER",
+    "stationId": "OP-JYP-TWN",
     "status": "ACTIVE",
     "rank": "Sub-Inspector"
   }
 ];
 const cases: CaseRecord[] = [
   {
-    "id": "CR-KOR-25-0981",
-    "firNumber": "FIR/2025/0981",
-    "stationId": "KSP-BLR-KOR",
-    "investigatorId": "INV-BLR-034",
-    "title": "Jewelry Store Armed Heist",
-    "description": "Armed robbery at a jewelry store in Koramangala. Suspects fled in a white van.",
+    "id": "OD-CTC-2026-00981",
+    "firNumber": "FIR-2026-CTC-00981",
+    "stationId": "OP-CTC-CITY",
+    "investigatorId": "INV-CTC-006",
+    "title": "Jewelry Store Armed Heist (Badambadi)",
+    "description": "Armed robbery at a jewelry store in Cuttack. Suspects fled in a white van.",
     "crimeType": "Armed Robbery",
     "status": "INVESTIGATING",
     "priority": "CRITICAL",
-    "createdAt": "2026-08-18T09:34:58.374Z",
+    "createdAt": "2026-08-18T18:48:17.920Z",
     "entities": [
       {
         "id": "ENT-V-HERO",
         "type": "VEHICLE",
-        "value": "KA-01-AB-1234"
+        "value": "OD-02-AB-1234"
       },
       {
         "id": "ENT-P-HERO",
@@ -601,282 +609,263 @@ const cases: CaseRecord[] = [
     ]
   },
   {
-    "id": "CR-BLR-25-0001",
-    "firNumber": "FIR/2025/0001",
-    "stationId": "KSP-BLR-CEN",
-    "investigatorId": "INV-BLR-001",
-    "title": "High-Value Commercial Burglary (MG Road)",
+    "id": "OD-BBSR-2026-0001",
+    "firNumber": "FIR-2026-BBSR-0001",
+    "stationId": "OP-BBSR-CAP",
+    "investigatorId": "INV-BBSR-001",
+    "title": "High-Value Commercial Burglary (Unit IV)",
     "description": "Electronic goods stolen from a warehouse at night. Suspects disabled CCTV. One partial vehicle plate found in neighboring camera.",
     "crimeType": "Burglary",
     "status": "INVESTIGATING",
     "priority": "HIGH",
-    "createdAt": "2026-08-20T09:34:58.374Z",
+    "createdAt": "2026-08-20T18:48:17.920Z",
     "entities": [
       {
         "id": "ENT-V-HERO",
         "type": "VEHICLE",
-        "value": "KA-01-AB-1234"
+        "value": "OD-02-AB-1234"
       }
     ]
   },
   {
-    "id": "CR-BLR-25-0001",
-    "firNumber": "FIR/2025/0001",
-    "stationId": "KSP-BLR-CEN",
-    "investigatorId": "INV-BLR-003",
-    "title": "Narcotics in Bengaluru Urban",
+    "id": "OD-BBSR-2026-0001",
+    "firNumber": "FIR-2026-BBSR-0001",
+    "stationId": "OP-BBSR-CAP",
+    "investigatorId": "INV-BBSR-002",
+    "title": "Theft in Khordha",
+    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
+    "crimeType": "Assault",
+    "status": "INVESTIGATING",
+    "priority": "LOW",
+    "createdAt": "2026-08-12T21:02:07.046Z",
+    "entities": [
+      {
+        "id": "ENT-V-1",
+        "type": "VEHICLE",
+        "value": "OD-28-XX-1866"
+      }
+    ]
+  },
+  {
+    "id": "OD-BBSR-2026-0002",
+    "firNumber": "FIR-2026-BBSR-0002",
+    "stationId": "OP-BBSR-CAP",
+    "investigatorId": "INV-BBSR-003",
+    "title": "Cyber Crime in Khordha",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
     "crimeType": "Extortion",
     "status": "INVESTIGATING",
-    "priority": "HIGH",
-    "createdAt": "2026-07-23T00:36:36.506Z",
-    "entities": [
-      {
-        "id": "ENT-P-01",
-        "type": "PHONE",
-        "value": "+91-9876543210"
-      }
-    ]
-  },
-  {
-    "id": "CR-BLR-25-0002",
-    "firNumber": "FIR/2025/0002",
-    "stationId": "KSP-BLR-CEN",
-    "investigatorId": "INV-BLR-003",
-    "title": "Narcotics in Bengaluru Urban",
-    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Narcotics",
-    "status": "INVESTIGATING",
     "priority": "LOW",
-    "createdAt": "2026-08-03T09:26:26.899Z",
+    "createdAt": "2026-08-03T20:40:55.140Z",
     "entities": [
       {
         "id": "ENT-V-2",
         "type": "VEHICLE",
-        "value": "KA-49-XX-4001"
+        "value": "OD-08-XX-9705"
       }
     ]
   },
   {
-    "id": "CR-BLR-25-0003",
-    "firNumber": "FIR/2025/0003",
-    "stationId": "KSP-BLR-CEN",
-    "investigatorId": "INV-BLR-001",
-    "title": "Burglary in Bengaluru Urban",
+    "id": "OD-BBSR-2026-0003",
+    "firNumber": "FIR-2026-BBSR-0003",
+    "stationId": "OP-BBSR-CAP",
+    "investigatorId": "INV-BBSR-002",
+    "title": "Theft in Khordha",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
     "crimeType": "Fraud",
-    "status": "SOLVED",
+    "status": "CLOSED",
     "priority": "CRITICAL",
-    "createdAt": "2026-08-05T06:51:39.103Z",
+    "createdAt": "2026-08-04T04:31:37.870Z",
     "entities": [
       {
         "id": "ENT-V-3",
         "type": "VEHICLE",
-        "value": "KA-46-XX-7640"
+        "value": "OD-17-XX-7224"
       }
     ]
   },
   {
-    "id": "CR-BLR-25-0004",
-    "firNumber": "FIR/2025/0004",
-    "stationId": "KSP-BLR-CEN",
-    "investigatorId": "INV-BLR-001",
-    "title": "Narcotics in Bengaluru Urban",
+    "id": "OD-BBSR-2026-0004",
+    "firNumber": "FIR-2026-BBSR-0004",
+    "stationId": "OP-BBSR-CAP",
+    "investigatorId": "INV-BBSR-003",
+    "title": "Cyber Crime in Khordha",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Cyber Crime",
+    "crimeType": "Missing Person",
     "status": "INVESTIGATING",
-    "priority": "MEDIUM",
-    "createdAt": "2026-08-14T14:41:56.213Z",
+    "priority": "LOW",
+    "createdAt": "2026-07-29T03:15:24.384Z",
     "entities": [
       {
         "id": "ENT-V-4",
         "type": "VEHICLE",
-        "value": "KA-25-XX-1786"
+        "value": "OD-22-XX-9052"
       }
     ]
   },
   {
-    "id": "CR-BLR-25-0005",
-    "firNumber": "FIR/2025/0005",
-    "stationId": "KSP-BLR-CEN",
-    "investigatorId": "INV-BLR-004",
-    "title": "Assault in Bengaluru Urban",
+    "id": "OD-BBSR-2026-0005",
+    "firNumber": "FIR-2026-BBSR-0005",
+    "stationId": "OP-BBSR-CAP",
+    "investigatorId": "INV-BBSR-002",
+    "title": "Fraud in Khordha",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Missing Person",
-    "status": "INVESTIGATING",
-    "priority": "LOW",
-    "createdAt": "2026-07-30T08:51:46.263Z",
+    "crimeType": "Theft",
+    "status": "CLOSED",
+    "priority": "HIGH",
+    "createdAt": "2026-07-27T16:12:00.582Z",
     "entities": [
       {
         "id": "ENT-V-5",
         "type": "VEHICLE",
-        "value": "KA-15-XX-5285"
+        "value": "OD-23-XX-7400"
       }
     ]
   },
   {
-    "id": "CR-MYS-25-0006",
-    "firNumber": "FIR/2025/0006",
-    "stationId": "KSP-MYS-CTY",
-    "investigatorId": "INV-MYS-006",
-    "title": "Burglary in Mysuru",
+    "id": "OD-CTC-2026-0006",
+    "firNumber": "FIR-2026-CTC-0006",
+    "stationId": "OP-CTC-CITY",
+    "investigatorId": "INV-CTC-006",
+    "title": "Extortion in Cuttack",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Cyber Crime",
+    "crimeType": "Extortion",
     "status": "INVESTIGATING",
-    "priority": "LOW",
-    "createdAt": "2026-07-25T21:37:17.164Z",
+    "priority": "CRITICAL",
+    "createdAt": "2026-08-06T04:53:11.741Z",
     "entities": [
       {
         "id": "ENT-V-6",
         "type": "VEHICLE",
-        "value": "KA-32-XX-9738"
+        "value": "OD-28-XX-5067"
       }
     ]
   },
   {
-    "id": "CR-MYS-25-0007",
-    "firNumber": "FIR/2025/0007",
-    "stationId": "KSP-MYS-CTY",
-    "investigatorId": "INV-MYS-008",
-    "title": "Narcotics in Mysuru",
+    "id": "OD-CTC-2026-0007",
+    "firNumber": "FIR-2026-CTC-0007",
+    "stationId": "OP-CTC-CITY",
+    "investigatorId": "INV-CTC-006",
+    "title": "Extortion in Cuttack",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Assault",
+    "crimeType": "Burglary",
     "status": "INVESTIGATING",
-    "priority": "CRITICAL",
-    "createdAt": "2026-07-23T11:13:37.743Z",
+    "priority": "MEDIUM",
+    "createdAt": "2026-08-15T01:47:20.865Z",
     "entities": [
       {
         "id": "ENT-V-7",
         "type": "VEHICLE",
-        "value": "KA-17-XX-4884"
+        "value": "OD-08-XX-4048"
       }
     ]
   },
   {
-    "id": "CR-MYS-25-0008",
-    "firNumber": "FIR/2025/0008",
-    "stationId": "KSP-MYS-CTY",
-    "investigatorId": "INV-MYS-006",
-    "title": "Theft in Mysuru",
+    "id": "OD-CTC-2026-0008",
+    "firNumber": "FIR-2026-CTC-0008",
+    "stationId": "OP-CTC-CITY",
+    "investigatorId": "INV-CTC-007",
+    "title": "Burglary in Cuttack",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
     "crimeType": "Theft",
     "status": "INVESTIGATING",
-    "priority": "LOW",
-    "createdAt": "2026-08-07T14:28:07.647Z",
+    "priority": "MEDIUM",
+    "createdAt": "2026-07-24T21:01:51.069Z",
     "entities": [
       {
         "id": "ENT-V-8",
         "type": "VEHICLE",
-        "value": "KA-07-XX-5228"
+        "value": "OD-08-XX-2289"
       }
     ]
   },
   {
-    "id": "CR-MYS-25-0009",
-    "firNumber": "FIR/2025/0009",
-    "stationId": "KSP-MYS-CTY",
-    "investigatorId": "INV-MYS-007",
-    "title": "Cyber Crime in Mysuru",
-    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Fraud",
-    "status": "INVESTIGATING",
-    "priority": "HIGH",
-    "createdAt": "2026-08-05T12:22:34.228Z",
-    "entities": [
-      {
-        "id": "ENT-P-02",
-        "type": "PHONE",
-        "value": "+91-9999988888"
-      }
-    ]
-  },
-  {
-    "id": "CR-MYS-25-0010",
-    "firNumber": "FIR/2025/0010",
-    "stationId": "KSP-MYS-CTY",
-    "investigatorId": "INV-MYS-009",
-    "title": "Extortion in Mysuru",
+    "id": "OD-CTC-2026-0009",
+    "firNumber": "FIR-2026-CTC-0009",
+    "stationId": "OP-CTC-CITY",
+    "investigatorId": "INV-CTC-006",
+    "title": "Theft in Cuttack",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
     "crimeType": "Burglary",
     "status": "INVESTIGATING",
-    "priority": "MEDIUM",
-    "createdAt": "2026-08-08T17:00:51.136Z",
+    "priority": "HIGH",
+    "createdAt": "2026-08-08T12:09:04.931Z",
+    "entities": [
+      {
+        "id": "ENT-P-01",
+        "type": "PHONE",
+        "value": "+91-9876543210"
+      }
+    ]
+  },
+  {
+    "id": "OD-CTC-2026-0010",
+    "firNumber": "FIR-2026-CTC-0010",
+    "stationId": "OP-CTC-CITY",
+    "investigatorId": "INV-CTC-008",
+    "title": "Assault in Cuttack",
+    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
+    "crimeType": "Theft",
+    "status": "SOLVED",
+    "priority": "CRITICAL",
+    "createdAt": "2026-08-11T15:34:30.038Z",
     "entities": [
       {
         "id": "ENT-V-10",
         "type": "VEHICLE",
-        "value": "KA-12-XX-1195"
+        "value": "OD-20-XX-7200"
       }
     ]
   },
   {
-    "id": "CR-MYS-25-0011",
-    "firNumber": "FIR/2025/0011",
-    "stationId": "KSP-MYS-CTY",
-    "investigatorId": "INV-MYS-007",
-    "title": "Narcotics in Mysuru",
+    "id": "OD-CTC-2026-0011",
+    "firNumber": "FIR-2026-CTC-0011",
+    "stationId": "OP-CTC-CITY",
+    "investigatorId": "INV-CTC-007",
+    "title": "Theft in Cuttack",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Narcotics",
-    "status": "CLOSED",
+    "crimeType": "Extortion",
+    "status": "SOLVED",
     "priority": "MEDIUM",
-    "createdAt": "2026-08-08T02:17:42.087Z",
+    "createdAt": "2026-08-02T18:21:31.578Z",
     "entities": [
       {
         "id": "ENT-V-11",
         "type": "VEHICLE",
-        "value": "KA-10-XX-8488"
+        "value": "OD-02-XX-4658"
       }
     ]
   },
   {
-    "id": "CR-MYS-25-0012",
-    "firNumber": "FIR/2025/0012",
-    "stationId": "KSP-MYS-CTY",
-    "investigatorId": "INV-MYS-008",
-    "title": "Theft in Mysuru",
+    "id": "OD-CTC-2026-0012",
+    "firNumber": "FIR-2026-CTC-0012",
+    "stationId": "OP-CTC-CITY",
+    "investigatorId": "INV-CTC-007",
+    "title": "Extortion in Cuttack",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Cyber Crime",
+    "crimeType": "Narcotics",
     "status": "INVESTIGATING",
     "priority": "HIGH",
-    "createdAt": "2026-07-31T09:26:54.787Z",
+    "createdAt": "2026-08-01T06:43:07.663Z",
     "entities": [
       {
         "id": "ENT-V-12",
         "type": "VEHICLE",
-        "value": "KA-41-XX-2283"
+        "value": "OD-19-XX-2674"
       }
     ]
   },
   {
-    "id": "CR-MYS-25-0013",
-    "firNumber": "FIR/2025/0013",
-    "stationId": "KSP-MYS-CTY",
-    "investigatorId": "INV-MYS-006",
-    "title": "Burglary in Mysuru",
+    "id": "OD-RKL-2026-0013",
+    "firNumber": "FIR-2026-RKL-0013",
+    "stationId": "OP-RKL-CEN",
+    "investigatorId": "INV-RKL-012",
+    "title": "Missing Person in Sundargarh",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
     "crimeType": "Cyber Crime",
-    "status": "INVESTIGATING",
-    "priority": "HIGH",
-    "createdAt": "2026-08-02T11:41:29.227Z",
-    "entities": [
-      {
-        "id": "ENT-V-13",
-        "type": "VEHICLE",
-        "value": "KA-52-XX-6187"
-      }
-    ]
-  },
-  {
-    "id": "CR-MNG-25-0014",
-    "firNumber": "FIR/2025/0014",
-    "stationId": "KSP-MNG-NTH",
-    "investigatorId": "INV-MNG-010",
-    "title": "Theft in Dakshina Kannada",
-    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Extortion",
     "status": "SOLVED",
-    "priority": "MEDIUM",
-    "createdAt": "2026-07-23T23:17:06.760Z",
+    "priority": "CRITICAL",
+    "createdAt": "2026-08-05T13:38:38.705Z",
     "entities": [
       {
         "id": "ENT-P-01",
@@ -886,871 +875,1156 @@ const cases: CaseRecord[] = [
     ]
   },
   {
-    "id": "CR-MNG-25-0015",
-    "firNumber": "FIR/2025/0015",
-    "stationId": "KSP-MNG-NTH",
-    "investigatorId": "INV-MNG-013",
-    "title": "Assault in Dakshina Kannada",
+    "id": "OD-RKL-2026-0014",
+    "firNumber": "FIR-2026-RKL-0014",
+    "stationId": "OP-RKL-CEN",
+    "investigatorId": "INV-RKL-009",
+    "title": "Cyber Crime in Sundargarh",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Fraud",
+    "crimeType": "Extortion",
+    "status": "CLOSED",
+    "priority": "LOW",
+    "createdAt": "2026-07-30T06:25:47.411Z",
+    "entities": [
+      {
+        "id": "ENT-P-01",
+        "type": "PHONE",
+        "value": "+91-9876543210"
+      }
+    ]
+  },
+  {
+    "id": "OD-RKL-2026-0015",
+    "firNumber": "FIR-2026-RKL-0015",
+    "stationId": "OP-RKL-CEN",
+    "investigatorId": "INV-RKL-011",
+    "title": "Narcotics in Sundargarh",
+    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
+    "crimeType": "Theft",
     "status": "INVESTIGATING",
-    "priority": "MEDIUM",
-    "createdAt": "2026-07-23T17:52:46.603Z",
+    "priority": "CRITICAL",
+    "createdAt": "2026-07-28T17:54:42.808Z",
     "entities": [
       {
         "id": "ENT-V-15",
         "type": "VEHICLE",
-        "value": "KA-26-XX-3530"
+        "value": "OD-10-XX-4504"
       }
     ]
   },
   {
-    "id": "CR-MNG-25-0016",
-    "firNumber": "FIR/2025/0016",
-    "stationId": "KSP-MNG-NTH",
-    "investigatorId": "INV-MNG-013",
-    "title": "Assault in Dakshina Kannada",
+    "id": "OD-RKL-2026-0016",
+    "firNumber": "FIR-2026-RKL-0016",
+    "stationId": "OP-RKL-CEN",
+    "investigatorId": "INV-RKL-011",
+    "title": "Assault in Sundargarh",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Assault",
+    "crimeType": "Missing Person",
     "status": "CLOSED",
-    "priority": "HIGH",
-    "createdAt": "2026-07-31T00:23:35.239Z",
+    "priority": "MEDIUM",
+    "createdAt": "2026-07-30T17:17:15.457Z",
     "entities": [
       {
-        "id": "ENT-V-16",
-        "type": "VEHICLE",
-        "value": "KA-56-XX-4213"
+        "id": "ENT-N-01",
+        "type": "PERSON",
+        "value": "Unknown Subject Alias Ranga"
       }
     ]
   },
   {
-    "id": "CR-MNG-25-0017",
-    "firNumber": "FIR/2025/0017",
-    "stationId": "KSP-MNG-NTH",
-    "investigatorId": "INV-MNG-014",
-    "title": "Burglary in Dakshina Kannada",
+    "id": "OD-BAM-2026-0017",
+    "firNumber": "FIR-2026-BAM-0017",
+    "stationId": "OP-BAM-TWN",
+    "investigatorId": "INV-BAM-017",
+    "title": "Extortion in Ganjam",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Assault",
-    "status": "INVESTIGATING",
-    "priority": "HIGH",
-    "createdAt": "2026-07-30T22:06:52.555Z",
+    "crimeType": "Narcotics",
+    "status": "CLOSED",
+    "priority": "CRITICAL",
+    "createdAt": "2026-08-14T22:57:33.544Z",
     "entities": [
       {
         "id": "ENT-V-17",
         "type": "VEHICLE",
-        "value": "KA-02-XX-4857"
+        "value": "OD-08-XX-2425"
       }
     ]
   },
   {
-    "id": "CR-MNG-25-0018",
-    "firNumber": "FIR/2025/0018",
-    "stationId": "KSP-MNG-NTH",
-    "investigatorId": "INV-MNG-010",
-    "title": "Assault in Dakshina Kannada",
+    "id": "OD-BAM-2026-0018",
+    "firNumber": "FIR-2026-BAM-0018",
+    "stationId": "OP-BAM-TWN",
+    "investigatorId": "INV-BAM-013",
+    "title": "Missing Person in Ganjam",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Cyber Crime",
+    "crimeType": "Extortion",
     "status": "INVESTIGATING",
     "priority": "CRITICAL",
-    "createdAt": "2026-07-22T23:05:41.609Z",
+    "createdAt": "2026-08-03T12:58:01.477Z",
     "entities": [
       {
         "id": "ENT-V-18",
         "type": "VEHICLE",
-        "value": "KA-32-XX-4312"
+        "value": "OD-04-XX-7563"
       }
     ]
   },
   {
-    "id": "CR-MNG-25-0019",
-    "firNumber": "FIR/2025/0019",
-    "stationId": "KSP-MNG-NTH",
-    "investigatorId": "INV-MNG-014",
-    "title": "Narcotics in Dakshina Kannada",
+    "id": "OD-BAM-2026-0019",
+    "firNumber": "FIR-2026-BAM-0019",
+    "stationId": "OP-BAM-TWN",
+    "investigatorId": "INV-BAM-014",
+    "title": "Narcotics in Ganjam",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Cyber Crime",
-    "status": "CLOSED",
-    "priority": "MEDIUM",
-    "createdAt": "2026-08-06T05:45:45.499Z",
+    "crimeType": "Narcotics",
+    "status": "INVESTIGATING",
+    "priority": "CRITICAL",
+    "createdAt": "2026-08-19T02:06:10.529Z",
     "entities": [
       {
-        "id": "ENT-P-01",
-        "type": "PHONE",
-        "value": "+91-9876543210"
+        "id": "ENT-V-19",
+        "type": "VEHICLE",
+        "value": "OD-18-XX-2744"
       }
     ]
   },
   {
-    "id": "CR-MNG-25-0020",
-    "firNumber": "FIR/2025/0020",
-    "stationId": "KSP-MNG-NTH",
-    "investigatorId": "INV-MNG-012",
-    "title": "Burglary in Dakshina Kannada",
+    "id": "OD-BAM-2026-0020",
+    "firNumber": "FIR-2026-BAM-0020",
+    "stationId": "OP-BAM-TWN",
+    "investigatorId": "INV-BAM-014",
+    "title": "Theft in Ganjam",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Fraud",
-    "status": "CLOSED",
+    "crimeType": "Missing Person",
+    "status": "INVESTIGATING",
     "priority": "MEDIUM",
-    "createdAt": "2026-08-18T05:46:33.690Z",
+    "createdAt": "2026-08-19T02:33:45.266Z",
     "entities": [
       {
         "id": "ENT-V-20",
         "type": "VEHICLE",
-        "value": "KA-29-XX-5465"
+        "value": "OD-07-XX-8314"
       }
     ]
   },
   {
-    "id": "CR-HUB-25-0021",
-    "firNumber": "FIR/2025/0021",
-    "stationId": "KSP-HUB-CEN",
-    "investigatorId": "INV-HUB-015",
-    "title": "Fraud in Dharwad",
+    "id": "OD-BAM-2026-0021",
+    "firNumber": "FIR-2026-BAM-0021",
+    "stationId": "OP-BAM-TWN",
+    "investigatorId": "INV-BAM-017",
+    "title": "Burglary in Ganjam",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Cyber Crime",
-    "status": "INVESTIGATING",
-    "priority": "MEDIUM",
-    "createdAt": "2026-08-19T02:21:21.207Z",
+    "crimeType": "Missing Person",
+    "status": "SOLVED",
+    "priority": "LOW",
+    "createdAt": "2026-07-31T14:57:28.423Z",
     "entities": [
       {
         "id": "ENT-V-21",
         "type": "VEHICLE",
-        "value": "KA-46-XX-9990"
+        "value": "OD-21-XX-5549"
       }
     ]
   },
   {
-    "id": "CR-HUB-25-0022",
-    "firNumber": "FIR/2025/0022",
-    "stationId": "KSP-HUB-CEN",
-    "investigatorId": "INV-HUB-017",
-    "title": "Theft in Dharwad",
+    "id": "OD-BAM-2026-0022",
+    "firNumber": "FIR-2026-BAM-0022",
+    "stationId": "OP-BAM-TWN",
+    "investigatorId": "INV-BAM-015",
+    "title": "Theft in Ganjam",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Theft",
+    "crimeType": "Extortion",
     "status": "SOLVED",
-    "priority": "CRITICAL",
-    "createdAt": "2026-07-25T02:24:30.260Z",
+    "priority": "MEDIUM",
+    "createdAt": "2026-08-14T11:54:59.597Z",
     "entities": [
       {
-        "id": "ENT-V-02",
-        "type": "VEHICLE",
-        "value": "KA-05-XY-7777"
+        "id": "ENT-P-01",
+        "type": "PHONE",
+        "value": "+91-9876543210"
       }
     ]
   },
   {
-    "id": "CR-HUB-25-0023",
-    "firNumber": "FIR/2025/0023",
-    "stationId": "KSP-HUB-CEN",
-    "investigatorId": "INV-HUB-015",
-    "title": "Assault in Dharwad",
+    "id": "OD-PURI-2026-0023",
+    "firNumber": "FIR-2026-PURI-0023",
+    "stationId": "OP-PURI-TWN",
+    "investigatorId": "INV-PURI-021",
+    "title": "Burglary in Puri",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Missing Person",
-    "status": "INVESTIGATING",
+    "crimeType": "Extortion",
+    "status": "CLOSED",
     "priority": "HIGH",
-    "createdAt": "2026-08-11T16:31:06.929Z",
+    "createdAt": "2026-08-06T15:36:26.645Z",
     "entities": [
       {
-        "id": "ENT-V-23",
-        "type": "VEHICLE",
-        "value": "KA-49-XX-6254"
+        "id": "ENT-P-02",
+        "type": "PHONE",
+        "value": "+91-9999988888"
       }
     ]
   },
   {
-    "id": "CR-HUB-25-0024",
-    "firNumber": "FIR/2025/0024",
-    "stationId": "KSP-HUB-CEN",
-    "investigatorId": "INV-HUB-016",
-    "title": "Fraud in Dharwad",
+    "id": "OD-PURI-2026-0024",
+    "firNumber": "FIR-2026-PURI-0024",
+    "stationId": "OP-PURI-TWN",
+    "investigatorId": "INV-PURI-019",
+    "title": "Assault in Puri",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Assault",
+    "crimeType": "Narcotics",
     "status": "INVESTIGATING",
-    "priority": "LOW",
-    "createdAt": "2026-07-26T12:19:21.692Z",
+    "priority": "CRITICAL",
+    "createdAt": "2026-08-03T06:00:24.472Z",
     "entities": [
       {
         "id": "ENT-V-24",
         "type": "VEHICLE",
-        "value": "KA-44-XX-3118"
+        "value": "OD-26-XX-3718"
       }
     ]
   },
   {
-    "id": "CR-HUB-25-0025",
-    "firNumber": "FIR/2025/0025",
-    "stationId": "KSP-HUB-CEN",
-    "investigatorId": "INV-HUB-015",
-    "title": "Narcotics in Dharwad",
+    "id": "OD-PURI-2026-0025",
+    "firNumber": "FIR-2026-PURI-0025",
+    "stationId": "OP-PURI-TWN",
+    "investigatorId": "INV-PURI-019",
+    "title": "Narcotics in Puri",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Burglary",
+    "crimeType": "Missing Person",
     "status": "INVESTIGATING",
-    "priority": "LOW",
-    "createdAt": "2026-08-08T22:36:29.004Z",
+    "priority": "MEDIUM",
+    "createdAt": "2026-08-15T02:38:39.675Z",
     "entities": [
       {
         "id": "ENT-V-25",
         "type": "VEHICLE",
-        "value": "KA-42-XX-4783"
+        "value": "OD-20-XX-7094"
       }
     ]
   },
   {
-    "id": "CR-HUB-25-0026",
-    "firNumber": "FIR/2025/0026",
-    "stationId": "KSP-HUB-CEN",
-    "investigatorId": "INV-HUB-018",
-    "title": "Cyber Crime in Dharwad",
+    "id": "OD-PURI-2026-0026",
+    "firNumber": "FIR-2026-PURI-0026",
+    "stationId": "OP-PURI-TWN",
+    "investigatorId": "INV-PURI-020",
+    "title": "Extortion in Puri",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Cyber Crime",
-    "status": "CLOSED",
-    "priority": "CRITICAL",
-    "createdAt": "2026-08-20T03:09:52.636Z",
+    "crimeType": "Missing Person",
+    "status": "SOLVED",
+    "priority": "LOW",
+    "createdAt": "2026-08-10T10:54:26.167Z",
     "entities": [
       {
         "id": "ENT-V-26",
         "type": "VEHICLE",
-        "value": "KA-28-XX-7880"
+        "value": "OD-05-XX-9750"
       }
     ]
   },
   {
-    "id": "CR-HUB-25-0027",
-    "firNumber": "FIR/2025/0027",
-    "stationId": "KSP-HUB-CEN",
-    "investigatorId": "INV-HUB-017",
-    "title": "Theft in Dharwad",
+    "id": "OD-PURI-2026-0027",
+    "firNumber": "FIR-2026-PURI-0027",
+    "stationId": "OP-PURI-TWN",
+    "investigatorId": "INV-PURI-019",
+    "title": "Fraud in Puri",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Theft",
+    "crimeType": "Cyber Crime",
     "status": "INVESTIGATING",
-    "priority": "CRITICAL",
-    "createdAt": "2026-07-29T11:31:53.935Z",
+    "priority": "MEDIUM",
+    "createdAt": "2026-08-02T14:52:48.391Z",
     "entities": [
       {
         "id": "ENT-V-27",
         "type": "VEHICLE",
-        "value": "KA-11-XX-6694"
+        "value": "OD-03-XX-1752"
       }
     ]
   },
   {
-    "id": "CR-HUB-25-0028",
-    "firNumber": "FIR/2025/0028",
-    "stationId": "KSP-HUB-CEN",
-    "investigatorId": "INV-HUB-019",
-    "title": "Theft in Dharwad",
+    "id": "OD-SBP-2026-0028",
+    "firNumber": "FIR-2026-SBP-0028",
+    "stationId": "OP-SBP-CEN",
+    "investigatorId": "INV-SBP-023",
+    "title": "Narcotics in Sambalpur",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Theft",
+    "crimeType": "Assault",
     "status": "INVESTIGATING",
-    "priority": "LOW",
-    "createdAt": "2026-07-25T12:11:40.131Z",
+    "priority": "MEDIUM",
+    "createdAt": "2026-07-27T11:56:28.387Z",
     "entities": [
       {
         "id": "ENT-V-28",
         "type": "VEHICLE",
-        "value": "KA-04-XX-5330"
+        "value": "OD-20-XX-8059"
       }
     ]
   },
   {
-    "id": "CR-BEL-25-0029",
-    "firNumber": "FIR/2025/0029",
-    "stationId": "KSP-BEL-CTY",
-    "investigatorId": "INV-BEL-022",
-    "title": "Assault in Belagavi",
+    "id": "OD-SBP-2026-0029",
+    "firNumber": "FIR-2026-SBP-0029",
+    "stationId": "OP-SBP-CEN",
+    "investigatorId": "INV-SBP-024",
+    "title": "Extortion in Sambalpur",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Fraud",
-    "status": "CLOSED",
+    "crimeType": "Cyber Crime",
+    "status": "SOLVED",
     "priority": "LOW",
-    "createdAt": "2026-08-02T22:33:12.502Z",
+    "createdAt": "2026-07-29T23:41:07.947Z",
     "entities": [
       {
-        "id": "ENT-V-29",
+        "id": "ENT-V-02",
         "type": "VEHICLE",
-        "value": "KA-47-XX-7234"
+        "value": "OD-05-XY-7777"
       }
     ]
   },
   {
-    "id": "CR-BEL-25-0030",
-    "firNumber": "FIR/2025/0030",
-    "stationId": "KSP-BEL-CTY",
-    "investigatorId": "INV-BEL-022",
-    "title": "Cyber Crime in Belagavi",
+    "id": "OD-SBP-2026-0030",
+    "firNumber": "FIR-2026-SBP-0030",
+    "stationId": "OP-SBP-CEN",
+    "investigatorId": "INV-SBP-025",
+    "title": "Fraud in Sambalpur",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Theft",
-    "status": "CLOSED",
-    "priority": "CRITICAL",
-    "createdAt": "2026-08-14T00:33:02.487Z",
+    "crimeType": "Missing Person",
+    "status": "INVESTIGATING",
+    "priority": "LOW",
+    "createdAt": "2026-08-11T06:05:08.177Z",
     "entities": [
       {
         "id": "ENT-V-30",
         "type": "VEHICLE",
-        "value": "KA-12-XX-1883"
+        "value": "OD-18-XX-8044"
       }
     ]
   },
   {
-    "id": "CR-BEL-25-0031",
-    "firNumber": "FIR/2025/0031",
-    "stationId": "KSP-BEL-CTY",
-    "investigatorId": "INV-BEL-022",
-    "title": "Narcotics in Belagavi",
+    "id": "OD-SBP-2026-0031",
+    "firNumber": "FIR-2026-SBP-0031",
+    "stationId": "OP-SBP-CEN",
+    "investigatorId": "INV-SBP-022",
+    "title": "Burglary in Sambalpur",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Theft",
+    "crimeType": "Cyber Crime",
     "status": "INVESTIGATING",
-    "priority": "MEDIUM",
-    "createdAt": "2026-08-09T18:39:07.152Z",
+    "priority": "CRITICAL",
+    "createdAt": "2026-07-27T04:46:46.029Z",
     "entities": [
       {
         "id": "ENT-V-31",
         "type": "VEHICLE",
-        "value": "KA-15-XX-6178"
+        "value": "OD-03-XX-8553"
       }
     ]
   },
   {
-    "id": "CR-BEL-25-0032",
-    "firNumber": "FIR/2025/0032",
-    "stationId": "KSP-BEL-CTY",
-    "investigatorId": "INV-BEL-020",
-    "title": "Assault in Belagavi",
+    "id": "OD-SBP-2026-0032",
+    "firNumber": "FIR-2026-SBP-0032",
+    "stationId": "OP-SBP-CEN",
+    "investigatorId": "INV-SBP-022",
+    "title": "Extortion in Sambalpur",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Burglary",
-    "status": "SOLVED",
+    "crimeType": "Missing Person",
+    "status": "CLOSED",
     "priority": "CRITICAL",
-    "createdAt": "2026-08-11T22:24:15.973Z",
+    "createdAt": "2026-08-04T00:26:52.438Z",
     "entities": [
       {
         "id": "ENT-V-32",
         "type": "VEHICLE",
-        "value": "KA-44-XX-5524"
+        "value": "OD-17-XX-8005"
       }
     ]
   },
   {
-    "id": "CR-BEL-25-0033",
-    "firNumber": "FIR/2025/0033",
-    "stationId": "KSP-BEL-CTY",
-    "investigatorId": "INV-BEL-021",
-    "title": "Assault in Belagavi",
+    "id": "OD-SBP-2026-0033",
+    "firNumber": "FIR-2026-SBP-0033",
+    "stationId": "OP-SBP-CEN",
+    "investigatorId": "INV-SBP-022",
+    "title": "Burglary in Sambalpur",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Assault",
-    "status": "SOLVED",
-    "priority": "MEDIUM",
-    "createdAt": "2026-07-24T12:45:16.138Z",
+    "crimeType": "Extortion",
+    "status": "INVESTIGATING",
+    "priority": "LOW",
+    "createdAt": "2026-07-30T22:13:40.985Z",
     "entities": [
       {
         "id": "ENT-V-33",
         "type": "VEHICLE",
-        "value": "KA-16-XX-3366"
+        "value": "OD-15-XX-9668"
       }
     ]
   },
   {
-    "id": "CR-SHV-25-0034",
-    "firNumber": "FIR/2025/0034",
-    "stationId": "KSP-SHV-TWN",
-    "investigatorId": "INV-SHV-023",
-    "title": "Theft in Shivamogga",
+    "id": "OD-SBP-2026-0034",
+    "firNumber": "FIR-2026-SBP-0034",
+    "stationId": "OP-SBP-CEN",
+    "investigatorId": "INV-SBP-023",
+    "title": "Narcotics in Sambalpur",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Narcotics",
+    "crimeType": "Burglary",
     "status": "INVESTIGATING",
     "priority": "LOW",
-    "createdAt": "2026-07-28T14:49:53.706Z",
+    "createdAt": "2026-07-30T11:07:16.452Z",
     "entities": [
       {
-        "id": "ENT-P-01",
-        "type": "PHONE",
-        "value": "+91-9876543210"
+        "id": "ENT-V-34",
+        "type": "VEHICLE",
+        "value": "OD-29-XX-2062"
       }
     ]
   },
   {
-    "id": "CR-SHV-25-0035",
-    "firNumber": "FIR/2025/0035",
-    "stationId": "KSP-SHV-TWN",
-    "investigatorId": "INV-SHV-024",
-    "title": "Missing Person in Shivamogga",
+    "id": "OD-SBP-2026-0035",
+    "firNumber": "FIR-2026-SBP-0035",
+    "stationId": "OP-SBP-CEN",
+    "investigatorId": "INV-SBP-024",
+    "title": "Burglary in Sambalpur",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Narcotics",
+    "crimeType": "Cyber Crime",
     "status": "INVESTIGATING",
-    "priority": "LOW",
-    "createdAt": "2026-08-02T21:35:49.967Z",
+    "priority": "CRITICAL",
+    "createdAt": "2026-08-02T16:48:39.859Z",
     "entities": [
       {
         "id": "ENT-V-35",
         "type": "VEHICLE",
-        "value": "KA-10-XX-6464"
+        "value": "OD-20-XX-9600"
       }
     ]
   },
   {
-    "id": "CR-SHV-25-0036",
-    "firNumber": "FIR/2025/0036",
-    "stationId": "KSP-SHV-TWN",
-    "investigatorId": "INV-SHV-024",
-    "title": "Burglary in Shivamogga",
-    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Cyber Crime",
-    "status": "CLOSED",
-    "priority": "CRITICAL",
-    "createdAt": "2026-08-03T21:04:36.461Z",
-    "entities": [
-      {
-        "id": "ENT-P-01",
-        "type": "PHONE",
-        "value": "+91-9876543210"
-      }
-    ]
-  },
-  {
-    "id": "CR-SHV-25-0037",
-    "firNumber": "FIR/2025/0037",
-    "stationId": "KSP-SHV-TWN",
-    "investigatorId": "INV-SHV-025",
-    "title": "Assault in Shivamogga",
-    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Fraud",
-    "status": "INVESTIGATING",
-    "priority": "CRITICAL",
-    "createdAt": "2026-08-10T07:55:43.547Z",
-    "entities": [
-      {
-        "id": "ENT-V-37",
-        "type": "VEHICLE",
-        "value": "KA-57-XX-1309"
-      }
-    ]
-  },
-  {
-    "id": "CR-SHV-25-0038",
-    "firNumber": "FIR/2025/0038",
-    "stationId": "KSP-SHV-TWN",
-    "investigatorId": "INV-SHV-025",
-    "title": "Theft in Shivamogga",
+    "id": "OD-BLS-2026-0036",
+    "firNumber": "FIR-2026-BLS-0036",
+    "stationId": "OP-BLS-TOW",
+    "investigatorId": "INV-BLS-027",
+    "title": "Cyber Crime in Balasore",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
     "crimeType": "Narcotics",
     "status": "INVESTIGATING",
-    "priority": "LOW",
-    "createdAt": "2026-07-30T06:13:55.070Z",
+    "priority": "CRITICAL",
+    "createdAt": "2026-08-09T00:23:44.133Z",
+    "entities": [
+      {
+        "id": "ENT-V-36",
+        "type": "VEHICLE",
+        "value": "OD-00-XX-6570"
+      }
+    ]
+  },
+  {
+    "id": "OD-BLS-2026-0037",
+    "firNumber": "FIR-2026-BLS-0037",
+    "stationId": "OP-BLS-TOW",
+    "investigatorId": "INV-BLS-026",
+    "title": "Cyber Crime in Balasore",
+    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
+    "crimeType": "Theft",
+    "status": "INVESTIGATING",
+    "priority": "HIGH",
+    "createdAt": "2026-08-10T14:30:11.007Z",
+    "entities": [
+      {
+        "id": "ENT-N-01",
+        "type": "PERSON",
+        "value": "Unknown Subject Alias Ranga"
+      }
+    ]
+  },
+  {
+    "id": "OD-BLS-2026-0038",
+    "firNumber": "FIR-2026-BLS-0038",
+    "stationId": "OP-BLS-TOW",
+    "investigatorId": "INV-BLS-029",
+    "title": "Cyber Crime in Balasore",
+    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
+    "crimeType": "Assault",
+    "status": "SOLVED",
+    "priority": "MEDIUM",
+    "createdAt": "2026-07-23T11:58:33.147Z",
     "entities": [
       {
         "id": "ENT-V-38",
         "type": "VEHICLE",
-        "value": "KA-02-XX-5230"
+        "value": "OD-02-XX-7710"
       }
     ]
   },
   {
-    "id": "CR-SHV-25-0039",
-    "firNumber": "FIR/2025/0039",
-    "stationId": "KSP-SHV-TWN",
-    "investigatorId": "INV-SHV-023",
-    "title": "Cyber Crime in Shivamogga",
+    "id": "OD-BLS-2026-0039",
+    "firNumber": "FIR-2026-BLS-0039",
+    "stationId": "OP-BLS-TOW",
+    "investigatorId": "INV-BLS-028",
+    "title": "Burglary in Balasore",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Extortion",
+    "crimeType": "Assault",
     "status": "INVESTIGATING",
-    "priority": "LOW",
-    "createdAt": "2026-08-05T01:56:59.575Z",
+    "priority": "CRITICAL",
+    "createdAt": "2026-08-07T14:35:23.211Z",
     "entities": [
       {
         "id": "ENT-V-39",
         "type": "VEHICLE",
-        "value": "KA-56-XX-8964"
+        "value": "OD-28-XX-1495"
       }
     ]
   },
   {
-    "id": "CR-SHV-25-0040",
-    "firNumber": "FIR/2025/0040",
-    "stationId": "KSP-SHV-TWN",
-    "investigatorId": "INV-SHV-024",
-    "title": "Burglary in Shivamogga",
+    "id": "OD-BLS-2026-0040",
+    "firNumber": "FIR-2026-BLS-0040",
+    "stationId": "OP-BLS-TOW",
+    "investigatorId": "INV-BLS-029",
+    "title": "Theft in Balasore",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
     "crimeType": "Fraud",
-    "status": "CLOSED",
+    "status": "INVESTIGATING",
     "priority": "MEDIUM",
-    "createdAt": "2026-08-11T14:53:06.103Z",
+    "createdAt": "2026-08-01T16:07:31.684Z",
     "entities": [
       {
         "id": "ENT-V-40",
         "type": "VEHICLE",
-        "value": "KA-36-XX-1462"
+        "value": "OD-22-XX-5863"
       }
     ]
   },
   {
-    "id": "CR-SHV-25-0041",
-    "firNumber": "FIR/2025/0041",
-    "stationId": "KSP-SHV-TWN",
-    "investigatorId": "INV-SHV-025",
-    "title": "Extortion in Shivamogga",
+    "id": "OD-BLS-2026-0041",
+    "firNumber": "FIR-2026-BLS-0041",
+    "stationId": "OP-BLS-TOW",
+    "investigatorId": "INV-BLS-027",
+    "title": "Extortion in Balasore",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Burglary",
-    "status": "CLOSED",
-    "priority": "MEDIUM",
-    "createdAt": "2026-07-27T08:26:40.582Z",
+    "crimeType": "Theft",
+    "status": "INVESTIGATING",
+    "priority": "HIGH",
+    "createdAt": "2026-07-28T09:31:34.088Z",
     "entities": [
       {
         "id": "ENT-V-41",
         "type": "VEHICLE",
-        "value": "KA-32-XX-8669"
+        "value": "OD-21-XX-2009"
       }
     ]
   },
   {
-    "id": "CR-TUM-25-0042",
-    "firNumber": "FIR/2025/0042",
-    "stationId": "KSP-TUM-CEN",
-    "investigatorId": "INV-TUM-026",
-    "title": "Theft in Tumakuru",
-    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Burglary",
-    "status": "INVESTIGATING",
-    "priority": "HIGH",
-    "createdAt": "2026-08-14T02:01:53.907Z",
-    "entities": [
-      {
-        "id": "ENT-V-02",
-        "type": "VEHICLE",
-        "value": "KA-05-XY-7777"
-      }
-    ]
-  },
-  {
-    "id": "CR-TUM-25-0043",
-    "firNumber": "FIR/2025/0043",
-    "stationId": "KSP-TUM-CEN",
-    "investigatorId": "INV-TUM-029",
-    "title": "Cyber Crime in Tumakuru",
-    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Fraud",
-    "status": "INVESTIGATING",
-    "priority": "MEDIUM",
-    "createdAt": "2026-07-22T09:54:48.648Z",
-    "entities": [
-      {
-        "id": "ENT-V-43",
-        "type": "VEHICLE",
-        "value": "KA-39-XX-8476"
-      }
-    ]
-  },
-  {
-    "id": "CR-TUM-25-0044",
-    "firNumber": "FIR/2025/0044",
-    "stationId": "KSP-TUM-CEN",
-    "investigatorId": "INV-TUM-026",
-    "title": "Extortion in Tumakuru",
+    "id": "OD-BLS-2026-0042",
+    "firNumber": "FIR-2026-BLS-0042",
+    "stationId": "OP-BLS-TOW",
+    "investigatorId": "INV-BLS-029",
+    "title": "Missing Person in Balasore",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
     "crimeType": "Extortion",
-    "status": "INVESTIGATING",
+    "status": "SOLVED",
     "priority": "LOW",
-    "createdAt": "2026-07-31T15:43:44.438Z",
+    "createdAt": "2026-08-17T12:43:44.848Z",
     "entities": [
       {
-        "id": "ENT-V-44",
+        "id": "ENT-V-42",
         "type": "VEHICLE",
-        "value": "KA-21-XX-1090"
+        "value": "OD-27-XX-1856"
       }
     ]
   },
   {
-    "id": "CR-TUM-25-0045",
-    "firNumber": "FIR/2025/0045",
-    "stationId": "KSP-TUM-CEN",
-    "investigatorId": "INV-TUM-027",
-    "title": "Missing Person in Tumakuru",
+    "id": "OD-BLS-2026-0043",
+    "firNumber": "FIR-2026-BLS-0043",
+    "stationId": "OP-BLS-TOW",
+    "investigatorId": "INV-BLS-029",
+    "title": "Fraud in Balasore",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Narcotics",
-    "status": "INVESTIGATING",
-    "priority": "LOW",
-    "createdAt": "2026-07-27T19:49:48.260Z",
-    "entities": [
-      {
-        "id": "ENT-V-45",
-        "type": "VEHICLE",
-        "value": "KA-50-XX-4647"
-      }
-    ]
-  },
-  {
-    "id": "CR-TUM-25-0046",
-    "firNumber": "FIR/2025/0046",
-    "stationId": "KSP-TUM-CEN",
-    "investigatorId": "INV-TUM-028",
-    "title": "Fraud in Tumakuru",
-    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Cyber Crime",
-    "status": "INVESTIGATING",
-    "priority": "MEDIUM",
-    "createdAt": "2026-07-28T06:34:15.345Z",
-    "entities": [
-      {
-        "id": "ENT-V-46",
-        "type": "VEHICLE",
-        "value": "KA-07-XX-1456"
-      }
-    ]
-  },
-  {
-    "id": "CR-TUM-25-0047",
-    "firNumber": "FIR/2025/0047",
-    "stationId": "KSP-TUM-CEN",
-    "investigatorId": "INV-TUM-029",
-    "title": "Theft in Tumakuru",
-    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Extortion",
-    "status": "INVESTIGATING",
-    "priority": "MEDIUM",
-    "createdAt": "2026-08-18T22:31:21.058Z",
-    "entities": [
-      {
-        "id": "ENT-V-47",
-        "type": "VEHICLE",
-        "value": "KA-06-XX-2439"
-      }
-    ]
-  },
-  {
-    "id": "CR-BAL-25-0048",
-    "firNumber": "FIR/2025/0048",
-    "stationId": "KSP-BAL-CTY",
-    "investigatorId": "INV-BAL-030",
-    "title": "Narcotics in Ballari",
-    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Fraud",
+    "crimeType": "Theft",
     "status": "CLOSED",
     "priority": "MEDIUM",
-    "createdAt": "2026-08-08T12:48:46.718Z",
+    "createdAt": "2026-07-23T13:56:57.142Z",
     "entities": [
       {
         "id": "ENT-V-01",
         "type": "VEHICLE",
-        "value": "KA-01-AB-1234"
+        "value": "OD-02-AB-1234"
       }
     ]
   },
   {
-    "id": "CR-BAL-25-0049",
-    "firNumber": "FIR/2025/0049",
-    "stationId": "KSP-BAL-CTY",
-    "investigatorId": "INV-BAL-032",
-    "title": "Extortion in Ballari",
+    "id": "OD-ANG-2026-0044",
+    "firNumber": "FIR-2026-ANG-0044",
+    "stationId": "OP-ANG-CEN",
+    "investigatorId": "INV-ANG-031",
+    "title": "Burglary in Angul",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Burglary",
+    "crimeType": "Theft",
+    "status": "INVESTIGATING",
+    "priority": "MEDIUM",
+    "createdAt": "2026-08-12T15:33:40.828Z",
+    "entities": [
+      {
+        "id": "ENT-V-01",
+        "type": "VEHICLE",
+        "value": "OD-02-AB-1234"
+      }
+    ]
+  },
+  {
+    "id": "OD-ANG-2026-0045",
+    "firNumber": "FIR-2026-ANG-0045",
+    "stationId": "OP-ANG-CEN",
+    "investigatorId": "INV-ANG-032",
+    "title": "Assault in Angul",
+    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
+    "crimeType": "Theft",
+    "status": "INVESTIGATING",
+    "priority": "CRITICAL",
+    "createdAt": "2026-07-31T14:54:29.133Z",
+    "entities": [
+      {
+        "id": "ENT-P-01",
+        "type": "PHONE",
+        "value": "+91-9876543210"
+      }
+    ]
+  },
+  {
+    "id": "OD-ANG-2026-0046",
+    "firNumber": "FIR-2026-ANG-0046",
+    "stationId": "OP-ANG-CEN",
+    "investigatorId": "INV-ANG-032",
+    "title": "Cyber Crime in Angul",
+    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
+    "crimeType": "Cyber Crime",
+    "status": "INVESTIGATING",
+    "priority": "MEDIUM",
+    "createdAt": "2026-07-30T09:22:19.502Z",
+    "entities": [
+      {
+        "id": "ENT-V-46",
+        "type": "VEHICLE",
+        "value": "OD-27-XX-1951"
+      }
+    ]
+  },
+  {
+    "id": "OD-ANG-2026-0047",
+    "firNumber": "FIR-2026-ANG-0047",
+    "stationId": "OP-ANG-CEN",
+    "investigatorId": "INV-ANG-032",
+    "title": "Fraud in Angul",
+    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
+    "crimeType": "Fraud",
+    "status": "SOLVED",
+    "priority": "LOW",
+    "createdAt": "2026-08-11T11:39:40.532Z",
+    "entities": [
+      {
+        "id": "ENT-V-47",
+        "type": "VEHICLE",
+        "value": "OD-18-XX-7940"
+      }
+    ]
+  },
+  {
+    "id": "OD-ANG-2026-0048",
+    "firNumber": "FIR-2026-ANG-0048",
+    "stationId": "OP-ANG-CEN",
+    "investigatorId": "INV-ANG-033",
+    "title": "Missing Person in Angul",
+    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
+    "crimeType": "Fraud",
     "status": "SOLVED",
     "priority": "CRITICAL",
-    "createdAt": "2026-08-04T22:04:56.243Z",
+    "createdAt": "2026-08-12T12:58:37.505Z",
+    "entities": [
+      {
+        "id": "ENT-V-48",
+        "type": "VEHICLE",
+        "value": "OD-21-XX-6642"
+      }
+    ]
+  },
+  {
+    "id": "OD-ANG-2026-0049",
+    "firNumber": "FIR-2026-ANG-0049",
+    "stationId": "OP-ANG-CEN",
+    "investigatorId": "INV-ANG-031",
+    "title": "Theft in Angul",
+    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
+    "crimeType": "Missing Person",
+    "status": "INVESTIGATING",
+    "priority": "MEDIUM",
+    "createdAt": "2026-08-15T20:22:22.524Z",
     "entities": [
       {
         "id": "ENT-V-49",
         "type": "VEHICLE",
-        "value": "KA-21-XX-8858"
+        "value": "OD-08-XX-8840"
       }
     ]
   },
   {
-    "id": "CR-BAL-25-0050",
-    "firNumber": "FIR/2025/0050",
-    "stationId": "KSP-BAL-CTY",
-    "investigatorId": "INV-BAL-030",
-    "title": "Extortion in Ballari",
+    "id": "OD-ANG-2026-0050",
+    "firNumber": "FIR-2026-ANG-0050",
+    "stationId": "OP-ANG-CEN",
+    "investigatorId": "INV-ANG-032",
+    "title": "Theft in Angul",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
     "crimeType": "Missing Person",
-    "status": "SOLVED",
-    "priority": "HIGH",
-    "createdAt": "2026-08-14T22:54:25.521Z",
+    "status": "INVESTIGATING",
+    "priority": "CRITICAL",
+    "createdAt": "2026-07-24T07:48:21.423Z",
     "entities": [
       {
         "id": "ENT-V-50",
         "type": "VEHICLE",
-        "value": "KA-20-XX-9608"
+        "value": "OD-15-XX-2752"
       }
     ]
   },
   {
-    "id": "CR-BAL-25-0051",
-    "firNumber": "FIR/2025/0051",
-    "stationId": "KSP-BAL-CTY",
-    "investigatorId": "INV-BAL-032",
-    "title": "Assault in Ballari",
+    "id": "OD-ANG-2026-0051",
+    "firNumber": "FIR-2026-ANG-0051",
+    "stationId": "OP-ANG-CEN",
+    "investigatorId": "INV-ANG-031",
+    "title": "Theft in Angul",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Missing Person",
+    "crimeType": "Theft",
     "status": "INVESTIGATING",
-    "priority": "CRITICAL",
-    "createdAt": "2026-08-04T10:03:04.971Z",
-    "entities": [
-      {
-        "id": "ENT-V-51",
-        "type": "VEHICLE",
-        "value": "KA-28-XX-6957"
-      }
-    ]
-  },
-  {
-    "id": "CR-BLR-25-0052",
-    "firNumber": "FIR/2025/0052",
-    "stationId": "KSP-BLR-KOR",
-    "investigatorId": "INV-BLR-035",
-    "title": "Cyber Crime in Bengaluru Urban",
-    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Narcotics",
-    "status": "CLOSED",
-    "priority": "MEDIUM",
-    "createdAt": "2026-08-19T01:45:23.894Z",
-    "entities": [
-      {
-        "id": "ENT-V-52",
-        "type": "VEHICLE",
-        "value": "KA-03-XX-6347"
-      }
-    ]
-  },
-  {
-    "id": "CR-BLR-25-0053",
-    "firNumber": "FIR/2025/0053",
-    "stationId": "KSP-BLR-KOR",
-    "investigatorId": "INV-BLR-036",
-    "title": "Cyber Crime in Bengaluru Urban",
-    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Extortion",
-    "status": "CLOSED",
     "priority": "HIGH",
-    "createdAt": "2026-07-29T20:14:26.048Z",
-    "entities": [
-      {
-        "id": "ENT-V-53",
-        "type": "VEHICLE",
-        "value": "KA-30-XX-2848"
-      }
-    ]
-  },
-  {
-    "id": "CR-BLR-25-0054",
-    "firNumber": "FIR/2025/0054",
-    "stationId": "KSP-BLR-KOR",
-    "investigatorId": "INV-BLR-036",
-    "title": "Narcotics in Bengaluru Urban",
-    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Narcotics",
-    "status": "INVESTIGATING",
-    "priority": "LOW",
-    "createdAt": "2026-08-06T11:34:42.963Z",
+    "createdAt": "2026-07-30T20:31:02.335Z",
     "entities": [
       {
         "id": "ENT-V-02",
         "type": "VEHICLE",
-        "value": "KA-05-XY-7777"
+        "value": "OD-05-XY-7777"
       }
     ]
   },
   {
-    "id": "CR-BLR-25-0055",
-    "firNumber": "FIR/2025/0055",
-    "stationId": "KSP-BLR-KOR",
-    "investigatorId": "INV-BLR-034",
-    "title": "Narcotics in Bengaluru Urban",
+    "id": "OD-JHG-2026-0052",
+    "firNumber": "FIR-2026-JHG-0052",
+    "stationId": "OP-JHG-TWN",
+    "investigatorId": "INV-JHG-036",
+    "title": "Extortion in Jharsuguda",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Missing Person",
+    "crimeType": "Narcotics",
+    "status": "SOLVED",
+    "priority": "HIGH",
+    "createdAt": "2026-07-25T09:56:24.568Z",
+    "entities": [
+      {
+        "id": "ENT-V-52",
+        "type": "VEHICLE",
+        "value": "OD-06-XX-4398"
+      }
+    ]
+  },
+  {
+    "id": "OD-JHG-2026-0053",
+    "firNumber": "FIR-2026-JHG-0053",
+    "stationId": "OP-JHG-TWN",
+    "investigatorId": "INV-JHG-035",
+    "title": "Missing Person in Jharsuguda",
+    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
+    "crimeType": "Assault",
     "status": "INVESTIGATING",
-    "priority": "LOW",
-    "createdAt": "2026-07-26T10:16:43.630Z",
+    "priority": "CRITICAL",
+    "createdAt": "2026-08-04T05:18:27.933Z",
+    "entities": [
+      {
+        "id": "ENT-P-02",
+        "type": "PHONE",
+        "value": "+91-9999988888"
+      }
+    ]
+  },
+  {
+    "id": "OD-JHG-2026-0054",
+    "firNumber": "FIR-2026-JHG-0054",
+    "stationId": "OP-JHG-TWN",
+    "investigatorId": "INV-JHG-036",
+    "title": "Extortion in Jharsuguda",
+    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
+    "crimeType": "Extortion",
+    "status": "INVESTIGATING",
+    "priority": "CRITICAL",
+    "createdAt": "2026-08-13T09:31:04.869Z",
+    "entities": [
+      {
+        "id": "ENT-V-54",
+        "type": "VEHICLE",
+        "value": "OD-08-XX-2254"
+      }
+    ]
+  },
+  {
+    "id": "OD-JHG-2026-0055",
+    "firNumber": "FIR-2026-JHG-0055",
+    "stationId": "OP-JHG-TWN",
+    "investigatorId": "INV-JHG-035",
+    "title": "Missing Person in Jharsuguda",
+    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
+    "crimeType": "Assault",
+    "status": "INVESTIGATING",
+    "priority": "CRITICAL",
+    "createdAt": "2026-07-26T09:36:14.854Z",
     "entities": [
       {
         "id": "ENT-V-55",
         "type": "VEHICLE",
-        "value": "KA-56-XX-8597"
+        "value": "OD-00-XX-9006"
       }
     ]
   },
   {
-    "id": "CR-BLR-25-0056",
-    "firNumber": "FIR/2025/0056",
-    "stationId": "KSP-BLR-IND",
-    "investigatorId": "INV-BLR-040",
-    "title": "Extortion in Bengaluru Urban",
+    "id": "OD-JHG-2026-0056",
+    "firNumber": "FIR-2026-JHG-0056",
+    "stationId": "OP-JHG-TWN",
+    "investigatorId": "INV-JHG-034",
+    "title": "Narcotics in Jharsuguda",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Extortion",
+    "crimeType": "Cyber Crime",
     "status": "SOLVED",
     "priority": "HIGH",
-    "createdAt": "2026-08-13T02:15:14.845Z",
+    "createdAt": "2026-08-01T21:07:33.493Z",
     "entities": [
       {
         "id": "ENT-V-56",
         "type": "VEHICLE",
-        "value": "KA-11-XX-9299"
+        "value": "OD-25-XX-3792"
       }
     ]
   },
   {
-    "id": "CR-BLR-25-0057",
-    "firNumber": "FIR/2025/0057",
-    "stationId": "KSP-BLR-IND",
-    "investigatorId": "INV-BLR-039",
-    "title": "Extortion in Bengaluru Urban",
+    "id": "OD-JHG-2026-0057",
+    "firNumber": "FIR-2026-JHG-0057",
+    "stationId": "OP-JHG-TWN",
+    "investigatorId": "INV-JHG-034",
+    "title": "Fraud in Jharsuguda",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Cyber Crime",
-    "status": "SOLVED",
-    "priority": "CRITICAL",
-    "createdAt": "2026-07-25T11:41:32.245Z",
+    "crimeType": "Theft",
+    "status": "INVESTIGATING",
+    "priority": "MEDIUM",
+    "createdAt": "2026-07-24T15:11:14.678Z",
     "entities": [
       {
-        "id": "ENT-P-02",
-        "type": "PHONE",
-        "value": "+91-9999988888"
+        "id": "ENT-V-57",
+        "type": "VEHICLE",
+        "value": "OD-17-XX-5080"
       }
     ]
   },
   {
-    "id": "CR-BLR-25-0058",
-    "firNumber": "FIR/2025/0058",
-    "stationId": "KSP-BLR-IND",
-    "investigatorId": "INV-BLR-040",
-    "title": "Theft in Bengaluru Urban",
+    "id": "OD-JHG-2026-0058",
+    "firNumber": "FIR-2026-JHG-0058",
+    "stationId": "OP-JHG-TWN",
+    "investigatorId": "INV-JHG-036",
+    "title": "Missing Person in Jharsuguda",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Cyber Crime",
-    "status": "CLOSED",
+    "crimeType": "Narcotics",
+    "status": "SOLVED",
     "priority": "HIGH",
-    "createdAt": "2026-08-10T18:18:36.406Z",
+    "createdAt": "2026-08-10T23:58:39.943Z",
     "entities": [
       {
         "id": "ENT-V-58",
         "type": "VEHICLE",
-        "value": "KA-47-XX-5311"
+        "value": "OD-06-XX-3242"
       }
     ]
   },
   {
-    "id": "CR-BLR-25-0059",
-    "firNumber": "FIR/2025/0059",
-    "stationId": "KSP-BLR-IND",
-    "investigatorId": "INV-BLR-038",
-    "title": "Extortion in Bengaluru Urban",
+    "id": "OD-KRP-2026-0059",
+    "firNumber": "FIR-2026-KRP-0059",
+    "stationId": "OP-KRP-CEN",
+    "investigatorId": "INV-KRP-041",
+    "title": "Narcotics in Koraput",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Cyber Crime",
+    "crimeType": "Burglary",
     "status": "INVESTIGATING",
-    "priority": "HIGH",
-    "createdAt": "2026-07-28T22:52:59.158Z",
+    "priority": "MEDIUM",
+    "createdAt": "2026-07-28T14:45:08.401Z",
     "entities": [
       {
         "id": "ENT-V-59",
         "type": "VEHICLE",
-        "value": "KA-49-XX-2521"
+        "value": "OD-00-XX-7288"
       }
     ]
   },
   {
-    "id": "CR-BLR-25-0060",
-    "firNumber": "FIR/2025/0060",
-    "stationId": "KSP-BLR-IND",
-    "investigatorId": "INV-BLR-040",
-    "title": "Extortion in Bengaluru Urban",
+    "id": "OD-KRP-2026-0060",
+    "firNumber": "FIR-2026-KRP-0060",
+    "stationId": "OP-KRP-CEN",
+    "investigatorId": "INV-KRP-041",
+    "title": "Extortion in Koraput",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Narcotics",
+    "crimeType": "Missing Person",
     "status": "INVESTIGATING",
     "priority": "MEDIUM",
-    "createdAt": "2026-07-28T17:42:22.972Z",
+    "createdAt": "2026-08-14T16:24:07.014Z",
+    "entities": [
+      {
+        "id": "ENT-V-60",
+        "type": "VEHICLE",
+        "value": "OD-06-XX-2621"
+      }
+    ]
+  },
+  {
+    "id": "OD-KRP-2026-0061",
+    "firNumber": "FIR-2026-KRP-0061",
+    "stationId": "OP-KRP-CEN",
+    "investigatorId": "INV-KRP-038",
+    "title": "Theft in Koraput",
+    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
+    "crimeType": "Burglary",
+    "status": "SOLVED",
+    "priority": "LOW",
+    "createdAt": "2026-07-30T09:16:00.875Z",
+    "entities": [
+      {
+        "id": "ENT-V-61",
+        "type": "VEHICLE",
+        "value": "OD-24-XX-7628"
+      }
+    ]
+  },
+  {
+    "id": "OD-KRP-2026-0062",
+    "firNumber": "FIR-2026-KRP-0062",
+    "stationId": "OP-KRP-CEN",
+    "investigatorId": "INV-KRP-039",
+    "title": "Theft in Koraput",
+    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
+    "crimeType": "Assault",
+    "status": "INVESTIGATING",
+    "priority": "LOW",
+    "createdAt": "2026-08-20T03:49:46.653Z",
+    "entities": [
+      {
+        "id": "ENT-V-62",
+        "type": "VEHICLE",
+        "value": "OD-27-XX-8683"
+      }
+    ]
+  },
+  {
+    "id": "OD-KRP-2026-0063",
+    "firNumber": "FIR-2026-KRP-0063",
+    "stationId": "OP-KRP-CEN",
+    "investigatorId": "INV-KRP-037",
+    "title": "Assault in Koraput",
+    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
+    "crimeType": "Theft",
+    "status": "INVESTIGATING",
+    "priority": "MEDIUM",
+    "createdAt": "2026-07-30T20:35:16.167Z",
+    "entities": [
+      {
+        "id": "ENT-V-63",
+        "type": "VEHICLE",
+        "value": "OD-13-XX-1337"
+      }
+    ]
+  },
+  {
+    "id": "OD-KRP-2026-0064",
+    "firNumber": "FIR-2026-KRP-0064",
+    "stationId": "OP-KRP-CEN",
+    "investigatorId": "INV-KRP-041",
+    "title": "Burglary in Koraput",
+    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
+    "crimeType": "Theft",
+    "status": "CLOSED",
+    "priority": "HIGH",
+    "createdAt": "2026-08-06T04:55:07.129Z",
+    "entities": [
+      {
+        "id": "ENT-V-64",
+        "type": "VEHICLE",
+        "value": "OD-25-XX-8509"
+      }
+    ]
+  },
+  {
+    "id": "OD-RYG-2026-0065",
+    "firNumber": "FIR-2026-RYG-0065",
+    "stationId": "OP-RYG-TWN",
+    "investigatorId": "INV-RYG-045",
+    "title": "Narcotics in Rayagada",
+    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
+    "crimeType": "Cyber Crime",
+    "status": "SOLVED",
+    "priority": "MEDIUM",
+    "createdAt": "2026-07-21T19:49:29.001Z",
+    "entities": [
+      {
+        "id": "ENT-N-01",
+        "type": "PERSON",
+        "value": "Unknown Subject Alias Ranga"
+      }
+    ]
+  },
+  {
+    "id": "OD-RYG-2026-0066",
+    "firNumber": "FIR-2026-RYG-0066",
+    "stationId": "OP-RYG-TWN",
+    "investigatorId": "INV-RYG-044",
+    "title": "Missing Person in Rayagada",
+    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
+    "crimeType": "Burglary",
+    "status": "INVESTIGATING",
+    "priority": "LOW",
+    "createdAt": "2026-07-23T05:46:47.016Z",
+    "entities": [
+      {
+        "id": "ENT-V-66",
+        "type": "VEHICLE",
+        "value": "OD-11-XX-2005"
+      }
+    ]
+  },
+  {
+    "id": "OD-RYG-2026-0067",
+    "firNumber": "FIR-2026-RYG-0067",
+    "stationId": "OP-RYG-TWN",
+    "investigatorId": "INV-RYG-045",
+    "title": "Narcotics in Rayagada",
+    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
+    "crimeType": "Cyber Crime",
+    "status": "INVESTIGATING",
+    "priority": "HIGH",
+    "createdAt": "2026-08-14T20:04:40.441Z",
+    "entities": [
+      {
+        "id": "ENT-V-67",
+        "type": "VEHICLE",
+        "value": "OD-28-XX-8824"
+      }
+    ]
+  },
+  {
+    "id": "OD-RYG-2026-0068",
+    "firNumber": "FIR-2026-RYG-0068",
+    "stationId": "OP-RYG-TWN",
+    "investigatorId": "INV-RYG-043",
+    "title": "Missing Person in Rayagada",
+    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
+    "crimeType": "Burglary",
+    "status": "INVESTIGATING",
+    "priority": "MEDIUM",
+    "createdAt": "2026-07-26T16:48:27.367Z",
+    "entities": [
+      {
+        "id": "ENT-V-68",
+        "type": "VEHICLE",
+        "value": "OD-06-XX-7689"
+      }
+    ]
+  },
+  {
+    "id": "OD-RYG-2026-0069",
+    "firNumber": "FIR-2026-RYG-0069",
+    "stationId": "OP-RYG-TWN",
+    "investigatorId": "INV-RYG-043",
+    "title": "Missing Person in Rayagada",
+    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
+    "crimeType": "Assault",
+    "status": "CLOSED",
+    "priority": "MEDIUM",
+    "createdAt": "2026-08-07T18:25:19.381Z",
+    "entities": [
+      {
+        "id": "ENT-V-69",
+        "type": "VEHICLE",
+        "value": "OD-27-XX-1138"
+      }
+    ]
+  },
+  {
+    "id": "OD-JYP-2026-0070",
+    "firNumber": "FIR-2026-JYP-0070",
+    "stationId": "OP-JYP-TWN",
+    "investigatorId": "INV-JYP-048",
+    "title": "Assault in Koraput",
+    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
+    "crimeType": "Fraud",
+    "status": "INVESTIGATING",
+    "priority": "LOW",
+    "createdAt": "2026-08-14T06:19:31.783Z",
+    "entities": [
+      {
+        "id": "ENT-N-01",
+        "type": "PERSON",
+        "value": "Unknown Subject Alias Ranga"
+      }
+    ]
+  },
+  {
+    "id": "OD-JYP-2026-0071",
+    "firNumber": "FIR-2026-JYP-0071",
+    "stationId": "OP-JYP-TWN",
+    "investigatorId": "INV-JYP-047",
+    "title": "Narcotics in Koraput",
+    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
+    "crimeType": "Fraud",
+    "status": "CLOSED",
+    "priority": "CRITICAL",
+    "createdAt": "2026-08-07T21:54:56.414Z",
+    "entities": [
+      {
+        "id": "ENT-V-71",
+        "type": "VEHICLE",
+        "value": "OD-21-XX-6626"
+      }
+    ]
+  },
+  {
+    "id": "OD-JYP-2026-0072",
+    "firNumber": "FIR-2026-JYP-0072",
+    "stationId": "OP-JYP-TWN",
+    "investigatorId": "INV-JYP-048",
+    "title": "Missing Person in Koraput",
+    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
+    "crimeType": "Assault",
+    "status": "CLOSED",
+    "priority": "HIGH",
+    "createdAt": "2026-07-25T01:35:46.153Z",
+    "entities": [
+      {
+        "id": "ENT-V-02",
+        "type": "VEHICLE",
+        "value": "OD-05-XY-7777"
+      }
+    ]
+  },
+  {
+    "id": "OD-JYP-2026-0073",
+    "firNumber": "FIR-2026-JYP-0073",
+    "stationId": "OP-JYP-TWN",
+    "investigatorId": "INV-JYP-048",
+    "title": "Narcotics in Koraput",
+    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
+    "crimeType": "Fraud",
+    "status": "INVESTIGATING",
+    "priority": "LOW",
+    "createdAt": "2026-08-18T05:03:33.559Z",
+    "entities": [
+      {
+        "id": "ENT-V-73",
+        "type": "VEHICLE",
+        "value": "OD-23-XX-5579"
+      }
+    ]
+  },
+  {
+    "id": "OD-JYP-2026-0074",
+    "firNumber": "FIR-2026-JYP-0074",
+    "stationId": "OP-JYP-TWN",
+    "investigatorId": "INV-JYP-046",
+    "title": "Fraud in Koraput",
+    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
+    "crimeType": "Extortion",
+    "status": "INVESTIGATING",
+    "priority": "CRITICAL",
+    "createdAt": "2026-08-07T10:40:49.930Z",
     "entities": [
       {
         "id": "ENT-P-02",
@@ -1760,368 +2034,116 @@ const cases: CaseRecord[] = [
     ]
   },
   {
-    "id": "CR-BLR-25-0061",
-    "firNumber": "FIR/2025/0061",
-    "stationId": "KSP-BLR-IND",
-    "investigatorId": "INV-BLR-040",
-    "title": "Fraud in Bengaluru Urban",
-    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Narcotics",
-    "status": "INVESTIGATING",
-    "priority": "MEDIUM",
-    "createdAt": "2026-08-19T23:01:53.582Z",
-    "entities": [
-      {
-        "id": "ENT-V-61",
-        "type": "VEHICLE",
-        "value": "KA-34-XX-9233"
-      }
-    ]
-  },
-  {
-    "id": "CR-BLR-25-0062",
-    "firNumber": "FIR/2025/0062",
-    "stationId": "KSP-BLR-IND",
-    "investigatorId": "INV-BLR-038",
-    "title": "Theft in Bengaluru Urban",
-    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Fraud",
-    "status": "CLOSED",
-    "priority": "CRITICAL",
-    "createdAt": "2026-08-19T11:55:18.130Z",
-    "entities": [
-      {
-        "id": "ENT-V-62",
-        "type": "VEHICLE",
-        "value": "KA-31-XX-6042"
-      }
-    ]
-  },
-  {
-    "id": "CR-BLR-25-0063",
-    "firNumber": "FIR/2025/0063",
-    "stationId": "KSP-BLR-IND",
-    "investigatorId": "INV-BLR-038",
-    "title": "Burglary in Bengaluru Urban",
-    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Missing Person",
-    "status": "INVESTIGATING",
-    "priority": "LOW",
-    "createdAt": "2026-08-18T13:47:31.043Z",
-    "entities": [
-      {
-        "id": "ENT-V-63",
-        "type": "VEHICLE",
-        "value": "KA-11-XX-9752"
-      }
-    ]
-  },
-  {
-    "id": "CR-UUD-25-0064",
-    "firNumber": "FIR/2025/0064",
-    "stationId": "KSP-UUD-TWN",
-    "investigatorId": "INV-UUD-041",
-    "title": "Narcotics in Udupi",
-    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Theft",
-    "status": "SOLVED",
-    "priority": "MEDIUM",
-    "createdAt": "2026-07-30T04:58:49.106Z",
-    "entities": [
-      {
-        "id": "ENT-N-01",
-        "type": "PERSON",
-        "value": "Unknown Subject Alias Ranga"
-      }
-    ]
-  },
-  {
-    "id": "CR-UUD-25-0065",
-    "firNumber": "FIR/2025/0065",
-    "stationId": "KSP-UUD-TWN",
-    "investigatorId": "INV-UUD-042",
-    "title": "Assault in Udupi",
-    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Cyber Crime",
-    "status": "SOLVED",
-    "priority": "CRITICAL",
-    "createdAt": "2026-08-10T23:45:32.042Z",
-    "entities": [
-      {
-        "id": "ENT-V-65",
-        "type": "VEHICLE",
-        "value": "KA-39-XX-6768"
-      }
-    ]
-  },
-  {
-    "id": "CR-UUD-25-0066",
-    "firNumber": "FIR/2025/0066",
-    "stationId": "KSP-UUD-TWN",
-    "investigatorId": "INV-UUD-042",
-    "title": "Burglary in Udupi",
+    "id": "OD-JYP-2026-0075",
+    "firNumber": "FIR-2026-JYP-0075",
+    "stationId": "OP-JYP-TWN",
+    "investigatorId": "INV-JYP-047",
+    "title": "Theft in Koraput",
     "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
     "crimeType": "Burglary",
     "status": "INVESTIGATING",
-    "priority": "MEDIUM",
-    "createdAt": "2026-07-31T07:33:02.854Z",
-    "entities": [
-      {
-        "id": "ENT-V-66",
-        "type": "VEHICLE",
-        "value": "KA-38-XX-4856"
-      }
-    ]
-  },
-  {
-    "id": "CR-UUD-25-0067",
-    "firNumber": "FIR/2025/0067",
-    "stationId": "KSP-UUD-TWN",
-    "investigatorId": "INV-UUD-044",
-    "title": "Assault in Udupi",
-    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Assault",
-    "status": "INVESTIGATING",
     "priority": "LOW",
-    "createdAt": "2026-08-10T11:13:43.649Z",
-    "entities": [
-      {
-        "id": "ENT-P-01",
-        "type": "PHONE",
-        "value": "+91-9876543210"
-      }
-    ]
-  },
-  {
-    "id": "CR-GLB-25-0068",
-    "firNumber": "FIR/2025/0068",
-    "stationId": "KSP-GLB-CEN",
-    "investigatorId": "INV-GLB-047",
-    "title": "Extortion in Kalaburagi",
-    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Assault",
-    "status": "INVESTIGATING",
-    "priority": "CRITICAL",
-    "createdAt": "2026-08-13T18:28:41.099Z",
-    "entities": [
-      {
-        "id": "ENT-V-68",
-        "type": "VEHICLE",
-        "value": "KA-31-XX-5319"
-      }
-    ]
-  },
-  {
-    "id": "CR-GLB-25-0069",
-    "firNumber": "FIR/2025/0069",
-    "stationId": "KSP-GLB-CEN",
-    "investigatorId": "INV-GLB-048",
-    "title": "Fraud in Kalaburagi",
-    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Cyber Crime",
-    "status": "INVESTIGATING",
-    "priority": "CRITICAL",
-    "createdAt": "2026-07-25T07:38:14.043Z",
-    "entities": [
-      {
-        "id": "ENT-V-69",
-        "type": "VEHICLE",
-        "value": "KA-02-XX-8915"
-      }
-    ]
-  },
-  {
-    "id": "CR-GLB-25-0070",
-    "firNumber": "FIR/2025/0070",
-    "stationId": "KSP-GLB-CEN",
-    "investigatorId": "INV-GLB-045",
-    "title": "Fraud in Kalaburagi",
-    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Theft",
-    "status": "INVESTIGATING",
-    "priority": "HIGH",
-    "createdAt": "2026-08-03T01:09:01.343Z",
-    "entities": [
-      {
-        "id": "ENT-V-70",
-        "type": "VEHICLE",
-        "value": "KA-57-XX-1207"
-      }
-    ]
-  },
-  {
-    "id": "CR-GLB-25-0071",
-    "firNumber": "FIR/2025/0071",
-    "stationId": "KSP-GLB-CEN",
-    "investigatorId": "INV-GLB-048",
-    "title": "Burglary in Kalaburagi",
-    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Fraud",
-    "status": "INVESTIGATING",
-    "priority": "LOW",
-    "createdAt": "2026-08-03T06:29:31.797Z",
-    "entities": [
-      {
-        "id": "ENT-N-01",
-        "type": "PERSON",
-        "value": "Unknown Subject Alias Ranga"
-      }
-    ]
-  },
-  {
-    "id": "CR-GLB-25-0072",
-    "firNumber": "FIR/2025/0072",
-    "stationId": "KSP-GLB-CEN",
-    "investigatorId": "INV-GLB-048",
-    "title": "Narcotics in Kalaburagi",
-    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Fraud",
-    "status": "INVESTIGATING",
-    "priority": "HIGH",
-    "createdAt": "2026-07-27T00:15:56.553Z",
-    "entities": [
-      {
-        "id": "ENT-V-72",
-        "type": "VEHICLE",
-        "value": "KA-22-XX-8830"
-      }
-    ]
-  },
-  {
-    "id": "CR-GLB-25-0073",
-    "firNumber": "FIR/2025/0073",
-    "stationId": "KSP-GLB-CEN",
-    "investigatorId": "INV-GLB-045",
-    "title": "Fraud in Kalaburagi",
-    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Burglary",
-    "status": "INVESTIGATING",
-    "priority": "MEDIUM",
-    "createdAt": "2026-07-27T01:21:19.330Z",
-    "entities": [
-      {
-        "id": "ENT-V-73",
-        "type": "VEHICLE",
-        "value": "KA-04-XX-9841"
-      }
-    ]
-  },
-  {
-    "id": "CR-GLB-25-0074",
-    "firNumber": "FIR/2025/0074",
-    "stationId": "KSP-GLB-CEN",
-    "investigatorId": "INV-GLB-046",
-    "title": "Fraud in Kalaburagi",
-    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Fraud",
-    "status": "SOLVED",
-    "priority": "HIGH",
-    "createdAt": "2026-08-03T11:55:50.441Z",
-    "entities": [
-      {
-        "id": "ENT-P-01",
-        "type": "PHONE",
-        "value": "+91-9876543210"
-      }
-    ]
-  },
-  {
-    "id": "CR-GLB-25-0075",
-    "firNumber": "FIR/2025/0075",
-    "stationId": "KSP-GLB-CEN",
-    "investigatorId": "INV-GLB-046",
-    "title": "Missing Person in Kalaburagi",
-    "description": "Reported incident being investigated by assigned officer. Standard protocols are in effect. Witness statements and preliminary evidence collected.",
-    "crimeType": "Extortion",
-    "status": "INVESTIGATING",
-    "priority": "LOW",
-    "createdAt": "2026-07-23T04:06:36.532Z",
+    "createdAt": "2026-07-31T20:08:47.955Z",
     "entities": [
       {
         "id": "ENT-V-75",
         "type": "VEHICLE",
-        "value": "KA-32-XX-4167"
+        "value": "OD-01-XX-2329"
       }
     ]
   }
 ];
 const evidence: Evidence[] = [
   {
-    "id": "EV-3",
-    "caseId": "CR-BLR-25-0003",
+    "id": "EV-BBSR-1",
+    "caseId": "OD-BBSR-2026-0001",
     "description": "Collected during preliminary sweep. Initial tagging done.",
-    "type": "DOCUMENT",
-    "uploadedAt": "2026-08-13T03:48:38.741Z",
+    "type": "VIDEO",
+    "uploadedAt": "2026-08-17T04:44:55.106Z",
     "entitiesExtracted": [
       {
-        "id": "ENT-V-3",
+        "id": "ENT-V-1",
         "type": "VEHICLE",
-        "value": "KA-46-XX-7640"
+        "value": "OD-28-XX-1866"
       }
     ]
   },
   {
-    "id": "EV-4",
-    "caseId": "CR-BLR-25-0004",
+    "id": "EV-BBSR-4",
+    "caseId": "OD-BBSR-2026-0004",
     "description": "Collected during preliminary sweep. Initial tagging done.",
-    "type": "VIDEO",
-    "uploadedAt": "2026-08-18T15:56:52.579Z",
+    "type": "DOCUMENT",
+    "uploadedAt": "2026-08-12T05:33:05.402Z",
     "entitiesExtracted": [
       {
         "id": "ENT-V-4",
         "type": "VEHICLE",
-        "value": "KA-25-XX-1786"
+        "value": "OD-22-XX-9052"
       }
     ]
   },
   {
-    "id": "EV-6",
-    "caseId": "CR-MYS-25-0006",
-    "description": "Collected during preliminary sweep. Initial tagging done.",
-    "type": "DOCUMENT",
-    "uploadedAt": "2026-08-17T15:51:06.976Z",
-    "entitiesExtracted": [
-      {
-        "id": "ENT-V-6",
-        "type": "VEHICLE",
-        "value": "KA-32-XX-9738"
-      }
-    ]
-  },
-  {
-    "id": "EV-7",
-    "caseId": "CR-MYS-25-0007",
-    "description": "Collected during preliminary sweep. Initial tagging done.",
-    "type": "DOCUMENT",
-    "uploadedAt": "2026-08-12T22:02:15.967Z",
-    "entitiesExtracted": [
-      {
-        "id": "ENT-V-7",
-        "type": "VEHICLE",
-        "value": "KA-17-XX-4884"
-      }
-    ]
-  },
-  {
-    "id": "EV-12",
-    "caseId": "CR-MYS-25-0012",
+    "id": "EV-BBSR-5",
+    "caseId": "OD-BBSR-2026-0005",
     "description": "Collected during preliminary sweep. Initial tagging done.",
     "type": "VIDEO",
-    "uploadedAt": "2026-08-15T15:46:28.658Z",
+    "uploadedAt": "2026-08-14T07:49:25.960Z",
+    "entitiesExtracted": [
+      {
+        "id": "ENT-V-5",
+        "type": "VEHICLE",
+        "value": "OD-23-XX-7400"
+      }
+    ]
+  },
+  {
+    "id": "EV-CTC-9",
+    "caseId": "OD-CTC-2026-0009",
+    "description": "Collected during preliminary sweep. Initial tagging done.",
+    "type": "DOCUMENT",
+    "uploadedAt": "2026-08-18T17:47:55.856Z",
+    "entitiesExtracted": [
+      {
+        "id": "ENT-P-01",
+        "type": "PHONE",
+        "value": "+91-9876543210"
+      }
+    ]
+  },
+  {
+    "id": "EV-CTC-10",
+    "caseId": "OD-CTC-2026-0010",
+    "description": "Collected during preliminary sweep. Initial tagging done.",
+    "type": "VIDEO",
+    "uploadedAt": "2026-08-14T23:16:26.983Z",
+    "entitiesExtracted": [
+      {
+        "id": "ENT-V-10",
+        "type": "VEHICLE",
+        "value": "OD-20-XX-7200"
+      }
+    ]
+  },
+  {
+    "id": "EV-CTC-12",
+    "caseId": "OD-CTC-2026-0012",
+    "description": "Collected during preliminary sweep. Initial tagging done.",
+    "type": "DOCUMENT",
+    "uploadedAt": "2026-08-16T04:18:11.210Z",
     "entitiesExtracted": [
       {
         "id": "ENT-V-12",
         "type": "VEHICLE",
-        "value": "KA-41-XX-2283"
+        "value": "OD-19-XX-2674"
       }
     ]
   },
   {
-    "id": "EV-14",
-    "caseId": "CR-MNG-25-0014",
+    "id": "EV-RKL-14",
+    "caseId": "OD-RKL-2026-0014",
     "description": "Collected during preliminary sweep. Initial tagging done.",
     "type": "DOCUMENT",
-    "uploadedAt": "2026-08-10T22:33:10.245Z",
+    "uploadedAt": "2026-08-15T16:07:54.636Z",
     "entitiesExtracted": [
       {
         "id": "ENT-P-01",
@@ -2131,39 +2153,67 @@ const evidence: Evidence[] = [
     ]
   },
   {
-    "id": "EV-16",
-    "caseId": "CR-MNG-25-0016",
-    "description": "Collected during preliminary sweep. Initial tagging done.",
-    "type": "VIDEO",
-    "uploadedAt": "2026-08-18T18:10:09.853Z",
-    "entitiesExtracted": [
-      {
-        "id": "ENT-V-16",
-        "type": "VEHICLE",
-        "value": "KA-56-XX-4213"
-      }
-    ]
-  },
-  {
-    "id": "EV-18",
-    "caseId": "CR-MNG-25-0018",
-    "description": "Collected during preliminary sweep. Initial tagging done.",
-    "type": "VIDEO",
-    "uploadedAt": "2026-08-17T14:47:13.335Z",
-    "entitiesExtracted": [
-      {
-        "id": "ENT-V-18",
-        "type": "VEHICLE",
-        "value": "KA-32-XX-4312"
-      }
-    ]
-  },
-  {
-    "id": "EV-19",
-    "caseId": "CR-MNG-25-0019",
+    "id": "EV-RKL-15",
+    "caseId": "OD-RKL-2026-0015",
     "description": "Collected during preliminary sweep. Initial tagging done.",
     "type": "DOCUMENT",
-    "uploadedAt": "2026-08-10T10:56:52.283Z",
+    "uploadedAt": "2026-08-16T15:39:58.214Z",
+    "entitiesExtracted": [
+      {
+        "id": "ENT-V-15",
+        "type": "VEHICLE",
+        "value": "OD-10-XX-4504"
+      }
+    ]
+  },
+  {
+    "id": "EV-RKL-16",
+    "caseId": "OD-RKL-2026-0016",
+    "description": "Collected during preliminary sweep. Initial tagging done.",
+    "type": "DOCUMENT",
+    "uploadedAt": "2026-08-20T16:04:56.522Z",
+    "entitiesExtracted": [
+      {
+        "id": "ENT-N-01",
+        "type": "PERSON",
+        "value": "Unknown Subject Alias Ranga"
+      }
+    ]
+  },
+  {
+    "id": "EV-BAM-17",
+    "caseId": "OD-BAM-2026-0017",
+    "description": "Collected during preliminary sweep. Initial tagging done.",
+    "type": "DOCUMENT",
+    "uploadedAt": "2026-08-14T20:56:06.957Z",
+    "entitiesExtracted": [
+      {
+        "id": "ENT-V-17",
+        "type": "VEHICLE",
+        "value": "OD-08-XX-2425"
+      }
+    ]
+  },
+  {
+    "id": "EV-BAM-20",
+    "caseId": "OD-BAM-2026-0020",
+    "description": "Collected during preliminary sweep. Initial tagging done.",
+    "type": "DOCUMENT",
+    "uploadedAt": "2026-08-19T16:15:38.676Z",
+    "entitiesExtracted": [
+      {
+        "id": "ENT-V-20",
+        "type": "VEHICLE",
+        "value": "OD-07-XX-8314"
+      }
+    ]
+  },
+  {
+    "id": "EV-BAM-22",
+    "caseId": "OD-BAM-2026-0022",
+    "description": "Collected during preliminary sweep. Initial tagging done.",
+    "type": "VIDEO",
+    "uploadedAt": "2026-08-20T17:48:35.609Z",
     "entitiesExtracted": [
       {
         "id": "ENT-P-01",
@@ -2173,380 +2223,352 @@ const evidence: Evidence[] = [
     ]
   },
   {
-    "id": "EV-22",
-    "caseId": "CR-HUB-25-0022",
+    "id": "EV-PURI-24",
+    "caseId": "OD-PURI-2026-0024",
     "description": "Collected during preliminary sweep. Initial tagging done.",
     "type": "DOCUMENT",
-    "uploadedAt": "2026-08-18T16:57:01.522Z",
-    "entitiesExtracted": [
-      {
-        "id": "ENT-V-02",
-        "type": "VEHICLE",
-        "value": "KA-05-XY-7777"
-      }
-    ]
-  },
-  {
-    "id": "EV-24",
-    "caseId": "CR-HUB-25-0024",
-    "description": "Collected during preliminary sweep. Initial tagging done.",
-    "type": "VIDEO",
-    "uploadedAt": "2026-08-12T04:38:37.324Z",
+    "uploadedAt": "2026-08-14T04:45:34.909Z",
     "entitiesExtracted": [
       {
         "id": "ENT-V-24",
         "type": "VEHICLE",
-        "value": "KA-44-XX-3118"
+        "value": "OD-26-XX-3718"
       }
     ]
   },
   {
-    "id": "EV-26",
-    "caseId": "CR-HUB-25-0026",
+    "id": "EV-PURI-26",
+    "caseId": "OD-PURI-2026-0026",
     "description": "Collected during preliminary sweep. Initial tagging done.",
     "type": "VIDEO",
-    "uploadedAt": "2026-08-12T10:15:19.007Z",
+    "uploadedAt": "2026-08-19T17:57:06.639Z",
     "entitiesExtracted": [
       {
         "id": "ENT-V-26",
         "type": "VEHICLE",
-        "value": "KA-28-XX-7880"
+        "value": "OD-05-XX-9750"
       }
     ]
   },
   {
-    "id": "EV-27",
-    "caseId": "CR-HUB-25-0027",
+    "id": "EV-PURI-27",
+    "caseId": "OD-PURI-2026-0027",
     "description": "Collected during preliminary sweep. Initial tagging done.",
-    "type": "VIDEO",
-    "uploadedAt": "2026-08-15T22:55:08.123Z",
+    "type": "DOCUMENT",
+    "uploadedAt": "2026-08-18T20:55:47.526Z",
     "entitiesExtracted": [
       {
         "id": "ENT-V-27",
         "type": "VEHICLE",
-        "value": "KA-11-XX-6694"
+        "value": "OD-03-XX-1752"
       }
     ]
   },
   {
-    "id": "EV-28",
-    "caseId": "CR-HUB-25-0028",
+    "id": "EV-SBP-29",
+    "caseId": "OD-SBP-2026-0029",
     "description": "Collected during preliminary sweep. Initial tagging done.",
     "type": "DOCUMENT",
-    "uploadedAt": "2026-08-10T18:44:48.888Z",
-    "entitiesExtracted": [
-      {
-        "id": "ENT-V-28",
-        "type": "VEHICLE",
-        "value": "KA-04-XX-5330"
-      }
-    ]
-  },
-  {
-    "id": "EV-32",
-    "caseId": "CR-BEL-25-0032",
-    "description": "Collected during preliminary sweep. Initial tagging done.",
-    "type": "DOCUMENT",
-    "uploadedAt": "2026-08-14T09:36:08.394Z",
-    "entitiesExtracted": [
-      {
-        "id": "ENT-V-32",
-        "type": "VEHICLE",
-        "value": "KA-44-XX-5524"
-      }
-    ]
-  },
-  {
-    "id": "EV-33",
-    "caseId": "CR-BEL-25-0033",
-    "description": "Collected during preliminary sweep. Initial tagging done.",
-    "type": "VIDEO",
-    "uploadedAt": "2026-08-17T21:53:17.903Z",
-    "entitiesExtracted": [
-      {
-        "id": "ENT-V-33",
-        "type": "VEHICLE",
-        "value": "KA-16-XX-3366"
-      }
-    ]
-  },
-  {
-    "id": "EV-34",
-    "caseId": "CR-SHV-25-0034",
-    "description": "Collected during preliminary sweep. Initial tagging done.",
-    "type": "DOCUMENT",
-    "uploadedAt": "2026-08-18T09:46:09.043Z",
-    "entitiesExtracted": [
-      {
-        "id": "ENT-P-01",
-        "type": "PHONE",
-        "value": "+91-9876543210"
-      }
-    ]
-  },
-  {
-    "id": "EV-38",
-    "caseId": "CR-SHV-25-0038",
-    "description": "Collected during preliminary sweep. Initial tagging done.",
-    "type": "DOCUMENT",
-    "uploadedAt": "2026-08-11T13:47:04.213Z",
-    "entitiesExtracted": [
-      {
-        "id": "ENT-V-38",
-        "type": "VEHICLE",
-        "value": "KA-02-XX-5230"
-      }
-    ]
-  },
-  {
-    "id": "EV-39",
-    "caseId": "CR-SHV-25-0039",
-    "description": "Collected during preliminary sweep. Initial tagging done.",
-    "type": "VIDEO",
-    "uploadedAt": "2026-08-15T21:32:10.383Z",
-    "entitiesExtracted": [
-      {
-        "id": "ENT-V-39",
-        "type": "VEHICLE",
-        "value": "KA-56-XX-8964"
-      }
-    ]
-  },
-  {
-    "id": "EV-44",
-    "caseId": "CR-TUM-25-0044",
-    "description": "Collected during preliminary sweep. Initial tagging done.",
-    "type": "VIDEO",
-    "uploadedAt": "2026-08-15T14:00:53.949Z",
-    "entitiesExtracted": [
-      {
-        "id": "ENT-V-44",
-        "type": "VEHICLE",
-        "value": "KA-21-XX-1090"
-      }
-    ]
-  },
-  {
-    "id": "EV-45",
-    "caseId": "CR-TUM-25-0045",
-    "description": "Collected during preliminary sweep. Initial tagging done.",
-    "type": "DOCUMENT",
-    "uploadedAt": "2026-08-17T13:14:45.478Z",
-    "entitiesExtracted": [
-      {
-        "id": "ENT-V-45",
-        "type": "VEHICLE",
-        "value": "KA-50-XX-4647"
-      }
-    ]
-  },
-  {
-    "id": "EV-47",
-    "caseId": "CR-TUM-25-0047",
-    "description": "Collected during preliminary sweep. Initial tagging done.",
-    "type": "VIDEO",
-    "uploadedAt": "2026-08-12T07:02:22.481Z",
-    "entitiesExtracted": [
-      {
-        "id": "ENT-V-47",
-        "type": "VEHICLE",
-        "value": "KA-06-XX-2439"
-      }
-    ]
-  },
-  {
-    "id": "EV-51",
-    "caseId": "CR-BAL-25-0051",
-    "description": "Collected during preliminary sweep. Initial tagging done.",
-    "type": "DOCUMENT",
-    "uploadedAt": "2026-08-12T20:14:13.245Z",
-    "entitiesExtracted": [
-      {
-        "id": "ENT-V-51",
-        "type": "VEHICLE",
-        "value": "KA-28-XX-6957"
-      }
-    ]
-  },
-  {
-    "id": "EV-52",
-    "caseId": "CR-BLR-25-0052",
-    "description": "Collected during preliminary sweep. Initial tagging done.",
-    "type": "VIDEO",
-    "uploadedAt": "2026-08-19T03:48:02.702Z",
-    "entitiesExtracted": [
-      {
-        "id": "ENT-V-52",
-        "type": "VEHICLE",
-        "value": "KA-03-XX-6347"
-      }
-    ]
-  },
-  {
-    "id": "EV-54",
-    "caseId": "CR-BLR-25-0054",
-    "description": "Collected during preliminary sweep. Initial tagging done.",
-    "type": "DOCUMENT",
-    "uploadedAt": "2026-08-12T19:46:42.707Z",
+    "uploadedAt": "2026-08-20T01:35:01.966Z",
     "entitiesExtracted": [
       {
         "id": "ENT-V-02",
         "type": "VEHICLE",
-        "value": "KA-05-XY-7777"
+        "value": "OD-05-XY-7777"
       }
     ]
   },
   {
-    "id": "EV-55",
-    "caseId": "CR-BLR-25-0055",
+    "id": "EV-SBP-30",
+    "caseId": "OD-SBP-2026-0030",
     "description": "Collected during preliminary sweep. Initial tagging done.",
     "type": "VIDEO",
-    "uploadedAt": "2026-08-19T18:37:38.869Z",
+    "uploadedAt": "2026-08-11T12:32:06.549Z",
     "entitiesExtracted": [
       {
-        "id": "ENT-V-55",
+        "id": "ENT-V-30",
         "type": "VEHICLE",
-        "value": "KA-56-XX-8597"
+        "value": "OD-18-XX-8044"
       }
     ]
   },
   {
-    "id": "EV-60",
-    "caseId": "CR-BLR-25-0060",
+    "id": "EV-SBP-34",
+    "caseId": "OD-SBP-2026-0034",
     "description": "Collected during preliminary sweep. Initial tagging done.",
-    "type": "VIDEO",
-    "uploadedAt": "2026-08-18T18:55:25.591Z",
+    "type": "DOCUMENT",
+    "uploadedAt": "2026-08-15T02:48:54.661Z",
     "entitiesExtracted": [
       {
-        "id": "ENT-P-02",
-        "type": "PHONE",
-        "value": "+91-9999988888"
+        "id": "ENT-V-34",
+        "type": "VEHICLE",
+        "value": "OD-29-XX-2062"
       }
     ]
   },
   {
-    "id": "EV-61",
-    "caseId": "CR-BLR-25-0061",
+    "id": "EV-SBP-35",
+    "caseId": "OD-SBP-2026-0035",
+    "description": "Collected during preliminary sweep. Initial tagging done.",
+    "type": "DOCUMENT",
+    "uploadedAt": "2026-08-16T21:56:26.077Z",
+    "entitiesExtracted": [
+      {
+        "id": "ENT-V-35",
+        "type": "VEHICLE",
+        "value": "OD-20-XX-9600"
+      }
+    ]
+  },
+  {
+    "id": "EV-BLS-36",
+    "caseId": "OD-BLS-2026-0036",
+    "description": "Collected during preliminary sweep. Initial tagging done.",
+    "type": "DOCUMENT",
+    "uploadedAt": "2026-08-18T21:38:40.580Z",
+    "entitiesExtracted": [
+      {
+        "id": "ENT-V-36",
+        "type": "VEHICLE",
+        "value": "OD-00-XX-6570"
+      }
+    ]
+  },
+  {
+    "id": "EV-BLS-38",
+    "caseId": "OD-BLS-2026-0038",
+    "description": "Collected during preliminary sweep. Initial tagging done.",
+    "type": "DOCUMENT",
+    "uploadedAt": "2026-08-12T09:22:35.511Z",
+    "entitiesExtracted": [
+      {
+        "id": "ENT-V-38",
+        "type": "VEHICLE",
+        "value": "OD-02-XX-7710"
+      }
+    ]
+  },
+  {
+    "id": "EV-BLS-39",
+    "caseId": "OD-BLS-2026-0039",
     "description": "Collected during preliminary sweep. Initial tagging done.",
     "type": "VIDEO",
-    "uploadedAt": "2026-08-18T19:25:01.844Z",
+    "uploadedAt": "2026-08-18T21:39:14.737Z",
+    "entitiesExtracted": [
+      {
+        "id": "ENT-V-39",
+        "type": "VEHICLE",
+        "value": "OD-28-XX-1495"
+      }
+    ]
+  },
+  {
+    "id": "EV-BLS-42",
+    "caseId": "OD-BLS-2026-0042",
+    "description": "Collected during preliminary sweep. Initial tagging done.",
+    "type": "DOCUMENT",
+    "uploadedAt": "2026-08-20T14:26:51.454Z",
+    "entitiesExtracted": [
+      {
+        "id": "ENT-V-42",
+        "type": "VEHICLE",
+        "value": "OD-27-XX-1856"
+      }
+    ]
+  },
+  {
+    "id": "EV-BLS-43",
+    "caseId": "OD-BLS-2026-0043",
+    "description": "Collected during preliminary sweep. Initial tagging done.",
+    "type": "VIDEO",
+    "uploadedAt": "2026-08-18T22:57:41.509Z",
+    "entitiesExtracted": [
+      {
+        "id": "ENT-V-01",
+        "type": "VEHICLE",
+        "value": "OD-02-AB-1234"
+      }
+    ]
+  },
+  {
+    "id": "EV-ANG-44",
+    "caseId": "OD-ANG-2026-0044",
+    "description": "Collected during preliminary sweep. Initial tagging done.",
+    "type": "VIDEO",
+    "uploadedAt": "2026-08-12T00:56:06.865Z",
+    "entitiesExtracted": [
+      {
+        "id": "ENT-V-01",
+        "type": "VEHICLE",
+        "value": "OD-02-AB-1234"
+      }
+    ]
+  },
+  {
+    "id": "EV-ANG-46",
+    "caseId": "OD-ANG-2026-0046",
+    "description": "Collected during preliminary sweep. Initial tagging done.",
+    "type": "DOCUMENT",
+    "uploadedAt": "2026-08-16T19:57:48.385Z",
+    "entitiesExtracted": [
+      {
+        "id": "ENT-V-46",
+        "type": "VEHICLE",
+        "value": "OD-27-XX-1951"
+      }
+    ]
+  },
+  {
+    "id": "EV-ANG-48",
+    "caseId": "OD-ANG-2026-0048",
+    "description": "Collected during preliminary sweep. Initial tagging done.",
+    "type": "DOCUMENT",
+    "uploadedAt": "2026-08-17T15:58:22.254Z",
+    "entitiesExtracted": [
+      {
+        "id": "ENT-V-48",
+        "type": "VEHICLE",
+        "value": "OD-21-XX-6642"
+      }
+    ]
+  },
+  {
+    "id": "EV-ANG-50",
+    "caseId": "OD-ANG-2026-0050",
+    "description": "Collected during preliminary sweep. Initial tagging done.",
+    "type": "VIDEO",
+    "uploadedAt": "2026-08-18T05:04:41.584Z",
+    "entitiesExtracted": [
+      {
+        "id": "ENT-V-50",
+        "type": "VEHICLE",
+        "value": "OD-15-XX-2752"
+      }
+    ]
+  },
+  {
+    "id": "EV-JHG-56",
+    "caseId": "OD-JHG-2026-0056",
+    "description": "Collected during preliminary sweep. Initial tagging done.",
+    "type": "VIDEO",
+    "uploadedAt": "2026-08-13T00:37:24.180Z",
+    "entitiesExtracted": [
+      {
+        "id": "ENT-V-56",
+        "type": "VEHICLE",
+        "value": "OD-25-XX-3792"
+      }
+    ]
+  },
+  {
+    "id": "EV-JHG-57",
+    "caseId": "OD-JHG-2026-0057",
+    "description": "Collected during preliminary sweep. Initial tagging done.",
+    "type": "VIDEO",
+    "uploadedAt": "2026-08-15T07:58:12.794Z",
+    "entitiesExtracted": [
+      {
+        "id": "ENT-V-57",
+        "type": "VEHICLE",
+        "value": "OD-17-XX-5080"
+      }
+    ]
+  },
+  {
+    "id": "EV-JHG-58",
+    "caseId": "OD-JHG-2026-0058",
+    "description": "Collected during preliminary sweep. Initial tagging done.",
+    "type": "VIDEO",
+    "uploadedAt": "2026-08-14T23:40:47.914Z",
+    "entitiesExtracted": [
+      {
+        "id": "ENT-V-58",
+        "type": "VEHICLE",
+        "value": "OD-06-XX-3242"
+      }
+    ]
+  },
+  {
+    "id": "EV-KRP-59",
+    "caseId": "OD-KRP-2026-0059",
+    "description": "Collected during preliminary sweep. Initial tagging done.",
+    "type": "DOCUMENT",
+    "uploadedAt": "2026-08-12T04:34:10.965Z",
+    "entitiesExtracted": [
+      {
+        "id": "ENT-V-59",
+        "type": "VEHICLE",
+        "value": "OD-00-XX-7288"
+      }
+    ]
+  },
+  {
+    "id": "EV-KRP-60",
+    "caseId": "OD-KRP-2026-0060",
+    "description": "Collected during preliminary sweep. Initial tagging done.",
+    "type": "VIDEO",
+    "uploadedAt": "2026-08-18T01:48:04.857Z",
+    "entitiesExtracted": [
+      {
+        "id": "ENT-V-60",
+        "type": "VEHICLE",
+        "value": "OD-06-XX-2621"
+      }
+    ]
+  },
+  {
+    "id": "EV-KRP-61",
+    "caseId": "OD-KRP-2026-0061",
+    "description": "Collected during preliminary sweep. Initial tagging done.",
+    "type": "DOCUMENT",
+    "uploadedAt": "2026-08-12T18:01:52.444Z",
     "entitiesExtracted": [
       {
         "id": "ENT-V-61",
         "type": "VEHICLE",
-        "value": "KA-34-XX-9233"
+        "value": "OD-24-XX-7628"
       }
     ]
   },
   {
-    "id": "EV-62",
-    "caseId": "CR-BLR-25-0062",
+    "id": "EV-KRP-64",
+    "caseId": "OD-KRP-2026-0064",
+    "description": "Collected during preliminary sweep. Initial tagging done.",
+    "type": "VIDEO",
+    "uploadedAt": "2026-08-20T17:04:24.587Z",
+    "entitiesExtracted": [
+      {
+        "id": "ENT-V-64",
+        "type": "VEHICLE",
+        "value": "OD-25-XX-8509"
+      }
+    ]
+  },
+  {
+    "id": "EV-RYG-65",
+    "caseId": "OD-RYG-2026-0065",
+    "description": "Collected during preliminary sweep. Initial tagging done.",
+    "type": "VIDEO",
+    "uploadedAt": "2026-08-15T08:50:50.692Z",
+    "entitiesExtracted": [
+      {
+        "id": "ENT-N-01",
+        "type": "PERSON",
+        "value": "Unknown Subject Alias Ranga"
+      }
+    ]
+  },
+  {
+    "id": "EV-JYP-72",
+    "caseId": "OD-JYP-2026-0072",
     "description": "Collected during preliminary sweep. Initial tagging done.",
     "type": "DOCUMENT",
-    "uploadedAt": "2026-08-10T22:59:00.053Z",
+    "uploadedAt": "2026-08-12T08:07:50.166Z",
     "entitiesExtracted": [
       {
-        "id": "ENT-V-62",
+        "id": "ENT-V-02",
         "type": "VEHICLE",
-        "value": "KA-31-XX-6042"
-      }
-    ]
-  },
-  {
-    "id": "EV-65",
-    "caseId": "CR-UUD-25-0065",
-    "description": "Collected during preliminary sweep. Initial tagging done.",
-    "type": "VIDEO",
-    "uploadedAt": "2026-08-13T01:18:44.791Z",
-    "entitiesExtracted": [
-      {
-        "id": "ENT-V-65",
-        "type": "VEHICLE",
-        "value": "KA-39-XX-6768"
-      }
-    ]
-  },
-  {
-    "id": "EV-66",
-    "caseId": "CR-UUD-25-0066",
-    "description": "Collected during preliminary sweep. Initial tagging done.",
-    "type": "DOCUMENT",
-    "uploadedAt": "2026-08-18T21:30:28.699Z",
-    "entitiesExtracted": [
-      {
-        "id": "ENT-V-66",
-        "type": "VEHICLE",
-        "value": "KA-38-XX-4856"
-      }
-    ]
-  },
-  {
-    "id": "EV-68",
-    "caseId": "CR-GLB-25-0068",
-    "description": "Collected during preliminary sweep. Initial tagging done.",
-    "type": "VIDEO",
-    "uploadedAt": "2026-08-15T17:59:32.867Z",
-    "entitiesExtracted": [
-      {
-        "id": "ENT-V-68",
-        "type": "VEHICLE",
-        "value": "KA-31-XX-5319"
-      }
-    ]
-  },
-  {
-    "id": "EV-70",
-    "caseId": "CR-GLB-25-0070",
-    "description": "Collected during preliminary sweep. Initial tagging done.",
-    "type": "DOCUMENT",
-    "uploadedAt": "2026-08-11T12:59:57.271Z",
-    "entitiesExtracted": [
-      {
-        "id": "ENT-V-70",
-        "type": "VEHICLE",
-        "value": "KA-57-XX-1207"
-      }
-    ]
-  },
-  {
-    "id": "EV-72",
-    "caseId": "CR-GLB-25-0072",
-    "description": "Collected during preliminary sweep. Initial tagging done.",
-    "type": "VIDEO",
-    "uploadedAt": "2026-08-19T06:25:07.739Z",
-    "entitiesExtracted": [
-      {
-        "id": "ENT-V-72",
-        "type": "VEHICLE",
-        "value": "KA-22-XX-8830"
-      }
-    ]
-  },
-  {
-    "id": "EV-73",
-    "caseId": "CR-GLB-25-0073",
-    "description": "Collected during preliminary sweep. Initial tagging done.",
-    "type": "VIDEO",
-    "uploadedAt": "2026-08-15T16:13:21.498Z",
-    "entitiesExtracted": [
-      {
-        "id": "ENT-V-73",
-        "type": "VEHICLE",
-        "value": "KA-04-XX-9841"
-      }
-    ]
-  },
-  {
-    "id": "EV-74",
-    "caseId": "CR-GLB-25-0074",
-    "description": "Collected during preliminary sweep. Initial tagging done.",
-    "type": "VIDEO",
-    "uploadedAt": "2026-08-16T18:41:32.924Z",
-    "entitiesExtracted": [
-      {
-        "id": "ENT-P-01",
-        "type": "PHONE",
-        "value": "+91-9876543210"
+        "value": "OD-05-XY-7777"
       }
     ]
   }
@@ -2555,12 +2577,12 @@ const alerts: IntelligenceAlert[] = [
   {
     "id": "ALT-001",
     "type": "CROSS_STATION_MATCH",
-    "message": "Cross-station relationship detected. Vehicle KA-01-AB-1234 matched between Burglary and Armed Heist.",
-    "relatedCaseId": "CR-BLR-25-0001",
-    "targetCaseId": "CR-KOR-25-0981",
-    "targetStationId": "KSP-BLR-KOR",
+    "message": "Cross-station relationship detected. Vehicle OD-02-AB-1234 matched between Burglary and Armed Heist.",
+    "relatedCaseId": "OD-BBSR-2026-0001",
+    "targetCaseId": "OD-CTC-2026-00981",
+    "targetStationId": "OP-CTC-CITY",
     "isRead": false,
-    "createdAt": "2026-08-20T09:34:58.374Z"
+    "createdAt": "2026-08-20T18:48:17.920Z"
   }
 ];
 
@@ -2570,7 +2592,38 @@ export const initialState: AppState = {
   stations,
   cases,
   evidence,
-  accessRequests: [],
+  accessRequests: [
+    {
+      id: 'REQ-2026-00301',
+      requestingStationId: 'OP-BBSR-CAP',
+      requestingOfficerId: 'INV-BBSR-001',
+      targetStationId: 'OP-CTC-CITY',
+      targetCaseId: 'OD-CTC-2026-0008',
+      reason: 'Cross-station phone correlation link.',
+      status: 'PENDING',
+      createdAt: '2026-08-19T10:00:00.000Z'
+    },
+    {
+      id: 'REQ-2026-00302',
+      requestingStationId: 'OP-BBSR-CAP',
+      requestingOfficerId: 'INV-BBSR-001',
+      targetStationId: 'OP-PAT-CITY',
+      targetCaseId: 'OD-RKL-2026-0117',
+      reason: 'Vehicle plate query matching pattern.',
+      status: 'APPROVED',
+      createdAt: '2026-08-18T14:30:00.000Z'
+    },
+    {
+      id: 'REQ-2026-00303',
+      requestingStationId: 'OP-BBSR-CAP',
+      requestingOfficerId: 'INV-BBSR-001',
+      targetStationId: 'OP-SAH-CITY',
+      targetCaseId: 'OD-JYP-2026-0030',
+      reason: 'Suspect association mapping.',
+      status: 'REJECTED',
+      createdAt: '2026-08-17T09:15:00.000Z'
+    }
+  ],
   alerts,
   isProcessingIntelligence: false,
 };

@@ -51,9 +51,9 @@ export function Sidebar({
         {!collapsed && (
           <div className="animate-fade-in overflow-hidden">
             <p className="truncate text-sm font-semibold text-white">
-              KSP FIR Command
+              CrimeLens
             </p>
-            <p className="truncate text-xs text-slate-500">Karnataka Police HQ (SCRB)</p>
+            <p className="truncate text-xs text-slate-500">Odisha Police Intelligence</p>
           </div>
         )}
       </div>

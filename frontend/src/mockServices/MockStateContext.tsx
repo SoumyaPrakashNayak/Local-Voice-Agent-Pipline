@@ -13,7 +13,8 @@ type Action =
   | { type: 'UPDATE_ACCESS_REQUEST_STATUS'; payload: { id: string; status: 'APPROVED' | 'REJECTED' } }
   | { type: 'SET_PROCESSING'; payload: boolean }
   | { type: 'ADD_STATION'; payload: Station }
-  | { type: 'ADD_USER'; payload: User };
+  | { type: 'ADD_USER'; payload: User }
+  | { type: 'UPDATE_USER'; payload: User };
 
 const reducer = (state: AppState, action: Action): AppState => {
   switch (action.type) {
@@ -50,6 +51,11 @@ const reducer = (state: AppState, action: Action): AppState => {
       return { ...state, stations: [...state.stations, action.payload] };
     case 'ADD_USER':
       return { ...state, users: [...state.users, action.payload] };
+    case 'UPDATE_USER':
+      return {
+        ...state,
+        users: state.users.map((u) => (u.id === action.payload.id ? action.payload : u)),
+      };
     default:
       return state;
   }
