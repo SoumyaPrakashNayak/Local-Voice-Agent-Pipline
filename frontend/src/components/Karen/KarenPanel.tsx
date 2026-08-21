@@ -1,10 +1,13 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useKaren } from './KarenProvider';
-import { useMockState } from '../../mockServices/MockStateContext';
 import { KarenVoiceVisualizer } from './KarenVoiceVisualizer';
 import { KarenResponseCard } from './KarenResponseCard';
-import { Mic, ArrowLeft, Terminal, Bot, Sparkles, Navigation, X } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useMockState } from '../../mockServices/MockStateContext';
+import { useLanguage } from '../../context/LanguageContext';
+import { 
+  Mic, X, Sparkles, ArrowLeft, Navigation, Terminal
+} from 'lucide-react';
 
 export function KarenPanel() {
   const {
@@ -15,14 +18,16 @@ export function KarenPanel() {
     transcript,
     setTranscript,
     response,
-    setResponse,
     startListening,
     stopListening,
     handleSubmitQuery,
-    resetKaren
+    resetKaren,
+    isSpeaking,
+    stopSpeaking
   } = useKaren();
 
   const { state } = useMockState();
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const [processingStep, setProcessingStep] = useState(0);
@@ -33,8 +38,8 @@ export function KarenPanel() {
   useEffect(() => {
     if (listeningState === 'PROCESSING') {
       setProcessingStep(0);
-      const t1 = setTimeout(() => setProcessingStep(1), 600);
-      const t2 = setTimeout(() => setProcessingStep(2), 1300);
+      const t1 = setTimeout(() => setProcessingStep(1), 500);
+      const t2 = setTimeout(() => setProcessingStep(2), 1100);
       return () => {
         clearTimeout(t1);
         clearTimeout(t2);
@@ -47,7 +52,7 @@ export function KarenPanel() {
     if (listeningState === 'RESPONDING' && response) {
       if (response.route) {
         // Auto redirect countdown
-        setCountdown(4);
+        setCountdown(6);
         setCountdownAction(() => () => {
           let target = response.route || '';
           if (target.startsWith('/investigations/')) {
@@ -55,14 +60,16 @@ export function KarenPanel() {
           } else if (target === '/investigations') {
             target = '/cases';
           }
+          stopSpeaking();
           navigate(target);
           setIsOpen(false);
           resetKaren();
         });
       } else {
-        // Auto minimize countdown
-        setCountdown(8);
+        // Generous auto-minimize
+        setCountdown(12);
         setCountdownAction(() => () => {
+          stopSpeaking();
           setIsOpen(false);
           resetKaren();
         });
@@ -84,25 +91,18 @@ export function KarenPanel() {
 
   if (!isOpen) return null;
 
-  const role = state.currentUser?.role || 'OFFICER';
   const name = state.currentUser?.name || 'Officer';
 
   // Customized operating-system greeting
   const getGreeting = () => {
-    if (role === 'SUPER_ADMIN') {
-      return `Good morning Commissioner.`;
-    } else if (role === 'STATION_ADMIN') {
-      return `Good morning IIC Ramesh.`;
-    } else {
-      // Officer
-      return `Good morning Inspector Vikram.`;
-    }
+    return t('karen.greeting', `Good day, ${name}. I am KAREN, your voice intelligence companion.`);
   };
 
   const handleMicToggle = () => {
     // Cancel any active auto-nav/minimization timers when user interacts
     setCountdown(null);
     setCountdownAction(null);
+    stopSpeaking();
     
     if (listeningState === 'LISTENING') {
       stopListening();
@@ -112,6 +112,7 @@ export function KarenPanel() {
   };
 
   const handleTextAssistantRedirect = () => {
+    stopSpeaking();
     setIsOpen(false);
     resetKaren();
     navigate('/assistant');
@@ -139,14 +140,9 @@ export function KarenPanel() {
 
   const mockCommands = [
     "Tell me about FIR 541",
-    "Show my pending cases",
-    "Open this case",
-    "Show linked cases",
-    "Find similar crimes",
-    "Open CCTV footage",
-    "Show BNS sections",
-    "Generate report",
-    "Show crime hotspots"
+    "Open CCTV for CR-CTC-2026-00981",
+    "Check cross-station matches",
+    "Scan applicable BNS provisions"
   ];
 
   return (
@@ -156,7 +152,7 @@ export function KarenPanel() {
 
       {/* Close button top right */}
       <button 
-        onClick={() => { setIsOpen(false); resetKaren(); }}
+        onClick={() => { stopSpeaking(); setIsOpen(false); resetKaren(); }}
         className="absolute top-6 right-6 p-2 rounded-full bg-surface-2 border border-border-soft hover:bg-surface-hover text-text-dim hover:text-text transition-colors z-[9998]"
       >
         <X size={18} />
@@ -181,7 +177,7 @@ export function KarenPanel() {
                 {getGreeting()}
               </h1>
               <p className="text-xs text-text-dim max-w-md mx-auto leading-relaxed font-sans">
-                I am Karen, your CrimeLens voice companion. Speak or tap a command chip below to trigger platform actions.
+                Speak or tap a command chip below to trigger platform actions and receive text & audio responses.
               </p>
             </div>
 
@@ -195,7 +191,7 @@ export function KarenPanel() {
                 <span className="absolute -inset-1 rounded-full border border-brand/40 animate-ping opacity-75" />
               </button>
               <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-brand animate-pulse">
-                🎙 Tap to Speak Command
+                🎙 {t('karen.tapToSpeak', 'Tap to Speak Command')}
               </span>
             </div>
 
@@ -233,7 +229,7 @@ export function KarenPanel() {
           <div className="space-y-6 animate-fade-in w-full">
             <div className="space-y-1">
               <span className="text-xs font-mono font-bold text-danger-bright uppercase animate-pulse">
-                LISTENING ACTIVE
+                {t('karen.listening', 'LISTENING ACTIVE')}
               </span>
               <p className="text-xs text-text-dim">Speak case query (e.g. "Tell me about FIR 541")</p>
             </div>
