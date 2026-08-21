@@ -585,6 +585,25 @@ const users: User[] = [
 ];
 const cases: CaseRecord[] = [
   {
+    "id": "CR-KHD-2026-00541",
+    "firNumber": "FIR 541",
+    "stationId": "OP-BBSR-CAP",
+    "investigatorId": "INV-BBSR-001",
+    "title": "Vehicle Theft (Khandagiri)",
+    "description": "Reported theft of a white commercial van from Khandagiri Junction. An organized gang is suspected to have operated the lifter ring.",
+    "crimeType": "Vehicle Theft",
+    "status": "INVESTIGATING",
+    "priority": "HIGH",
+    "createdAt": "2026-08-20T10:00:00.000Z",
+    "entities": [
+      {
+        "id": "ENT-V-541",
+        "type": "VEHICLE",
+        "value": "OD-02-AB-1234"
+      }
+    ]
+  },
+  {
     "id": "OD-CTC-2026-00981",
     "firNumber": "FIR-2026-CTC-00981",
     "stationId": "OP-CTC-CITY",

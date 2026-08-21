@@ -16,39 +16,48 @@ import { Stations } from './pages/Stations';
 import { Investigators } from './pages/Investigators';
 import { Cases } from './pages/Cases';
 import { LegalIntelligence } from './pages/LegalIntelligence';
+import { CCTVModule } from './pages/CCTVModule';
+import { KarenProvider } from './components/Karen/KarenProvider';
+import { KarenOrb } from './components/Karen/KarenOrb';
+import { KarenPanel } from './components/Karen/KarenPanel';
 
 function App() {
   return (
     <BrowserRouter>
       <ErrorBoundary>
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route element={<SIHLayout />}>
-            <Route path="/dashboard" element={<CommandCenter />} />
-            
-            {/* Super Admin Routes */}
-            <Route path="/stations" element={<Stations />} />
+        <KarenProvider>
+          <Routes>
+            <Route path="/" element={<Login />} />
+            <Route element={<SIHLayout />}>
+              <Route path="/dashboard" element={<CommandCenter />} />
+              
+              {/* Super Admin Routes */}
+              <Route path="/stations" element={<Stations />} />
 
-            {/* IIC Routes */}
-            <Route path="/investigators" element={<Investigators />} />
-            
-            {/* Investigations */}
-            <Route path="/cases" element={<Cases />} /> 
-            <Route path="/cases/new" element={<RegisterFIR />} />
-            <Route path="/cases/:id" element={<CaseWorkspace />} />
-            
-            {/* Intelligence */}
-            <Route path="/intelligence/alerts" element={<CommandCenter />} /> {/* TODO: Make a dedicated alerts page if needed, or point to CC alerts tab */}
-            <Route path="/network" element={<NetworkExplorer />} />
-            <Route path="/assistant" element={<InvestigationAssistant />} />
-            <Route path="/legal" element={<LegalIntelligence />} /> 
-            
-            {/* Operations */}
-            <Route path="/requests" element={<AccessRequests />} />
-            <Route path="/evidence" element={<EvidenceVault />} />
-            <Route path="/reports" element={<Analytics />} /> 
-          </Route>
-        </Routes>
+              {/* IIC Routes */}
+              <Route path="/investigators" element={<Investigators />} />
+              
+              {/* Investigations */}
+              <Route path="/cases" element={<Cases />} /> 
+              <Route path="/cases/new" element={<RegisterFIR />} />
+              <Route path="/cases/:id" element={<CaseWorkspace />} />
+              
+              {/* Intelligence */}
+              <Route path="/intelligence/alerts" element={<CommandCenter />} /> {/* TODO: Make a dedicated alerts page if needed, or point to CC alerts tab */}
+              <Route path="/network" element={<NetworkExplorer />} />
+              <Route path="/assistant" element={<InvestigationAssistant />} />
+              <Route path="/legal" element={<LegalIntelligence />} /> 
+              
+              {/* Operations */}
+              <Route path="/requests" element={<AccessRequests />} />
+              <Route path="/evidence" element={<EvidenceVault />} />
+              <Route path="/reports" element={<Analytics />} /> 
+              <Route path="/cctv" element={<CCTVModule />} />
+            </Route>
+          </Routes>
+          <KarenOrb />
+          <KarenPanel />
+        </KarenProvider>
       </ErrorBoundary>
     </BrowserRouter>
   );
