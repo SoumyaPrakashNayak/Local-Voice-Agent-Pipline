@@ -1,16 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, Shield, FilePlus, Search, ShieldAlert,
   Network, Sparkles, Scale, FileText, FileBarChart,
-  Bell, LogOut, Moon, Sun, Lock, Building, Users, Mic
+  Bell, LogOut, Moon, Sun, Lock, Building, Users, Globe, ChevronDown, Briefcase
 } from 'lucide-react';
 import { useMockState } from '../../mockServices/MockStateContext';
+import { useLanguage, LanguageCode } from '../../context/LanguageContext';
 
 export function SIHLayout() {
   const { state, dispatch } = useMockState();
+  const { language, setLanguage, t, languages } = useLanguage();
   const navigate = useNavigate();
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const [langMenuOpen, setLangMenuOpen] = useState(false);
+  const langMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -19,6 +23,17 @@ export function SIHLayout() {
       root.classList.add('theme-light');
     }
   }, [theme]);
+
+  // Close language menu on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (langMenuRef.current && !langMenuRef.current.contains(e.target as Node)) {
+        setLangMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark');
 
@@ -41,95 +56,84 @@ export function SIHLayout() {
     r.requestingOfficerId === state.currentUser?.id
   ).length;
 
+  const currentLangObj = languages.find(l => l.code === language) || languages[0];
+
   return (
     <div className="flex h-screen bg-bg text-text font-sans">
       {/* Sidebar Navigation */}
       <aside className="w-64 flex flex-col bg-bg-elev border-r border-border-soft">
         <div className="p-5 border-b border-border-soft">
-          <h1 className="text-xl font-display font-bold text-gradient tracking-tight">CRIMELENS</h1>
-          <p className="text-[10px] text-text-dim uppercase tracking-wider font-mono mt-1">Odisha Police Intelligence</p>
+          <h1 className="text-xl font-display font-bold text-gradient tracking-tight">{t('brand.name', 'CRIMELENS')}</h1>
+          <p className="text-[10px] text-text-dim uppercase tracking-wider font-mono mt-1">{t('brand.tagline', 'Odisha Police Intelligence')}</p>
         </div>
 
         <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
           {isSuperAdmin && (
             <>
-              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">STATE COMMAND</div>
-              <NavItem to="/dashboard" icon={LayoutDashboard} label="Command Center" />
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">{t('nav.section.stateCommand', 'STATE COMMAND')}</div>
+              <NavItem to="/dashboard" icon={LayoutDashboard} label={t('nav.commandCenter', 'Command Center')} />
               
-              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">POLICE ADMINISTRATION</div>
-              <NavItem to="/stations" icon={Building} label="Police Stations" />
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">{t('nav.section.policeAdmin', 'POLICE ADMINISTRATION')}</div>
+              <NavItem to="/stations" icon={Building} label={t('nav.policeStations', 'Police Stations')} />
               
-              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">CASE INTELLIGENCE</div>
-              <NavItem to="/cases" icon={Search} label="State Case Registry" />
-              <NavItem to="/intelligence/alerts" icon={ShieldAlert} label="State Alerts" badge={unreadAlerts} />
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">{t('nav.section.caseIntel', 'CASE INTELLIGENCE')}</div>
+              <NavItem to="/cases" icon={Search} label={t('nav.caseSearch', 'State Case Registry')} />
+              <NavItem to="/intelligence/alerts" icon={ShieldAlert} label={t('nav.notifications', 'State Alerts')} badge={unreadAlerts} />
               
-              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">NETWORK INTELLIGENCE</div>
-              <NavItem to="/network" icon={Network} label="State Network Explorer" />
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">{t('nav.section.networkIntel', 'NETWORK INTELLIGENCE')}</div>
+              <NavItem to="/network" icon={Network} label={t('nav.networkExplorer', 'State Network Explorer')} />
               
-              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">REPORTS</div>
-              <NavItem to="/reports" icon={FileBarChart} label="Monthly Crime Reports" />
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">{t('nav.section.reports', 'REPORTS')}</div>
+              <NavItem to="/reports" icon={FileBarChart} label={t('nav.monthlyReports', 'Monthly Crime Reports')} />
             </>
           )}
 
           {role === 'STATION_ADMIN' && (
             <>
-              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">COMMAND</div>
-              <NavItem to="/dashboard" icon={LayoutDashboard} label="Dashboard" />
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">{t('nav.section.myDesk', 'COMMAND')}</div>
+              <NavItem to="/dashboard" icon={LayoutDashboard} label={t('nav.dashboard', 'Dashboard')} />
               
-              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">INVESTIGATIONS</div>
-              <NavItem to="/cases" icon={Search} label="All Cases" />
-              <NavItem to="/cases?status=INVESTIGATING" icon={Building} label="Active Investigations" />
-              <NavItem to="/cases/new" icon={FilePlus} label="Register FIR" />
-              <NavItem to="/evidence" icon={FileText} label="Evidence Vault" />
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">{t('nav.section.investigate', 'INVESTIGATIONS')}</div>
+              <NavItem to="/cases" icon={Search} label={t('nav.allCases', 'All Cases')} />
+              <NavItem to="/cases/new" icon={FilePlus} label={t('nav.registerFir', 'Register FIR')} />
+              <NavItem to="/evidence" icon={FileText} label={t('nav.evidenceVault', 'Evidence Vault')} />
               
-              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">INTELLIGENCE</div>
-              <NavItem to="/reports" icon={FileBarChart} label="Station Intelligence" />
-              <NavItem to="/network" icon={Network} label="Network Explorer" />
-              <NavItem to="/legal" icon={Scale} label="Similar Cases" />
-              <NavItem to="/assistant" icon={Sparkles} label="AI Assistant" />
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">{t('nav.section.intelligence', 'INTELLIGENCE')}</div>
+              <NavItem to="/network" icon={Network} label={t('nav.networkExplorer', 'Network Explorer')} />
+              <NavItem to="/legal" icon={Scale} label={t('nav.legalIntelligence', 'Legal Intelligence')} />
+              <NavItem to="/assistant" icon={Sparkles} label={t('nav.aiAssistant', 'AI Assistant')} />
               
-              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">OPERATIONS</div>
-              <NavItem to="/investigators" icon={Users} label="Officers" />
-              <NavItem to="/dashboard?action=assign" icon={FilePlus} label="Case Assignment" />
-              <NavItem to="/requests" icon={Lock} label="Access Requests" badge={pendingRequests} />
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">{t('nav.section.operations', 'OPERATIONS')}</div>
+              <NavItem to="/investigators" icon={Users} label={t('nav.officers', 'Officers')} />
+              <NavItem to="/requests" icon={Lock} label={t('nav.accessRequests', 'Access Requests')} badge={pendingRequests} />
               
-              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">REPORTS</div>
-              <NavItem to="/reports?type=station" icon={FileBarChart} label="Station Reports" />
-              <NavItem to="/reports?type=investigation" icon={FileBarChart} label="Investigation Reports" />
-
-              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">SYSTEM</div>
-              <NavItem to="/dashboard" icon={Bell} label="Notifications" badge={unreadAlerts} />
-              <NavItem to="/dashboard" icon={Users} label="Profile" />
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">{t('nav.section.reports', 'REPORTS')}</div>
+              <NavItem to="/reports" icon={FileBarChart} label={t('nav.caseReports', 'Case Reports')} />
             </>
           )}
 
           {role === 'OFFICER' && (
             <>
-              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">MY DESK</div>
-              <NavItem to="/dashboard" icon={LayoutDashboard} label="Dashboard" />
-              <NavItem to="/cases" icon={Search} label="My Investigations" />
-              <NavItem to="/requests" icon={Lock} label="Access Requests" badge={outgoingRequestsCount} />
-              <NavItem to="/dashboard" icon={FileText} label="My Tasks" />
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">{t('nav.section.myDesk', 'MY DESK')}</div>
+              <NavItem to="/dashboard" icon={LayoutDashboard} label={t('nav.dashboard', 'Dashboard')} />
+              <NavItem to="/cases" icon={Briefcase} label={t('nav.myInvestigations', 'My Investigations')} />
+              <NavItem to="/requests" icon={Lock} label={t('nav.accessRequests', 'Access Requests')} badge={outgoingRequestsCount} />
               
-              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">INVESTIGATE</div>
-              <NavItem to="/cases/new" icon={FilePlus} label="Register FIR" />
-              <NavItem to="/evidence" icon={FileText} label="Evidence Vault" />
-              <NavItem to="/cases" icon={Search} label="Case Search" />
-              <NavItem to="/legal" icon={Scale} label="Similar Cases" />
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">{t('nav.section.investigate', 'INVESTIGATE')}</div>
+              <NavItem to="/cases/new" icon={FilePlus} label={t('nav.registerFir', 'Register FIR')} />
+              <NavItem to="/evidence" icon={FileText} label={t('nav.evidenceVault', 'Evidence Vault')} />
+              <NavItem to="/case-search" icon={Search} label={t('nav.caseSearch', 'Case Search')} />
               
-              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">INTELLIGENCE</div>
-              <NavItem to="/network" icon={Network} label="Knowledge Graph" />
-              <NavItem to="/network" icon={Network} label="Network Explorer" />
-              <NavItem to="/reports" icon={FileBarChart} label="Crime Intelligence" />
-              <NavItem to="/legal" icon={Scale} label="Legal Intelligence" />
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">{t('nav.section.intelligence', 'INTELLIGENCE')}</div>
+              <NavItem to="/network" icon={Network} label={t('nav.networkExplorer', 'Network Explorer')} />
+              <NavItem to="/reports" icon={FileBarChart} label={t('nav.crimeIntelligence', 'Crime Intelligence')} />
+              <NavItem to="/legal" icon={Scale} label={t('nav.legalIntelligence', 'Legal Intelligence')} />
               
-              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">ASSISTANCE</div>
-              <NavItem to="/assistant" icon={Sparkles} label="AI Assistant" />
-              <NavItem to="/dashboard" icon={Mic} label="Voice Assistant" />
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">{t('nav.section.assistance', 'ASSISTANCE')}</div>
+              <NavItem to="/assistant" icon={Sparkles} label={t('nav.aiAssistant', 'AI Assistant')} />
 
-              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">REPORTS</div>
-              <NavItem to="/reports" icon={FileBarChart} label="Case Reports" />
-              <NavItem to="/reports" icon={FileBarChart} label="Charge Sheet Drafts" />
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">{t('nav.section.reports', 'REPORTS')}</div>
+              <NavItem to="/reports" icon={FileBarChart} label={t('nav.caseReports', 'Case Reports')} />
             </>
           )}
         </nav>
@@ -165,25 +169,69 @@ export function SIHLayout() {
           <div className="flex items-center gap-4">
             {state.currentUser.stationId ? (
               <div className="flex items-center gap-2 text-xs font-mono bg-bg-elev px-3 py-1.5 rounded-md border border-border">
-                <span className="text-text-dim">STATION:</span>
+                <span className="text-text-dim">{t('header.station', 'STATION')}:</span>
                 <span className="font-bold text-accent-bright">
                   {state.stations.find(s => s.id === state.currentUser?.stationId)?.name} [{state.currentUser.stationId}]
                 </span>
               </div>
             ) : (
               <div className="flex items-center gap-2 text-xs font-mono bg-brand/10 text-brand px-3 py-1.5 rounded-md border border-brand/30">
-                <Shield size={14} /> ODISHA POLICE · STATE COMMAND
+                <Shield size={14} /> {t('header.stateCommand', 'ODISHA POLICE · STATE COMMAND')}
               </div>
             )}
             
             {state.isProcessingIntelligence && (
               <div className="flex items-center gap-2 text-[10px] font-bold text-brand animate-pulse uppercase tracking-wider">
-                <Sparkles size={14} /> Intelligence Engine Running...
+                <Sparkles size={14} /> {t('header.engineRunning', 'Intelligence Engine Running...')}
               </div>
             )}
           </div>
           
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            {/* Language Selector Dropdown */}
+            <div className="relative" ref={langMenuRef}>
+              <button
+                type="button"
+                onClick={() => setLangMenuOpen(prev => !prev)}
+                className="flex items-center gap-2 bg-surface-2 hover:bg-surface-hover border border-border-soft hover:border-brand/40 px-3 py-1.5 rounded-lg text-xs font-semibold text-text transition-all shadow-sm"
+                title="Change language"
+              >
+                <Globe size={14} className="text-brand shrink-0" />
+                <span className="font-medium">{currentLangObj.nativeLabel}</span>
+                <ChevronDown size={12} className={`text-text-dim transition-transform duration-200 ${langMenuOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {langMenuOpen && (
+                <div className="absolute right-0 mt-1.5 w-44 bg-surface border border-border rounded-xl shadow-glass py-1.5 z-50 animate-fade-in divide-y divide-border-soft/40">
+                  <div className="px-3 py-1 text-[10px] font-bold font-mono uppercase tracking-wider text-text-faint">
+                    {t('header.language', 'Select Language')}
+                  </div>
+                  <div className="py-1">
+                    {languages.map((lang) => (
+                      <button
+                        key={lang.code}
+                        type="button"
+                        onClick={() => {
+                          setLanguage(lang.code as LanguageCode);
+                          setLangMenuOpen(false);
+                        }}
+                        className={`w-full text-left px-3 py-2 text-xs flex items-center justify-between transition-colors ${
+                          language === lang.code
+                            ? 'bg-brand/10 text-brand font-bold'
+                            : 'text-text hover:bg-surface-hover'
+                        }`}
+                      >
+                        <span>{lang.nativeLabel}</span>
+                        <span className="text-[10px] font-mono text-text-dim uppercase">
+                          {lang.code.toUpperCase()}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
             <button onClick={() => navigate('/intelligence/alerts')} className="relative p-2 text-text-dim hover:text-text transition-colors">
               <Bell size={20} />
               {unreadAlerts > 0 && (
@@ -198,14 +246,14 @@ export function SIHLayout() {
           <div className="bg-danger/10 border-b border-danger/20 px-6 py-2 flex items-center justify-between z-10 shrink-0">
             <div className="flex items-center gap-2 text-sm text-danger-bright">
               <ShieldAlert size={16} />
-              <span className="font-bold uppercase tracking-wider text-[10px]">NEW INTELLIGENCE DISCOVERED:</span>
+              <span className="font-bold uppercase tracking-wider text-[10px]">{t('header.newIntel', 'NEW INTELLIGENCE DISCOVERED:')}</span>
               <span className="text-sm">{state.alerts.find(a => !a.isRead)?.message}</span>
             </div>
             <button 
               onClick={() => navigate('/intelligence/alerts')}
               className="text-xs font-bold text-text hover:underline uppercase tracking-wider"
             >
-              VIEW DETAILS
+              {t('header.viewDetails', 'VIEW DETAILS')}
             </button>
           </div>
         )}

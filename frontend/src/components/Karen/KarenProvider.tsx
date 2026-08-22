@@ -31,6 +31,14 @@ interface KarenContextType {
   speechSupported: boolean;
   resetKaren: () => void;
   speak: (text: string, callback?: () => void) => void;
+  // Audio Speech Synthesis
+  isSpeaking: boolean;
+  isPaused: boolean;
+  speakResponse: (text: string) => void;
+  stopSpeaking: () => void;
+  pauseSpeaking: () => void;
+  resumeSpeaking: () => void;
+  replaySpeaking: () => void;
 }
 
 const KarenContextObj = createContext<KarenContextType | undefined>(undefined);
@@ -75,6 +83,91 @@ export const KarenProvider = ({ children }: { children: ReactNode }) => {
   const [recognition, setRecognition] = useState<any>(null);
   const [speechSupported, setSpeechSupported] = useState(false);
 
+  // Speech Synthesis TTS setup
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [lastSpokenText, setLastSpokenText] = useState('');
+
+  const speakResponse = (text: string) => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+
+    window.speechSynthesis.cancel();
+
+    // Strip markdown formatting for natural voice output
+    const cleanSpeechText = text
+      .replace(/\*\*(.*?)\*\*/g, '$1')
+      .replace(/•/g, '')
+      .replace(/\[(.*?)\]\(.*?\)/g, '$1')
+      .replace(/[_#>`]/g, '')
+      .trim();
+
+    if (!cleanSpeechText) return;
+
+    const utterance = new SpeechSynthesisUtterance(cleanSpeechText);
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+    utterance.lang = 'en-US';
+
+    const voices = window.speechSynthesis.getVoices();
+    const naturalVoice = voices.find(v => (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Samantha') || v.name.includes('Female')) && v.lang.startsWith('en')) || voices.find(v => v.lang.startsWith('en'));
+    if (naturalVoice) {
+      utterance.voice = naturalVoice;
+    }
+
+    utterance.onstart = () => {
+      setIsSpeaking(true);
+      setIsPaused(false);
+    };
+
+    utterance.onend = () => {
+      setIsSpeaking(false);
+      setIsPaused(false);
+    };
+
+    utterance.onerror = (e) => {
+      console.warn('Speech synthesis notification:', e);
+      setIsSpeaking(false);
+      setIsPaused(false);
+    };
+
+    setLastSpokenText(cleanSpeechText);
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const stopSpeaking = () => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+      setIsPaused(false);
+    }
+  };
+
+  const pauseSpeaking = () => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+        window.speechSynthesis.pause();
+        setIsPaused(true);
+      }
+    }
+  };
+
+  const resumeSpeaking = () => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      if (window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+        setIsPaused(false);
+      }
+    }
+  };
+
+  const replaySpeaking = () => {
+    if (lastSpokenText) {
+      speakResponse(lastSpokenText);
+    } else if (response?.response) {
+      speakResponse(response.response);
+    }
+  };
+
   useEffect(() => {
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (SpeechRecognition) {
@@ -85,6 +178,7 @@ export const KarenProvider = ({ children }: { children: ReactNode }) => {
       rec.lang = 'en-US';
 
       rec.onstart = () => {
+        stopSpeaking();
         setListeningState('LISTENING');
         setTranscript('');
       };
@@ -261,6 +355,7 @@ export const KarenProvider = ({ children }: { children: ReactNode }) => {
   }, [isOpen, state.currentUser, location.pathname]);
 
   const startListening = () => {
+    stopSpeaking();
     if (recognition) {
       try {
         recognition.start();
@@ -340,6 +435,7 @@ export const KarenProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const resetKaren = () => {
+    stopSpeaking();
     setListeningState('IDLE');
     setTranscript('');
     setResponse(null);
@@ -351,6 +447,7 @@ export const KarenProvider = ({ children }: { children: ReactNode }) => {
   const handleSubmitQuery = (queryText: string) => {
     if (!queryText.trim()) return;
 
+    stopSpeaking();
     setListeningState('PROCESSING');
     setTranscript(queryText);
 
@@ -381,6 +478,9 @@ export const KarenProvider = ({ children }: { children: ReactNode }) => {
         setListeningState('RESPONDING');
       });
 
+      // Automatically speak the response using Web Speech Synthesis
+      speakResponse(resp.response);
+
       // Keep type compliance for history
       setHistory([
         {
@@ -395,7 +495,7 @@ export const KarenProvider = ({ children }: { children: ReactNode }) => {
           timestamp: new Date().toLocaleTimeString()
         }
       ]);
-    }, 2000); // 2 second realistic delay
+    }, 1800);
   };
 
   // Expose global test hook for automated verification
@@ -443,6 +543,7 @@ Cross-station relationship matching identified a related case in Cuttack Sadar.
       speak(mockResponse.response, () => {
         setListeningState('RESPONDING');
       });
+      speakResponse(mockResponse.response);
 
       setHistory([
         {
@@ -478,7 +579,14 @@ Cross-station relationship matching identified a related case in Cuttack Sadar.
         handleSubmitQuery,
         speechSupported,
         resetKaren,
-        speak
+        speak,
+        isSpeaking,
+        isPaused,
+        speakResponse,
+        stopSpeaking,
+        pauseSpeaking,
+        resumeSpeaking,
+        replaySpeaking
       }}
     >
       {children}

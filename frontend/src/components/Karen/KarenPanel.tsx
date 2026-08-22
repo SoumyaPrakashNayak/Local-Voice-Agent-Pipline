@@ -1,11 +1,12 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useKaren } from './KarenProvider';
-import { useMockState } from '../../mockServices/MockStateContext';
 import { KarenVoiceVisualizer } from './KarenVoiceVisualizer';
 import { KarenResponseCard } from './KarenResponseCard';
-import { Mic, ArrowLeft, Terminal, Bot, Sparkles, Navigation, X } from 'lucide-react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useMockState } from '../../mockServices/MockStateContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { navigateKaren } from '../../services/karenNavigationService';
+import { Mic, ArrowLeft, Terminal, Bot, Sparkles, Navigation, X } from 'lucide-react';
 
 export function KarenPanel() {
   const {
@@ -16,15 +17,17 @@ export function KarenPanel() {
     transcript,
     setTranscript,
     response,
-    setResponse,
     startListening,
     stopListening,
     handleSubmitQuery,
     resetKaren,
-    speak
+    speak,
+    isSpeaking,
+    stopSpeaking
   } = useKaren();
 
   const { state } = useMockState();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
   const role = state.currentUser?.role || 'OFFICER';
@@ -58,13 +61,15 @@ export function KarenPanel() {
       if (response.route) {
         setCountdown(6);
         setCountdownAction(() => () => {
+          stopSpeaking();
           navigateKaren(response.route || '', navigate);
           setIsOpen(false);
           resetKaren();
         });
       } else {
-        setCountdown(8);
+        setCountdown(10);
         setCountdownAction(() => () => {
+          stopSpeaking();
           setIsOpen(false);
           resetKaren();
         });
@@ -130,13 +135,15 @@ export function KarenPanel() {
   if (!isOpen) return null;
   if (location.pathname === '/' || location.pathname === '/login') return null;
 
+  const name = state.currentUser?.name || 'Officer';
+
   function getGreeting() {
     if (role === 'SUPER_ADMIN') {
-      return `Good morning Commissioner.`;
+      return t('karen.greetingAdmin', `Good morning Commissioner.`);
     } else if (role === 'STATION_ADMIN') {
-      return `Good morning IIC Ramesh.`;
+      return t('karen.greetingStation', `Good morning IIC Ramesh.`);
     } else {
-      return `Good morning Inspector Vikram.`;
+      return t('karen.greeting', `Good day, ${name}. I am KAREN, your voice intelligence companion.`);
     }
   }
 
@@ -146,12 +153,13 @@ export function KarenPanel() {
     } else if (role === 'STATION_ADMIN') {
       return `IIC Ramesh`;
     } else {
-      return `Inspector Vikram`;
+      return name;
     }
   }
 
   const handleMicToggle = () => {
     cancelTimers();
+    stopSpeaking();
     if (listeningState === 'LISTENING') {
       stopListening();
       setListeningState('IDLE');
@@ -161,6 +169,7 @@ export function KarenPanel() {
   };
 
   const handleTextAssistantRedirect = () => {
+    stopSpeaking();
     setIsOpen(false);
     resetKaren();
     navigate('/assistant');
@@ -202,7 +211,9 @@ export function KarenPanel() {
     "Generate report",
     "Open evidence vault",
     "Show case timeline",
-    "Show investigation progress"
+    "Show investigation progress",
+    "Check cross-station matches",
+    "Scan applicable BNS provisions"
   ];
 
   return (
@@ -222,7 +233,7 @@ export function KarenPanel() {
       >
         {/* Close Button */}
         <button 
-          onClick={() => { setIsOpen(false); resetKaren(); }}
+          onClick={() => { stopSpeaking(); setIsOpen(false); resetKaren(); }}
           className="absolute top-5 right-5 p-1.5 rounded-full bg-slate-900/60 border border-border-soft/30 hover:bg-slate-800 text-text-dim hover:text-text transition-colors z-[9998]"
         >
           <X size={15} />
@@ -283,7 +294,7 @@ export function KarenPanel() {
                 )}
               </button>
               <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-text-dim">
-                {listeningState === 'LISTENING' ? '🎙 Listening... Click to stop' : '🎙 Click to speak'}
+                {listeningState === 'LISTENING' ? '🎙 Listening... Click to stop' : '🎙 ' + t('karen.tapToSpeak', 'Click to speak')}
               </span>
             </div>
 

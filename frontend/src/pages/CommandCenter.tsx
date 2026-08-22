@@ -1950,13 +1950,13 @@ function CopDashboard() {
     }
   };
 
-  const text = translations[selectedLang] || translations.EN;
+  const text = translations[selectedLang as keyof typeof translations] || translations.EN;
 
   // ─── Voice Assistant Simulated State ───
-  const [voiceStatus, setVoiceStatus] = useState(null); // 'LISTENING', 'PROCESSING', 'NAVIGATING'
+  const [voiceStatus, setVoiceStatus] = useState<string | null>(null); // 'LISTENING', 'PROCESSING', 'NAVIGATING'
   const [simulatedVoiceCommand, setSimulatedVoiceCommand] = useState("");
 
-  const handleSimulateVoice = (command, route, actionType = null) => {
+  const handleSimulateVoice = (command: string, route: string | null, actionType: string | null = null) => {
     setSimulatedVoiceCommand(command);
     setVoiceStatus('LISTENING');
     
@@ -2011,7 +2011,7 @@ function CopDashboard() {
   const totalTasksCount = tasksList.filter(t => t.caseId === selectedFocusCaseId).length || 1;
   const dynamicProgressPercent = Math.round((completedTasksCount / totalTasksCount) * 100);
 
-  const handleAddTask = (e) => {
+  const handleAddTask = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTaskInput.trim()) return;
     const newTask = {
@@ -2024,11 +2024,11 @@ function CopDashboard() {
     setNewTaskInput('');
   };
 
-  const handleToggleTask = (id) => {
+  const handleToggleTask = (id: string) => {
     setTasksList(prev => prev.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
   };
 
-  const handleDeleteTask = (id) => {
+  const handleDeleteTask = (id: string) => {
     setTasksList(prev => prev.filter(t => t.id !== id));
   };
 
@@ -2038,7 +2038,7 @@ function CopDashboard() {
   ]);
   const [newNoteInput, setNewNoteInput] = useState('');
 
-  const handleAddNote = (e) => {
+  const handleAddNote = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newNoteInput.trim()) return;
     const newNote = {
@@ -2067,7 +2067,7 @@ function CopDashboard() {
     }
   ]);
 
-  const handleSendAiQuery = (queryText) => {
+  const handleSendAiQuery = (queryText?: string) => {
     const q = queryText || aiAssistantQuery;
     if (!q.trim()) return;
 
@@ -2119,7 +2119,7 @@ function CopDashboard() {
   }, [state.evidence, myCases]);
 
   // Request Access Dispatch
-  const handleRequestAccess = (caseId) => {
+  const handleRequestAccess = (caseId: string) => {
     const newReq = {
       id: 'REQ-' + String(state.accessRequests.length + 1).padStart(3, '0'),
       requestingStationId: myStationId,
@@ -2127,14 +2127,14 @@ function CopDashboard() {
       targetStationId: 'OP-CTC-CITY',
       targetCaseId: caseId,
       reason: 'Cross-station phone log matching.',
-      status: 'PENDING',
+      status: 'PENDING' as const,
       createdAt: new Date().toISOString()
     };
     dispatch({ type: 'ADD_ACCESS_REQUEST', payload: newReq });
   };
 
   // Trigger Mock Evidence Processing
-  const handleProcessEvidence = (evidenceId) => {
+  const handleProcessEvidence = (evidenceId: string) => {
     dispatch({ type: 'SET_PROCESSING', payload: true });
     setTimeout(() => {
       dispatch({ type: 'SET_PROCESSING', payload: false });
@@ -2207,7 +2207,7 @@ function CopDashboard() {
                 key={lang}
                 onClick={() => setSelectedLang(lang)}
                 className={`px-2 py-1 text-[9px] font-bold rounded transition-all ${
-                  selectedLang === lang ? 'bg-surface text-brand font-extrabold' : 'text-text-dim hover:text-text'
+                  selectedLang === lang ? 'bg-surface text-brand font-extrabold shadow-sm' : 'text-text-dim hover:text-text'
                 }`}
               >
                 {lang === 'OD' ? 'ଓଡ଼ିଆ' : lang === 'KN' ? 'ಕರ್ನಾಟಕ' : lang === 'HI' ? 'हिंदी' : 'EN'}
@@ -2217,7 +2217,7 @@ function CopDashboard() {
         </div>
       </div>
 
-      {/* ─── 3. PERSONAL KPI STRIP ─── */}
+      {/* ─── 3. INVESTIGATION OVERVIEW / PERSONAL KPI STRIP ─── */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
         {[
           { title: text.activeCases, val: activeCasesCount, trend: 'Steady', pts: [12, 12, 12, 12, 12, 12] },
@@ -2227,12 +2227,12 @@ function CopDashboard() {
           { title: text.intelAlerts, val: intelAlertsCount, trend: '↑ 1 match', pts: [5, 5, 6, 6, 6, 6] },
           { title: text.unresolvedLinks, val: unresolvedLinksCount, trend: 'Steady', pts: [3, 3, 3, 3, 3, 3], highlight: true }
         ].map((k, i) => (
-          <div key={i} className={`glass p-4 rounded-xl border border-border-soft flex flex-col justify-between min-h-[96px] ${
+          <div key={i} className={`glass p-4 rounded-xl border border-border-soft flex flex-col justify-between min-h-[96px] shadow-sm ${
             k.danger ? 'border-danger/30 bg-danger/5' : k.highlight ? 'border-brand/30 bg-brand/5' : 'bg-surface'
           }`}>
             <div className="text-[9px] font-bold uppercase tracking-wider text-text-dim flex justify-between items-center">
               <span>{k.title}</span>
-              <span className="text-[9px] font-bold text-text-faint">{k.trend}</span>
+              <span className="text-[8.5px] font-bold text-text-faint">{k.trend}</span>
             </div>
             <div className="flex items-baseline justify-between mt-2">
               <span className="text-2xl font-display font-bold text-text">{k.val}</span>
@@ -2243,11 +2243,11 @@ function CopDashboard() {
       </div>
 
       {/* ─── 4. "WHAT NEEDS MY ATTENTION?" PANEL ─── */}
-      <div className="glass p-5 rounded-2xl bg-surface border border-danger/25 bg-danger/5">
+      <div className="glass p-5 rounded-2xl bg-surface border border-danger/25 bg-danger/5 shadow-sm">
         <h3 className="text-xs font-bold uppercase tracking-wider text-danger-bright mb-3 flex items-center gap-1.5">
-          <ShieldAlert size={14} /> {text.attention}
+          <ShieldAlert size={15} /> {text.attention}
         </h3>
-        <div className="grid md:grid-cols-4 gap-4 text-xs">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 text-xs">
           {[
             { label: 'HIGH PRIORITY', cId: 'CR-KHD-2026-004821', desc: 'Cross-station relationship detected.', action: 'Review Network', onClick: () => navigate('/network') },
             { label: 'EVIDENCE REQUIRED', cId: 'CR-KHD-2026-004817', desc: '3 evidence items have not been processed.', action: 'Open Evidence Vault', onClick: () => navigate('/evidence') },
@@ -2257,225 +2257,147 @@ function CopDashboard() {
             <div 
               key={idx}
               onClick={item.onClick}
-              className="p-3.5 bg-surface/60 border border-danger/15 rounded-xl cursor-pointer hover:border-danger hover:bg-danger/10 transition-all flex flex-col justify-between min-h-[88px]"
+              className="p-3.5 bg-surface/80 border border-danger/15 rounded-xl cursor-pointer hover:border-danger hover:bg-danger/10 transition-all flex flex-col justify-between min-h-[96px] shadow-sm group"
             >
               <div>
                 <span className="text-[8px] font-bold uppercase tracking-wider text-danger-bright">{item.label}</span>
                 <div className="font-mono font-bold text-text mt-0.5">{item.cId}</div>
                 <p className="text-[10px] text-text-dim mt-1 leading-snug">{item.desc}</p>
               </div>
-              <span className="text-[9px] text-brand font-bold uppercase tracking-wider border-t border-border-soft/40 pt-1.5 mt-2 flex items-center gap-0.5">
-                {item.action} <ChevronRight size={10} />
+              <span className="text-[9px] text-brand font-bold uppercase tracking-wider border-t border-border-soft/40 pt-1.5 mt-2 flex items-center justify-between">
+                <span>{item.action}</span>
+                <ChevronRight size={11} className="group-hover:translate-x-1 transition-transform" />
               </span>
             </div>
           ))}
         </div>
       </div>
 
-      {/* ─── Main split view ─── */}
-      <div className="grid lg:grid-cols-3 gap-6">
-        {/* Left columns */}
-        <div className="lg:col-span-2 space-y-6">
-          
-          {/* ─── 5. MY ACTIVE INVESTIGATIONS TABLE ─── */}
-          <div className="glass rounded-xl p-5 bg-surface border border-border-soft space-y-4">
-            <div className="flex items-center justify-between border-b border-border-soft pb-3">
-              <div>
-                <h3 className="text-sm font-bold uppercase tracking-wider text-text">MY INVESTIGATIONS</h3>
-                <p className="text-[10px] text-text-dim">Operational files assigned to your desk</p>
-              </div>
-              <div className="flex gap-1">
-                {['ALL', 'ACTIVE', 'PENDING', 'OVERDUE', 'HIGH PRIORITY'].map(t => (
-                  <button
-                    key={t}
-                    onClick={() => setSelectedCaseTab(t)}
-                    className={`px-2 py-0.5 text-[9px] font-bold rounded uppercase tracking-wider border transition-colors ${
-                      selectedCaseTab === t 
-                        ? 'bg-brand text-bg border-brand' 
-                        : 'bg-surface-2 text-text-dim hover:text-text border-border-soft'
-                    }`}
-                  >
-                    {t}
-                  </button>
-                ))}
-              </div>
+      {/* ─── SECTION 1: INVESTIGATION CASELOAD & PIPELINE STATUS ─── */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+        {/* Active Investigations Table (Span 2) */}
+        <div className="lg:col-span-2 glass rounded-2xl p-5 bg-surface border border-border-soft space-y-4 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border-soft pb-3">
+            <div>
+              <h3 className="text-sm font-bold uppercase tracking-wider text-text flex items-center gap-2">
+                <Briefcase size={16} className="text-brand" /> MY INVESTIGATIONS
+              </h3>
+              <p className="text-[10px] text-text-dim mt-0.5">Operational case files assigned to your desk</p>
             </div>
-
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead className="text-text-dim text-[9px] uppercase font-mono tracking-wider border-b border-border-soft pb-1.5">
-                  <tr>
-                    <th className="py-2">CASE</th>
-                    <th className="py-2">CRIME</th>
-                    <th className="py-2">PRIORITY</th>
-                    <th className="py-2">PROGRESS</th>
-                    <th className="py-2">LAST ACTIVITY</th>
-                    <th className="py-2">INTELLIGENCE</th>
-                    <th className="py-2">EVIDENCE</th>
-                    <th className="py-2 text-right">NEXT ACTION</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border-soft/40 font-mono">
-                  {filteredCases.map(c => {
-                    const progressPercent = c.id === 'OD-BBSR-2026-0001' ? dynamicProgressPercent : c.id === 'OD-BBSR-2026-0042' ? 43 : 54;
-                    const evidenceRatio = c.id === 'OD-BBSR-2026-0001' ? '8/11' : c.id === 'OD-BBSR-2026-0042' ? '4/9' : '5/7';
-                    const linkText = c.id === 'OD-BBSR-2026-0001' ? '3 links' : c.id === 'OD-BBSR-2026-0042' ? '2 links' : '1 link';
-                    const actionText = c.id === 'OD-BBSR-2026-0001' ? 'Review Network' : c.id === 'OD-BBSR-2026-0042' ? 'Resume Investigation' : 'Process Evidence';
-
-                    return (
-                      <tr 
-                        key={c.id}
-                        onClick={() => {
-                          setSelectedFocusCaseId(c.id);
-                          navigate(`/cases/${c.id}`);
-                        }}
-                        className={`hover:bg-surface-hover/20 cursor-pointer transition-colors ${selectedFocusCaseId === c.id ? 'bg-brand/5' : ''}`}
-                      >
-                        <td className="py-3 px-1 font-bold text-text">{c.firNumber}</td>
-                        <td className="py-3 px-1 font-sans text-text-dim">{c.crimeType}</td>
-                        <td className="py-3 px-1">
-                          <span className={`px-1.5 py-0.5 rounded text-[8px] border font-bold uppercase ${
-                            c.priority === 'CRITICAL' ? 'text-danger-bright bg-danger/10 border-danger/30' :
-                            c.priority === 'HIGH' ? 'text-warning bg-warning/10 border-warning/30' :
-                            'text-text-dim bg-surface border-border-soft'
-                          }`}>{c.priority}</span>
-                        </td>
-                        <td className="py-3 px-1 font-sans">
-                          <div className="flex items-center gap-1.5">
-                            <div className="w-12 h-1.5 bg-surface-2 rounded overflow-hidden border border-border-soft/40">
-                              <div className="h-full bg-brand" style={{ width: `${progressPercent}%` }} />
-                            </div>
-                            <span className="font-bold text-[10px]">{progressPercent}%</span>
-                          </div>
-                        </td>
-                        <td className="py-3 px-1 font-sans text-text-dim">
-                          {c.id === 'OD-BBSR-2026-0001' ? '2h ago' : 'Yesterday'}
-                        </td>
-                        <td className="py-3 px-1 font-sans text-brand font-bold">{linkText}</td>
-                        <td className="py-3 px-1 text-text-dim">{evidenceRatio}</td>
-                        <td className="py-3 px-1 text-right font-sans text-brand font-bold text-[10px] group-hover:underline">{actionText}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+            <div className="flex flex-wrap gap-1">
+              {['ALL', 'ACTIVE', 'PENDING', 'OVERDUE', 'HIGH PRIORITY'].map(t => (
+                <button
+                  key={t}
+                  onClick={() => setSelectedCaseTab(t)}
+                  className={`px-2.5 py-1 text-[9px] font-bold rounded-lg uppercase tracking-wider border transition-colors ${
+                    selectedCaseTab === t 
+                      ? 'bg-brand text-bg border-brand shadow-sm' 
+                      : 'bg-surface-2 text-text-dim hover:text-text border-border-soft'
+                  }`}
+                >
+                  {t}
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* ─── 6. INVESTIGATION PROGRESS TRACKER ─── */}
-          <div className="glass p-5 rounded-xl bg-surface border border-border-soft space-y-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-text">INVESTIGATION STAGES STATUS</h3>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead className="text-text-dim text-[9px] uppercase font-mono tracking-wider border-b border-border-soft pb-2">
+                <tr>
+                  <th className="py-2.5 px-2">CASE</th>
+                  <th className="py-2.5 px-2">CRIME</th>
+                  <th className="py-2.5 px-2">PRIORITY</th>
+                  <th className="py-2.5 px-2">PROGRESS</th>
+                  <th className="py-2.5 px-2">LAST ACTIVITY</th>
+                  <th className="py-2.5 px-2">INTELLIGENCE</th>
+                  <th className="py-2.5 px-2">EVIDENCE</th>
+                  <th className="py-2.5 px-2 text-right">NEXT ACTION</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border-soft/40 font-mono">
+                {filteredCases.map(c => {
+                  const progressPercent = c.id === 'OD-BBSR-2026-0001' ? dynamicProgressPercent : c.id === 'OD-BBSR-2026-0042' ? 43 : 54;
+                  const evidenceRatio = c.id === 'OD-BBSR-2026-0001' ? '8/11' : c.id === 'OD-BBSR-2026-0042' ? '4/9' : '5/7';
+                  const linkText = c.id === 'OD-BBSR-2026-0001' ? '3 links' : c.id === 'OD-BBSR-2026-0042' ? '2 links' : '1 link';
+                  const actionText = c.id === 'OD-BBSR-2026-0001' ? 'Review Network' : c.id === 'OD-BBSR-2026-0042' ? 'Resume Investigation' : 'Process Evidence';
+
+                  return (
+                    <tr 
+                      key={c.id}
+                      onClick={() => {
+                        setSelectedFocusCaseId(c.id);
+                        navigate(`/cases/${c.id}`);
+                      }}
+                      className={`hover:bg-surface-hover/30 cursor-pointer transition-colors ${selectedFocusCaseId === c.id ? 'bg-brand/5' : ''}`}
+                    >
+                      <td className="py-3 px-2 font-bold text-accent-bright">{c.firNumber}</td>
+                      <td className="py-3 px-2 font-sans text-text">{c.crimeType}</td>
+                      <td className="py-3 px-2">
+                        <span className={`px-2 py-0.5 rounded text-[8px] border font-bold uppercase ${
+                          c.priority === 'CRITICAL' ? 'text-danger-bright bg-danger/10 border-danger/30' :
+                          c.priority === 'HIGH' ? 'text-warning bg-warning/10 border-warning/30' :
+                          'text-text-dim bg-surface-2 border-border-soft'
+                        }`}>{c.priority}</span>
+                      </td>
+                      <td className="py-3 px-2 font-sans">
+                        <div className="flex items-center gap-1.5">
+                          <div className="w-12 h-1.5 bg-surface-2 rounded-full overflow-hidden border border-border-soft/40">
+                            <div className="h-full bg-brand" style={{ width: `${progressPercent}%` }} />
+                          </div>
+                          <span className="font-bold text-[10px]">{progressPercent}%</span>
+                        </div>
+                      </td>
+                      <td className="py-3 px-2 font-sans text-text-dim">
+                        {c.id === 'OD-BBSR-2026-0001' ? '2h ago' : 'Yesterday'}
+                      </td>
+                      <td className="py-3 px-2 font-sans text-brand font-bold">{linkText}</td>
+                      <td className="py-3 px-2 text-text-dim">{evidenceRatio}</td>
+                      <td className="py-3 px-2 text-right font-sans text-brand font-bold text-[10px] hover:underline">{actionText}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Investigation Pipeline & Guidance (Span 1) */}
+        <div className="space-y-6">
+          {/* Investigation Stages Status */}
+          <div className="glass p-5 rounded-2xl bg-surface border border-border-soft space-y-4 shadow-sm">
+            <div className="flex items-center justify-between border-b border-border-soft pb-2.5">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-text">INVESTIGATION STAGES</h3>
+              <span className="text-[9px] font-mono text-brand font-bold">CASE: {focusedCase?.firNumber}</span>
+            </div>
             
-            <div className="grid grid-cols-8 gap-2 text-center text-[10px] font-mono">
+            <div className="grid grid-cols-4 gap-2 text-center text-[10px] font-mono">
               {[
                 { stage: 'FIR', status: 'COMPLETED' },
-                { stage: 'AI EXTRACTION', status: 'COMPLETED' },
-                { stage: 'INITIAL ANALYSIS', status: 'COMPLETED' },
+                { stage: 'AI NER', status: 'COMPLETED' },
+                { stage: 'ANALYSIS', status: 'COMPLETED' },
                 { stage: 'EVIDENCE', status: 'COMPLETED' },
-                { stage: 'NETWORK ANALYSIS', status: 'CURRENT' },
-                { stage: 'FIELD INVESTIGATION', status: 'PENDING' },
-                { stage: 'LEGAL REVIEW', status: 'PENDING' },
-                { stage: 'CHARGE SHEET', status: 'PENDING' }
+                { stage: 'NETWORK', status: 'CURRENT' },
+                { stage: 'FIELD LEAD', status: 'PENDING' },
+                { stage: 'LEGAL BNS', status: 'PENDING' },
+                { stage: 'CHARGE', status: 'PENDING' }
               ].map((st, i) => (
-                <div key={i} className="flex flex-col items-center gap-2">
-                  <div className={`h-6 w-6 rounded-full border flex items-center justify-center font-bold font-sans ${
+                <div key={i} className="flex flex-col items-center gap-1.5 p-1.5 bg-surface-2/60 rounded-lg border border-border-soft/40">
+                  <div className={`h-5 w-5 rounded-full border flex items-center justify-center font-bold text-[10px] font-sans ${
                     st.status === 'COMPLETED' ? 'bg-success/15 border-success text-success' :
                     st.status === 'CURRENT' ? 'bg-brand/10 border-brand text-brand animate-pulse' :
                     'bg-surface border-border-soft text-text-faint'
                   }`}>
                     {st.status === 'COMPLETED' ? '✓' : st.status === 'CURRENT' ? '●' : '○'}
                   </div>
-                  <span className="text-[8px] font-bold uppercase text-text-dim block max-w-[64px] mx-auto leading-tight">{st.stage}</span>
+                  <span className="text-[7.5px] font-bold uppercase text-text-dim block leading-tight">{st.stage}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* ─── 10. EVIDENCE WORK QUEUE ─── */}
-          <div className="glass p-5 rounded-xl bg-surface border border-border-soft space-y-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-text">EVIDENCE WORK QUEUE</h3>
-            
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead className="border-b border-border-soft text-text-dim text-[9px] uppercase font-mono tracking-wider">
-                  <tr>
-                    <th className="py-2">Evidence ID</th>
-                    <th className="py-2">Case Context</th>
-                    <th className="py-2">Type</th>
-                    <th className="py-2">Uploaded At</th>
-                    <th className="py-2 text-center">AI Status</th>
-                    <th className="py-2 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border-soft/40 font-mono">
-                  {[
-                    { id: 'Evidence #07', cId: 'CR-KHD-004821', type: 'Vehicle Document', date: 'Today', status: 'Processed' },
-                    { id: 'Evidence #08', cId: 'CR-KHD-004821', type: 'CCTV Image', date: 'Today', status: 'Processing' },
-                    { id: 'Evidence #11', cId: 'CR-KHD-004817', type: 'PDF Document', date: 'Yesterday', status: 'Pending' }
-                  ].map((e, idx) => (
-                    <tr key={idx} className="hover:bg-surface-hover/10 transition-colors">
-                      <td className="py-2.5 px-1 font-bold text-text">{e.id}</td>
-                      <td className="py-2.5 px-1 text-text-dim">{e.cId}</td>
-                      <td className="py-2.5 px-1 font-sans text-text-dim">{e.type}</td>
-                      <td className="py-2.5 px-1 font-sans text-text-faint">{e.date}</td>
-                      <td className="py-2.5 px-1 text-center font-sans">
-                        <span className={`px-1.5 py-0.5 rounded text-[8px] font-bold uppercase border ${
-                          e.status === 'Processed' ? 'text-success bg-success/5 border-success/20' :
-                          e.status === 'Processing' ? 'text-brand bg-brand/5 border-brand/20 animate-pulse' :
-                          'text-warning bg-warning/5 border-warning/20'
-                        }`}>{e.status}</span>
-                      </td>
-                      <td className="py-2.5 px-1 text-right font-sans space-x-1.5">
-                        <button 
-                          onClick={() => handleProcessEvidence(e.id)}
-                          className="px-2 py-0.5 text-[9px] font-bold bg-brand text-bg rounded hover:bg-brand-bright transition-colors"
-                        >
-                          Process
-                        </button>
-                        <button 
-                          onClick={() => alert(`Viewing ${e.id}...`)}
-                          className="px-2 py-0.5 text-[9px] font-bold bg-surface-2 border border-border text-text rounded hover:bg-surface-hover"
-                        >
-                          View
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        {/* Right sidebar column */}
-        <div className="space-y-6">
-          {/* Quick Actions Card */}
-          <div className="glass p-5 rounded-xl bg-surface border border-border-soft space-y-3">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-text mb-2">INVESTIGATOR QUICK ACTIONS</h3>
-            <div className="grid grid-cols-2 gap-2 text-center text-xs">
-              {[
-                { label: 'Register FIR', route: '/cases/new', icon: Plus },
-                { label: 'Upload Evidence', route: '/evidence', icon: FileText },
-                { label: 'Open Network', route: '/network', icon: Compass },
-                { label: 'Similar Cases', route: '/legal', icon: Scale },
-                { label: 'Legal Intelligence', route: '/legal', icon: Scale },
-                { label: 'AI Assistant', route: '/assistant', icon: Sparkles },
-                { label: 'My Cases', route: '/cases', icon: Search }
-              ].map((act, i) => (
-                <button
-                  key={i}
-                  onClick={() => navigate(act.route)}
-                  className="p-2.5 bg-surface-2 border border-border-soft hover:border-brand rounded-lg text-left transition-all flex flex-col justify-between h-16 group"
-                >
-                  <act.icon size={14} className="text-brand group-hover:scale-110 transition-transform" />
-                  <span className="text-[9px] font-bold text-text-dim mt-2 block">{act.label}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* ─── 7. NEXT BEST ACTION / GUIDANCE ─── */}
-          <div className="glass p-5 rounded-xl bg-surface border border-brand/30 bg-brand/5 space-y-3">
+          {/* Next Best Action / Guidance */}
+          <div className="glass p-5 rounded-2xl bg-surface border border-brand/30 bg-brand/5 space-y-3 shadow-sm">
             <h3 className="text-xs font-bold uppercase tracking-wider text-brand flex items-center gap-1.5">
               <Sparkles size={14} className="animate-spin" /> {text.guidance}
             </h3>
@@ -2486,35 +2408,102 @@ function CopDashboard() {
               <strong>Rationale:</strong> The same entity appears in two related cases across Odisha stations.
             </div>
             <div className="flex items-center justify-between border-t border-border-soft/40 pt-2.5 text-[9px] font-mono text-text-faint">
-              <span>Confidence match: <strong>91%</strong></span>
+              <span>Confidence match: <strong className="text-brand">91%</strong></span>
               <button 
-                onClick={() => handleSimulateVoice("Open case network explorer", "/network")}
+                onClick={() => navigate('/network')}
                 className="text-brand font-bold hover:underline"
               >
-                Open Network
+                Open Network →
               </button>
             </div>
           </div>
+        </div>
+      </div>
 
-          {/* ─── 8. INTELLIGENCE DISCOVERIES FEED ─── */}
-          <div className="glass p-5 rounded-xl bg-surface border border-border-soft space-y-3">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-text border-b border-border-soft pb-2">
-              NEW INTELLIGENCE DISCOVERIES
-            </h3>
+      {/* ─── SECTION 2: EVIDENCE & INTELLIGENCE DISCOVERIES (3 EQUAL COLUMNS) ─── */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+        {/* Col 1: Evidence Work Queue */}
+        <div className="glass p-5 rounded-2xl bg-surface border border-border-soft flex flex-col justify-between space-y-4 shadow-sm">
+          <div>
+            <div className="flex items-center justify-between border-b border-border-soft pb-2.5 mb-3">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-text flex items-center gap-1.5">
+                <FileText size={14} className="text-brand" /> EVIDENCE WORK QUEUE
+              </h3>
+              <span className="text-[9px] font-mono text-text-dim">3 Pending</span>
+            </div>
             
-            <div className="space-y-3 text-xs">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead className="border-b border-border-soft text-text-dim text-[8.5px] uppercase font-mono tracking-wider">
+                  <tr>
+                    <th className="py-2">Item</th>
+                    <th className="py-2">Type</th>
+                    <th className="py-2 text-center">Status</th>
+                    <th className="py-2 text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border-soft/40 font-mono">
+                  {[
+                    { id: 'Evidence #07', cId: 'CR-KHD-004821', type: 'Vehicle Doc', date: 'Today', status: 'Processed' },
+                    { id: 'Evidence #08', cId: 'CR-KHD-004821', type: 'CCTV Feed', date: 'Today', status: 'Processing' },
+                    { id: 'Evidence #11', cId: 'CR-KHD-004817', type: 'PDF Report', date: 'Yesterday', status: 'Pending' }
+                  ].map((e, idx) => (
+                    <tr key={idx} className="hover:bg-surface-hover/20 transition-colors">
+                      <td className="py-2.5 font-bold text-text">{e.id}</td>
+                      <td className="py-2.5 font-sans text-[10px] text-text-dim">{e.type}</td>
+                      <td className="py-2.5 text-center font-sans">
+                        <span className={`px-1.5 py-0.5 rounded text-[7.5px] font-bold uppercase border ${
+                          e.status === 'Processed' ? 'text-success bg-success/5 border-success/20' :
+                          e.status === 'Processing' ? 'text-brand bg-brand/5 border-brand/20 animate-pulse' :
+                          'text-warning bg-warning/5 border-warning/20'
+                        }`}>{e.status}</span>
+                      </td>
+                      <td className="py-2.5 text-right font-sans space-x-1">
+                        <button 
+                          onClick={() => handleProcessEvidence(e.id)}
+                          className="px-2 py-0.5 text-[8.5px] font-bold bg-brand text-bg rounded hover:bg-brand-bright transition-colors"
+                        >
+                          Process
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <button
+            onClick={() => navigate('/evidence')}
+            className="w-full bg-surface-2 hover:bg-surface-hover border border-border-soft py-2 rounded-lg text-xs font-semibold text-text transition-colors text-center"
+          >
+            Open Evidence Vault →
+          </button>
+        </div>
+
+        {/* Col 2: Intelligence Discoveries */}
+        <div className="glass p-5 rounded-2xl bg-surface border border-border-soft flex flex-col justify-between space-y-4 shadow-sm">
+          <div>
+            <div className="flex items-center justify-between border-b border-border-soft pb-2.5 mb-3">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-text flex items-center gap-1.5">
+                <Activity size={14} className="text-accent-bright" /> INTELLIGENCE DISCOVERIES
+              </h3>
+              <span className="text-[9px] font-mono text-accent-bright font-bold">LIVE OVERWATCH</span>
+            </div>
+            
+            <div className="space-y-2.5 text-xs">
               {/* Card 1 */}
-              <div className="p-3 bg-surface-2 border border-border-soft rounded-lg space-y-2">
-                <div className="flex justify-between items-center text-[9px] font-mono font-bold text-danger-bright bg-danger/10 border border-danger/25 px-1.5 py-0.5 rounded">
+              <div className="p-3 bg-surface-2 border border-border-soft rounded-xl space-y-2">
+                <div className="flex justify-between items-center text-[8px] font-mono font-bold text-danger-bright bg-danger/10 border border-danger/25 px-1.5 py-0.5 rounded">
                   <span>CROSS-STATION MATCH</span>
                   <span>94% CONFIDENCE</span>
                 </div>
-                <div className="font-semibold text-text">Mobile number +91 XXXXX XXXXX matched case CR-CTC-2026-00981.</div>
-                <div className="flex justify-between items-center border-t border-border-soft/30 pt-2">
+                <div className="font-semibold text-text text-[11px] leading-snug">Mobile number +91 XXXXX XXXXX matched case CR-CTC-2026-00981.</div>
+                <div className="flex justify-between items-center border-t border-border-soft/30 pt-1.5">
                   <span className="text-[8px] font-mono uppercase text-text-faint">Status: Restricted</span>
                   <button 
                     onClick={() => handleRequestAccess('OD-CTC-2026-00981')}
-                    className="bg-brand text-bg px-2.5 py-1 rounded text-[9px] font-bold hover:bg-brand-bright transition-colors"
+                    className="bg-brand text-bg px-2.5 py-1 rounded text-[8.5px] font-bold hover:bg-brand-bright transition-colors"
                   >
                     Request Access
                   </button>
@@ -2522,15 +2511,15 @@ function CopDashboard() {
               </div>
 
               {/* Card 2 */}
-              <div className="p-3 bg-surface-2 border border-border-soft rounded-lg space-y-2">
-                <div className="flex justify-between items-center text-[9px] font-mono font-bold text-brand bg-brand/10 border border-brand/25 px-1.5 py-0.5 rounded">
+              <div className="p-3 bg-surface-2 border border-border-soft rounded-xl space-y-2">
+                <div className="flex justify-between items-center text-[8px] font-mono font-bold text-brand bg-brand/10 border border-brand/25 px-1.5 py-0.5 rounded">
                   <span>SIMILAR CASE</span>
                   <span>87% SIMILARITY</span>
                 </div>
-                <div className="font-semibold text-text">Burglary patterns resolved to CR-KHD-2025-00812 local case.</div>
+                <div className="font-semibold text-text text-[11px] leading-snug">Burglary MO patterns resolved to CR-KHD-2025-00812.</div>
                 <button 
                   onClick={() => navigate('/legal')}
-                  className="w-full bg-surface border border-border py-1 text-[9px] font-bold text-text hover:bg-surface-hover rounded transition-colors text-center"
+                  className="w-full bg-surface border border-border py-1 text-[8.5px] font-bold text-text hover:bg-surface-hover rounded transition-colors text-center"
                 >
                   Compare Case
                 </button>
@@ -2538,17 +2527,24 @@ function CopDashboard() {
             </div>
           </div>
 
-          {/* ─── 9. CASE KNOWLEDGE GRAPH GRAPH PREVIEW ─── */}
-          <div className="glass p-5 rounded-xl bg-surface border border-border-soft space-y-3">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-text flex items-center justify-between border-b border-border-soft pb-2">
-              <span>CASE KNOWLEDGE GRAPH</span>
+          <div className="text-[9px] font-mono text-text-faint text-center">
+            Auto-scanning linked entities across 6 districts
+          </div>
+        </div>
+
+        {/* Col 3: Case Knowledge Graph */}
+        <div className="glass p-5 rounded-2xl bg-surface border border-border-soft flex flex-col justify-between space-y-4 shadow-sm">
+          <div>
+            <div className="flex items-center justify-between border-b border-border-soft pb-2.5 mb-3">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-text flex items-center gap-1.5">
+                <Network size={14} className="text-brand" /> CASE KNOWLEDGE GRAPH
+              </h3>
               <span className="text-[9px] font-mono text-brand font-bold">CR-KHD-004821</span>
-            </h3>
+            </div>
 
             {/* SVG graph preview */}
-            <div className="h-32 bg-surface-2 border border-border-soft rounded-lg p-2 relative flex items-center justify-center">
+            <div className="h-36 bg-surface-2 border border-border-soft rounded-xl p-2 relative flex items-center justify-center overflow-hidden">
               <svg className="w-full h-full" viewBox="0 0 200 120">
-                {/* Node coordinates */}
                 {/* Local Case node */}
                 <circle cx="100" cy="60" r="10" fill="var(--brand)" />
                 <text x="100" y="75" fontSize="7" fill="var(--text)" textAnchor="middle" fontWeight="bold">CR-KHD-4821</text>
@@ -2563,152 +2559,180 @@ function CopDashboard() {
                 <text x="170" y="93" fontSize="6" fill="var(--danger-bright)" textAnchor="middle">🔒 Locked</text>
 
                 {/* Edges */}
-                <line x1="100" y1="60" x2="50" y2="30" stroke="var(--border-soft)" strokeWidth="1" />
-                <line x1="100" y1="60" x2="150" y2="30" stroke="var(--border-soft)" strokeWidth="1" />
-                <line x1="100" y1="60" x2="100" y2="100" stroke="var(--border-soft)" strokeWidth="1" />
-                <line x1="150" y1="30" x2="170" y2="80" stroke="var(--danger)" strokeDasharray="3 3" />
+                <line x1="100" y1="60" x2="50" y2="30" stroke="var(--border-soft)" strokeWidth="1.2" />
+                <line x1="100" y1="60" x2="150" y2="30" stroke="var(--border-soft)" strokeWidth="1.2" />
+                <line x1="100" y1="60" x2="100" y2="100" stroke="var(--border-soft)" strokeWidth="1.2" />
+                <line x1="150" y1="30" x2="170" y2="80" stroke="var(--danger)" strokeDasharray="3 3" strokeWidth="1.2" />
               </svg>
-              <div className="absolute top-2 right-2 text-[8px] font-mono font-bold text-danger-bright bg-danger/10 px-1 py-0.5 rounded border border-danger/25">🔒 CR-CTC-00981 LOCKED</div>
+              <div className="absolute top-2 right-2 text-[7.5px] font-mono font-bold text-danger-bright bg-danger/10 px-1.5 py-0.5 rounded border border-danger/25">🔒 CR-CTC-00981 LOCKED</div>
             </div>
-
-            <button 
-              onClick={() => navigate('/network')}
-              className="w-full bg-brand text-bg py-2 rounded-lg text-xs font-bold hover:bg-brand-bright transition-colors uppercase tracking-wider text-center"
-            >
-              Open Network Explorer
-            </button>
           </div>
 
-          {/* ─── 12. INVESTIGATION TASKS CHECKLIST ─── */}
-          <div className="glass p-5 rounded-xl bg-surface border border-border-soft space-y-4">
-            <div className="border-b border-border-soft pb-2 flex justify-between items-center">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-text">{text.tasks}</h3>
-              <span className="text-[10px] font-mono font-bold text-brand">{completedTasksCount} / {totalTasksCount} Completed</span>
+          <button 
+            onClick={() => navigate('/network')}
+            className="w-full bg-brand text-bg py-2 rounded-lg text-xs font-bold hover:bg-brand-bright transition-colors uppercase tracking-wider text-center shadow-sm"
+          >
+            Open Network Explorer
+          </button>
+        </div>
+      </div>
+
+      {/* ─── SECTION 3: TASKS, FIELD NOTES & LEGAL ANALYSIS (3 EQUAL COLUMNS) ─── */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+        {/* Col 1: Tasks Checklist */}
+        <div className="glass p-5 rounded-2xl bg-surface border border-border-soft flex flex-col justify-between space-y-4 shadow-sm">
+          <div>
+            <div className="border-b border-border-soft pb-2.5 flex justify-between items-center mb-3">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-text flex items-center gap-1.5">
+                <CheckCircle size={14} className="text-brand" /> {text.tasks}
+              </h3>
+              <span className="text-[9px] font-mono font-bold text-brand bg-brand/10 px-2 py-0.5 rounded border border-brand/20">
+                {completedTasksCount} / {totalTasksCount} Done
+              </span>
             </div>
 
             {/* Checklist */}
-            <div className="space-y-2 max-h-52 overflow-y-auto">
+            <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
               {tasksList.filter(t => t.caseId === selectedFocusCaseId).map(t => (
-                <div key={t.id} className="flex items-center justify-between text-xs p-1 hover:bg-surface-hover/10 rounded transition-colors">
-                  <label className="flex items-center gap-2 cursor-pointer text-text-dim font-medium select-none">
+                <div key={t.id} className="flex items-center justify-between text-xs p-1.5 hover:bg-surface-hover/20 rounded-lg transition-colors border border-transparent hover:border-border-soft/40">
+                  <label className="flex items-center gap-2 cursor-pointer text-text-dim font-medium select-none text-[11px] min-w-0">
                     <input 
                       type="checkbox" 
                       checked={t.completed} 
                       onChange={() => handleToggleTask(t.id)} 
-                      className="rounded border-border bg-surface-2 focus:ring-brand h-3.5 w-3.5"
+                      className="rounded border-border bg-surface-2 focus:ring-brand h-3.5 w-3.5 shrink-0"
                     />
-                    <span className={t.completed ? 'line-through text-text-faint' : ''}>{t.label}</span>
+                    <span className={`truncate ${t.completed ? 'line-through text-text-faint' : ''}`}>{t.label}</span>
                   </label>
                   <button 
                     onClick={() => handleDeleteTask(t.id)}
-                    className="text-text-faint hover:text-danger-bright transition-colors ml-2"
+                    className="text-text-faint hover:text-danger-bright transition-colors ml-1.5 text-sm font-bold"
                   >
                     &times;
                   </button>
                 </div>
               ))}
             </div>
-
-            {/* Add Task input */}
-            <form onSubmit={handleAddTask} className="flex gap-1.5 pt-2 border-t border-border-soft/40">
-              <input 
-                type="text" 
-                placeholder="New task lead..." 
-                value={newTaskInput} 
-                onChange={e => setNewTaskInput(e.target.value)} 
-                className="flex-1 bg-surface-2 border border-border rounded p-2 text-xs text-text outline-none focus:border-brand"
-              />
-              <button type="submit" className="bg-brand text-bg px-3 py-2 rounded text-xs font-bold hover:bg-brand-bright">Add</button>
-            </form>
           </div>
 
-          {/* ─── 13. INVESTIGATION NOTES ─── */}
-          <div className="glass p-5 rounded-xl bg-surface border border-border-soft space-y-4">
-            <div className="border-b border-border-soft pb-2">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-text">{text.notes}</h3>
+          {/* Add Task input */}
+          <form onSubmit={handleAddTask} className="flex gap-1.5 pt-2 border-t border-border-soft/40">
+            <input 
+              type="text" 
+              placeholder="New task lead..." 
+              value={newTaskInput} 
+              onChange={e => setNewTaskInput(e.target.value)} 
+              className="flex-1 bg-surface-2 border border-border rounded-lg px-2.5 py-1.5 text-xs text-text outline-none focus:border-brand"
+            />
+            <button type="submit" className="bg-brand text-bg px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-brand-bright">Add</button>
+          </form>
+        </div>
+
+        {/* Col 2: Field Notes */}
+        <div className="glass p-5 rounded-2xl bg-surface border border-border-soft flex flex-col justify-between space-y-4 shadow-sm">
+          <div>
+            <div className="border-b border-border-soft pb-2.5 flex justify-between items-center mb-3">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-text flex items-center gap-1.5">
+                <FileText size={14} className="text-brand" /> {text.notes}
+              </h3>
+              <span className="text-[9px] font-mono text-text-faint">Log Entries</span>
             </div>
 
             {/* List */}
             <div className="space-y-2 max-h-40 overflow-y-auto pr-1">
               {notesList.filter(n => n.caseId === selectedFocusCaseId).map(n => (
-                <div key={n.id} className="p-2 bg-surface-2 border border-border-soft/40 rounded-lg text-xs space-y-1">
-                  <p className="text-text leading-relaxed">{n.text}</p>
+                <div key={n.id} className="p-2.5 bg-surface-2 border border-border-soft/40 rounded-xl text-xs space-y-1">
+                  <p className="text-text leading-relaxed text-[11px]">{n.text}</p>
                   <span className="text-[8px] text-text-faint block font-mono font-bold uppercase">{n.createdAt}</span>
                 </div>
               ))}
             </div>
-
-            {/* Add Note Input */}
-            <form onSubmit={handleAddNote} className="flex flex-col gap-1.5 pt-2 border-t border-border-soft/40">
-              <textarea
-                placeholder="Observation or investigative lead notes..."
-                value={newNoteInput}
-                onChange={e => setNewNoteInput(e.target.value)}
-                className="w-full bg-surface-2 border border-border rounded p-2 text-xs text-text outline-none focus:border-brand h-16 resize-none"
-              />
-              <button type="submit" className="bg-brand text-bg py-1.5 rounded text-xs font-bold hover:bg-brand-bright transition-colors uppercase tracking-wider">Save Note</button>
-            </form>
           </div>
 
-          {/* ─── 14. LEGAL RECOMMENDED PROVISIONS ─── */}
-          <div className="glass p-5 rounded-xl bg-surface border border-border-soft space-y-3">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-text border-b border-border-soft pb-2">
-              LEGAL PROVISIONS RECOMMENDATION
-            </h3>
+          {/* Add Note Input */}
+          <form onSubmit={handleAddNote} className="flex flex-col gap-1.5 pt-2 border-t border-border-soft/40">
+            <textarea
+              placeholder="Observation or investigative lead notes..."
+              value={newNoteInput}
+              onChange={e => setNewNoteInput(e.target.value)}
+              className="w-full bg-surface-2 border border-border rounded-lg p-2 text-xs text-text outline-none focus:border-brand h-14 resize-none"
+            />
+            <button type="submit" className="bg-brand text-bg py-1.5 rounded-lg text-xs font-bold hover:bg-brand-bright transition-colors uppercase tracking-wider">Save Note</button>
+          </form>
+        </div>
+
+        {/* Col 3: Legal Provisions Recommendation */}
+        <div className="glass p-5 rounded-2xl bg-surface border border-border-soft flex flex-col justify-between space-y-4 shadow-sm">
+          <div>
+            <div className="border-b border-border-soft pb-2.5 mb-3 flex items-center justify-between">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-text flex items-center gap-1.5">
+                <Scale size={14} className="text-brand" /> LEGAL PROVISIONS (BNS)
+              </h3>
+              <span className="text-[9px] font-mono text-brand font-bold">89% MATCH</span>
+            </div>
             
-            <div className="space-y-2 text-xs">
-              <div className="p-2.5 bg-brand/5 border border-brand/20 rounded-lg">
-                <div className="flex justify-between items-center text-[9px] font-mono font-bold text-brand uppercase mb-1">
-                  <span>PRIMARY APPLICABLE SECTON</span>
-                  <span>89% MATCH</span>
+            <div className="space-y-2.5 text-xs">
+              <div className="p-3 bg-brand/5 border border-brand/20 rounded-xl">
+                <div className="flex justify-between items-center text-[8px] font-mono font-bold text-brand uppercase mb-1">
+                  <span>PRIMARY APPLICABLE SECTION</span>
+                  <span>MATCH CONFIRMED</span>
                 </div>
-                <div className="font-bold text-text">BNS Section 305</div>
+                <div className="font-bold text-text text-sm">BNS Section 305</div>
                 <p className="text-[10px] text-text-dim mt-1 leading-snug">Theft in dwelling house, means of transportation, or place of storage.</p>
               </div>
 
-              <div className="text-[9px] uppercase font-bold text-text-faint tracking-wider pt-1.5">Common Co-Provisions</div>
-              <div className="grid grid-cols-3 gap-1.5 text-center font-mono">
-                {['BNS 303', 'BNS 316', 'BNS 317'].map(bns => (
-                  <div 
-                    key={bns} 
-                    onClick={() => navigate('/legal')}
-                    className="p-1.5 bg-surface-2 border border-border-soft hover:border-brand rounded cursor-pointer text-[10px] text-text font-bold"
-                    title={
-                      bns === 'BNS 303' ? 'Punishment for theft' : 
-                      bns === 'BNS 316' ? 'Criminal breach of trust' : 'Receiving stolen property'
-                    }
-                  >
-                    {bns}
-                  </div>
-                ))}
+              <div>
+                <div className="text-[8.5px] uppercase font-bold text-text-faint tracking-wider mb-1.5">Common Co-Provisions</div>
+                <div className="grid grid-cols-3 gap-1.5 text-center font-mono">
+                  {['BNS 303', 'BNS 316', 'BNS 317'].map(bns => (
+                    <div 
+                      key={bns} 
+                      onClick={() => navigate('/legal')}
+                      className="p-1.5 bg-surface-2 border border-border-soft hover:border-brand rounded-lg cursor-pointer text-[10px] text-text font-bold transition-colors"
+                      title={
+                        bns === 'BNS 303' ? 'Punishment for theft' : 
+                        bns === 'BNS 316' ? 'Criminal breach of trust' : 'Receiving stolen property'
+                      }
+                    >
+                      {bns}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-            <button 
-              onClick={() => navigate('/legal')}
-              className="w-full bg-surface border border-border hover:bg-surface-hover py-2 rounded-lg text-xs font-bold text-text transition-colors uppercase tracking-wider text-center block mt-2"
-            >
-              Open Legal Intelligence
-            </button>
           </div>
 
-          {/* ─── 16. AI INVESTIGATION ASSISTANT ON DASHBOARD ─── */}
-          <div className="glass p-5 rounded-xl bg-surface border border-border-soft space-y-4">
-            <div className="border-b border-border-soft pb-2">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-text flex items-center gap-1">
-                <Sparkles size={13} className="text-brand animate-pulse" /> ASK CRIMELENS AI
+          <button 
+            onClick={() => navigate('/legal')}
+            className="w-full bg-surface border border-border hover:bg-surface-hover py-2 rounded-lg text-xs font-bold text-text transition-colors uppercase tracking-wider text-center"
+          >
+            Open Legal Intelligence
+          </button>
+        </div>
+      </div>
+
+      {/* ─── SECTION 4: AI ASSISTANT & QUICK ACTIONS (2 BALANCED COLUMNS) ─── */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+        {/* Col 1: Ask CrimeLens AI Assistant */}
+        <div className="glass p-5 rounded-2xl bg-surface border border-border-soft flex flex-col justify-between space-y-4 shadow-sm">
+          <div className="space-y-3">
+            <div className="border-b border-border-soft pb-2.5 flex items-center justify-between">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-text flex items-center gap-1.5">
+                <Sparkles size={14} className="text-brand animate-pulse" /> ASK CRIMELENS AI
               </h3>
+              <span className="text-[9px] font-mono text-text-faint">Legal & Investigation Copilot</span>
             </div>
 
             {/* Replies log */}
-            <div className="space-y-3 max-h-52 overflow-y-auto pr-1 text-xs">
+            <div className="space-y-2.5 max-h-48 overflow-y-auto pr-1 text-xs">
               {aiAssistantReplies.map((r, i) => (
                 <div key={i} className="space-y-1.5">
-                  <div className="bg-brand/5 border border-brand/20 p-2.5 rounded-lg text-xs leading-relaxed text-text font-medium">
-                    <span className="text-[8px] uppercase tracking-wider font-bold text-brand block mb-1">Prompt Query:</span>
+                  <div className="bg-brand/5 border border-brand/20 p-2.5 rounded-xl text-xs leading-relaxed text-text font-medium">
+                    <span className="text-[8px] uppercase tracking-wider font-bold text-brand block mb-0.5">Prompt Query:</span>
                     "{r.query}"
                   </div>
-                  <div className="p-2.5 bg-surface-2 border border-border-soft/60 rounded-lg text-xs leading-relaxed text-text-dim font-medium">
-                    <span className="text-[8px] uppercase tracking-wider font-bold text-text-faint block mb-1">CrimeLens AI Engine:</span>
+                  <div className="p-2.5 bg-surface-2 border border-border-soft/60 rounded-xl text-xs leading-relaxed text-text-dim font-medium">
+                    <span className="text-[8px] uppercase tracking-wider font-bold text-text-faint block mb-0.5">CrimeLens AI Engine:</span>
                     {r.reply}
                     {r.buttons && r.buttons.length > 0 && (
                       <div className="flex gap-1.5 mt-2 border-t border-border-soft/30 pt-2">
@@ -2739,29 +2763,68 @@ function CopDashboard() {
                   key={i}
                   type="button"
                   onClick={() => handleSendAiQuery(sp)}
-                  className="px-2 py-0.5 text-[8px] font-bold rounded bg-surface-2 border border-border-soft hover:border-brand text-text-dim transition-colors"
+                  className="px-2 py-0.5 text-[8px] font-bold rounded-md bg-surface-2 border border-border-soft hover:border-brand text-text-dim transition-colors"
                 >
                   "{sp}"
                 </button>
               ))}
             </div>
+          </div>
 
-            {/* Input field */}
-            <div className="flex gap-1.5">
-              <input 
-                type="text" 
-                placeholder="Ask CrimeLens AI Assistant..." 
-                value={aiAssistantQuery} 
-                onChange={e => setAiAssistantQuery(e.target.value)} 
-                className="flex-1 bg-surface-2 border border-border rounded p-2 text-xs text-text outline-none focus:border-brand"
-              />
-              <button 
-                onClick={() => handleSendAiQuery()}
-                className="bg-brand text-bg px-3.5 py-2 rounded text-xs font-bold hover:bg-brand-bright transition-colors"
-              >
-                Send
-              </button>
+          {/* Input field */}
+          <div className="flex gap-1.5 pt-2 border-t border-border-soft/40">
+            <input 
+              type="text" 
+              placeholder="Ask CrimeLens AI Assistant..." 
+              value={aiAssistantQuery} 
+              onChange={e => setAiAssistantQuery(e.target.value)} 
+              className="flex-1 bg-surface-2 border border-border rounded-lg px-3 py-2 text-xs text-text outline-none focus:border-brand"
+            />
+            <button 
+              onClick={() => handleSendAiQuery()}
+              className="bg-brand text-bg px-4 py-2 rounded-lg text-xs font-bold hover:bg-brand-bright transition-colors"
+            >
+              Send
+            </button>
+          </div>
+        </div>
+
+        {/* Col 2: Investigator Quick Actions */}
+        <div className="glass p-5 rounded-2xl bg-surface border border-border-soft flex flex-col justify-between space-y-4 shadow-sm">
+          <div>
+            <div className="border-b border-border-soft pb-2.5 mb-3 flex items-center justify-between">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-text flex items-center gap-1.5">
+                <Compass size={14} className="text-brand" /> INVESTIGATOR QUICK ACTIONS
+              </h3>
+              <span className="text-[9px] font-mono text-text-faint">Rapid Launch</span>
             </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs">
+              {[
+                { label: 'Register FIR', route: '/cases/new', icon: Plus },
+                { label: 'Upload Evidence', route: '/evidence', icon: FileText },
+                { label: 'Network Explorer', route: '/network', icon: Compass },
+                { label: 'Case Search', route: '/case-search', icon: Search },
+                { label: 'Legal Intelligence', route: '/legal', icon: Scale },
+                { label: 'AI Assistant', route: '/assistant', icon: Sparkles },
+                { label: 'CCTV Intelligence', route: '/cctv', icon: Eye },
+                { label: 'Case Reports', route: '/reports', icon: FileBarChart }
+              ].map((act, i) => (
+                <button
+                  key={i}
+                  onClick={() => navigate(act.route)}
+                  className="p-3 bg-surface-2 border border-border-soft hover:border-brand rounded-xl text-left transition-all flex flex-col justify-between h-20 group shadow-sm"
+                >
+                  <act.icon size={16} className="text-brand group-hover:scale-110 transition-transform" />
+                  <span className="text-[10px] font-bold text-text-dim group-hover:text-text mt-2 block">{act.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="p-3 bg-surface-2/60 border border-border-soft/40 rounded-xl text-[10px] font-mono text-text-dim flex items-center justify-between">
+            <span>STATION DISPATCH: ONLINE</span>
+            <span className="text-brand font-bold">KHANDAGIRI PS</span>
           </div>
         </div>
       </div>

@@ -1,40 +1,34 @@
 /**
  * IntelligenceGraph — CrimeLens Network Explorer Canvas
- * Pure React + SVG graph with simple force-layout simulation.
- * No external graph libraries needed.
+ * High-precision SVG graph with collision-free force-layout simulation,
+ * police intelligence HUD aesthetic, and crisp label backgrounds.
  */
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import {
-  NetworkNode, NetworkEdge, NodeType, RelationshipType,
+  NetworkNode, NetworkEdge, NodeType,
   getConnectedNodes, getNodeEdges
 } from '../../mockServices/networkGraphData';
 
 // ─── Visual constants ─────────────────────────────────────────────────────────
 
 const NODE_RADIUS: Record<NodeType, number> = {
-  STATION: 30,
-  CASE: 26,
-  PERSON: 22,
-  PHONE: 20,
-  VEHICLE: 20,
-  LOCATION: 20,
-  EVIDENCE: 18,
+  STATION: 32,
+  CASE: 28,
+  PERSON: 24,
+  PHONE: 22,
+  VEHICLE: 22,
+  LOCATION: 22,
+  EVIDENCE: 20,
 };
 
 const NODE_COLOR: Record<NodeType, string> = {
-  STATION: 'var(--brand)',
-  CASE: 'var(--accent-bright)',
-  PERSON: '#f59e0b',
+  STATION: '#f59e0b',
+  CASE: '#38bdf8',
+  PERSON: '#ec4899',
   PHONE: '#10b981',
   VEHICLE: '#8b5cf6',
   LOCATION: '#f97316',
-  EVIDENCE: '#64748b',
-};
-
-const EDGE_COLOR: Record<string, string> = {
-  CROSS_STATION: 'var(--danger-bright)',
-  AI_DISCOVERED: 'var(--accent-bright)',
-  DEFAULT: 'var(--border)',
+  EVIDENCE: '#94a3b8',
 };
 
 const ICON_PATHS: Record<NodeType, string> = {
@@ -46,8 +40,6 @@ const ICON_PATHS: Record<NodeType, string> = {
   LOCATION: 'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z',
   EVIDENCE: 'M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8zM14 2v6h6M16 13H8M16 17H8M10 9H8',
 };
-
-// ─── Interfaces ───────────────────────────────────────────────────────────────
 
 interface LayoutNode extends NetworkNode {
   x: number;
@@ -66,101 +58,143 @@ interface IntelligenceGraphProps {
   height?: number;
 }
 
-// ─── Force simulation helper ──────────────────────────────────────────────────
+// ─── Deterministic Cluster Layout ───────────────────────────────────────────
 
 function buildInitialLayout(nodes: NetworkNode[], width: number, height: number): LayoutNode[] {
-  // Arrange nodes in a semantic layout
   const cx = width / 2;
   const cy = height / 2;
 
-  return nodes.map((n, i) => {
-    let x = cx, y = cy;
+  const stationNodes = nodes.filter(n => n.type === 'STATION');
+  const caseNodes = nodes.filter(n => n.type === 'CASE');
+  const otherNodes = nodes.filter(n => n.type !== 'STATION' && n.type !== 'CASE');
 
-    // Station ring
-    if (n.type === 'STATION') {
-      const idx = nodes.filter(nn => nn.type === 'STATION').indexOf(n as any);
-      const total = nodes.filter(nn => nn.type === 'STATION').length;
-      const angle = (idx / total) * 2 * Math.PI - Math.PI / 2;
-      x = cx + Math.cos(angle) * Math.min(width, height) * 0.38;
-      y = cy + Math.sin(angle) * Math.min(width, height) * 0.38;
-    }
-    // Cases — around centre
-    else if (n.type === 'CASE') {
-      const idx = nodes.filter(nn => nn.type === 'CASE').indexOf(n as any);
-      const total = nodes.filter(nn => nn.type === 'CASE').length;
-      const angle = (idx / total) * 2 * Math.PI;
-      const r = n.isLocal ? Math.min(width, height) * 0.18 : Math.min(width, height) * 0.28;
-      x = cx + Math.cos(angle) * r;
-      y = cy + Math.sin(angle) * r;
-    }
-    // Entities — scatter
-    else {
-      const angle = (i / nodes.length) * 2 * Math.PI + Math.random() * 0.3;
-      const r = Math.min(width, height) * (0.10 + Math.random() * 0.20);
-      x = cx + Math.cos(angle) * r;
-      y = cy + Math.sin(angle) * r;
-    }
+  const layout: LayoutNode[] = [];
 
-    // Clamp
-    x = Math.max(60, Math.min(width - 60, x));
-    y = Math.max(60, Math.min(height - 60, y));
-
-    return { ...n, x, y, vx: 0, vy: 0 };
+  // 1. Position Stations on left & right poles
+  stationNodes.forEach((st, idx) => {
+    const angle = idx === 0 ? Math.PI : 0; // Left (Khandagiri) vs Right (Cuttack)
+    const dist = Math.min(width, height) * 0.32;
+    layout.push({
+      ...st,
+      x: cx + Math.cos(angle) * dist,
+      y: cy + (idx === 0 ? -20 : 20),
+      vx: 0,
+      vy: 0,
+    });
   });
+
+  // 2. Position Cases clustered near stations
+  caseNodes.forEach((c, idx) => {
+    const isLocal = c.isLocal;
+    const baseAngle = isLocal ? Math.PI * 0.85 : Math.PI * 0.15;
+    const offsetAngle = (idx % 3 - 1) * 0.45;
+    const totalAngle = baseAngle + offsetAngle;
+    const dist = Math.min(width, height) * 0.22;
+    layout.push({
+      ...c,
+      x: cx + Math.cos(totalAngle) * dist,
+      y: cy + Math.sin(totalAngle) * dist * 0.9,
+      vx: 0,
+      vy: 0,
+    });
+  });
+
+  // 3. Position Entities distributed around periphery with cross-station in the bridge zone
+  otherNodes.forEach((node, idx) => {
+    let x = cx;
+    let y = cy;
+
+    if (node.isCrossStation) {
+      // Bridge zone in vertical center column
+      const span = (idx % 4 - 1.5) * 80;
+      x = cx + (idx % 2 === 0 ? -30 : 30);
+      y = cy + span;
+    } else {
+      const angle = (idx / Math.max(1, otherNodes.length)) * 2 * Math.PI;
+      const radius = Math.min(width, height) * (0.34 + (idx % 3) * 0.04);
+      x = cx + Math.cos(angle) * radius;
+      y = cy + Math.sin(angle) * radius * 0.85;
+    }
+
+    layout.push({ ...node, x, y, vx: 0, vy: 0 });
+  });
+
+  return layout;
 }
 
+// ─── Force Step with Anti-Overlap Collision Resolution ─────────────────────
+
 function runForceStep(nodes: LayoutNode[], edges: NetworkEdge[], width: number, height: number): LayoutNode[] {
-  const alpha = 0.06;
-  const repulsion = 2800;
-  const attraction = 0.018;
-  const centerForce = 0.008;
+  const alpha = 0.08;
+  const repulsion = 4500;
+  const attraction = 0.022;
+  const centerForce = 0.005;
 
   const updated = nodes.map(n => ({ ...n }));
 
-  // Repulsion
+  // 1. Aggressive Pairwise Repulsion & Hard Collision Bounds
   for (let i = 0; i < updated.length; i++) {
     for (let j = i + 1; j < updated.length; j++) {
       const dx = updated[j].x - updated[i].x;
       const dy = updated[j].y - updated[i].y;
       const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-      const force = repulsion / (dist * dist);
-      const fx = (dx / dist) * force;
-      const fy = (dy / dist) * force;
-      updated[i].vx -= fx * alpha;
-      updated[i].vy -= fy * alpha;
-      updated[j].vx += fx * alpha;
-      updated[j].vy += fy * alpha;
+      
+      const r_i = NODE_RADIUS[updated[i].type as NodeType] || 24;
+      const r_j = NODE_RADIUS[updated[j].type as NodeType] || 24;
+      const minDist = r_i + r_j + 65; // Safe label + node clearance
+
+      if (dist < minDist) {
+        // Direct overlap avoidance push
+        const overlap = (minDist - dist) * 0.35;
+        const pushX = (dx / dist) * overlap;
+        const pushY = (dy / dist) * overlap;
+        updated[i].vx -= pushX;
+        updated[i].vy -= pushY;
+        updated[j].vx += pushX;
+        updated[j].vy += pushY;
+      } else {
+        const force = repulsion / (dist * dist);
+        const fx = (dx / dist) * force;
+        const fy = (dy / dist) * force;
+        updated[i].vx -= fx * alpha;
+        updated[i].vy -= fy * alpha;
+        updated[j].vx += fx * alpha;
+        updated[j].vy += fy * alpha;
+      }
     }
   }
 
-  // Attraction along edges
+  // 2. Spring Attraction along Edges
   edges.forEach(e => {
     const src = updated.find(n => n.id === e.source);
     const tgt = updated.find(n => n.id === e.target);
     if (!src || !tgt) return;
+
     const dx = tgt.x - src.x;
     const dy = tgt.y - src.y;
     const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-    const targetDist = e.isCrossStation ? 200 : 130;
-    const force = (dist - targetDist) * attraction;
-    src.vx += dx / dist * force;
-    src.vy += dy / dist * force;
-    tgt.vx -= dx / dist * force;
-    tgt.vy -= dy / dist * force;
+    const idealDist = e.isCrossStation ? 220 : 150;
+    const force = (dist - idealDist) * attraction;
+
+    src.vx += (dx / dist) * force;
+    src.vy += (dy / dist) * force;
+    tgt.vx -= (dx / dist) * force;
+    tgt.vy -= (dy / dist) * force;
   });
 
-  // Center pull
-  const cx = width / 2, cy = height / 2;
+  // 3. Center Gravity
+  const cx = width / 2;
+  const cy = height / 2;
   updated.forEach(n => {
     n.vx += (cx - n.x) * centerForce;
     n.vy += (cy - n.y) * centerForce;
   });
 
-  // Apply velocity + dampen + clamp
-  const margin = 60;
+  // 4. Dampen and Clamp within Canvas
+  const margin = 70;
   updated.forEach(n => {
-    n.vx *= 0.7;
-    n.vy *= 0.7;
+    n.vx *= 0.68;
+    n.vy *= 0.68;
     n.x = Math.max(margin, Math.min(width - margin, n.x + n.vx));
     n.y = Math.max(margin, Math.min(height - margin, n.y + n.vy));
   });
@@ -168,7 +202,7 @@ function runForceStep(nodes: LayoutNode[], edges: NetworkEdge[], width: number, 
   return updated;
 }
 
-// ─── Main Component ───────────────────────────────────────────────────────────
+// ─── Main Component ─────────────────────────────────────────────────────────
 
 export function IntelligenceGraph({
   nodes, edges, selectedNodeId, highlightedNodeIds,
@@ -183,24 +217,25 @@ export function IntelligenceGraph({
   const simulationRef = useRef<number>(0);
   const svgRef = useRef<SVGSVGElement>(null);
 
-  // Initialize layout
+  // Initialize layout with iterative relaxation
   useEffect(() => {
-    const initial = buildInitialLayout(nodes, width, height);
-    setLayoutNodes(initial);
+    let current = buildInitialLayout(nodes, width, height);
+    setLayoutNodes(current);
 
-    // Run force simulation for 60 frames on mount
     let frames = 0;
-    let current = initial;
+    const maxFrames = 75;
+
     const tick = () => {
-      if (frames++ < 60) {
+      if (frames++ < maxFrames) {
         current = runForceStep(current, edges, width, height);
         setLayoutNodes([...current]);
         simulationRef.current = requestAnimationFrame(tick);
       }
     };
+
     simulationRef.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(simulationRef.current);
-  }, [nodes.length, edges.length]);
+  }, [nodes.length, edges.length, width, height]);
 
   const getLayoutNode = (id: string) => layoutNodes.find(n => n.id === id);
 
@@ -231,219 +266,294 @@ export function IntelligenceGraph({
     setLastMouse({ x: e.clientX, y: e.clientY });
   }, [dragging, dragPan, lastMouse, zoom]);
 
-  const handleMouseUp = () => { setDragging(null); setDragPan(false); };
+  const handleMouseUp = () => {
+    setDragging(null);
+    setDragPan(false);
+  };
 
   const handleWheel = (e: React.WheelEvent) => {
     e.preventDefault();
-    setZoom(z => Math.max(0.3, Math.min(2.5, z - e.deltaY * 0.001)));
+    setZoom(z => Math.max(0.4, Math.min(2.5, z - e.deltaY * 0.001)));
   };
 
-  const fitGraph = () => { setPan({ x: 0, y: 0 }); setZoom(1); };
-
-  // ── Render ────────────────────────────────────────────────────────────────
+  const fitGraph = () => {
+    setPan({ x: 0, y: 0 });
+    setZoom(1);
+  };
 
   const isHighlighted = (id: string) => !highlightedNodeIds || highlightedNodeIds.size === 0 || highlightedNodeIds.has(id);
 
   return (
-    <svg
-      ref={svgRef}
-      width={width}
-      height={height}
-      className="w-full h-full cursor-grab select-none"
-      style={{ cursor: dragPan ? 'grabbing' : dragging ? 'grabbing' : 'grab' }}
-      onMouseDown={handleSvgMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
-      onWheel={handleWheel}
-    >
-      <defs>
-        {/* Grid pattern */}
-        <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
-          <path d="M 32 0 L 0 0 0 32" fill="none" stroke="var(--border)" strokeWidth="0.5" opacity="0.5" />
-        </pattern>
+    <div className="relative w-full h-full overflow-hidden bg-bg rounded-2xl border border-border-soft">
+      {/* Tactical HUD Header Bar */}
+      <div className="absolute top-3 left-4 z-10 flex items-center gap-3 bg-surface/90 backdrop-blur-md px-3 py-1.5 rounded-lg border border-border-soft shadow-sm pointer-events-none">
+        <span className="w-2 h-2 rounded-full bg-brand animate-ping" />
+        <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-text-dim">
+          GRID: ODISHA-INTEL-NET // {nodes.length} NODES · {edges.length} RELATIONS
+        </span>
+      </div>
 
-        {/* Arrow markers */}
-        <marker id="arrow-default" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-          <path d="M0,0 L0,6 L6,3 z" fill="var(--border)" opacity="0.6" />
-        </marker>
-        <marker id="arrow-cross" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-          <path d="M0,0 L0,6 L6,3 z" fill="var(--danger-bright)" opacity="0.8" />
-        </marker>
-        <marker id="arrow-ai" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-          <path d="M0,0 L0,6 L6,3 z" fill="var(--accent-bright)" opacity="0.7" />
-        </marker>
+      <svg
+        ref={svgRef}
+        width={width}
+        height={height}
+        className="w-full h-full cursor-grab select-none"
+        style={{ cursor: dragPan ? 'grabbing' : dragging ? 'grabbing' : 'grab' }}
+        onMouseDown={handleSvgMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        onWheel={handleWheel}
+      >
+        <defs>
+          {/* Tactical Grid */}
+          <pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse">
+            <path d="M 36 0 L 0 0 0 36" fill="none" stroke="var(--border)" strokeWidth="0.6" opacity="0.35" />
+            <circle cx="0" cy="0" r="1" fill="var(--border)" opacity="0.6" />
+          </pattern>
 
-        {/* Glow filter */}
-        <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
-          <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
-          <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-        <filter id="glow-sm" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
-          <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-      </defs>
+          {/* Markers */}
+          <marker id="arrow-default" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+            <path d="M0,0 L0,7 L7,3.5 z" fill="var(--border-soft)" opacity="0.7" />
+          </marker>
+          <marker id="arrow-cross" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+            <path d="M0,0 L0,8 L8,4 z" fill="var(--danger-bright)" opacity="0.9" />
+          </marker>
+          <marker id="arrow-ai" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+            <path d="M0,0 L0,8 L8,4 z" fill="var(--accent-bright)" opacity="0.85" />
+          </marker>
 
-      {/* Background */}
-      <rect width={width} height={height} fill="transparent" className="canvas-bg" />
-      <rect width={width} height={height} fill="url(#grid)" className="canvas-bg" />
+          {/* Glow Filters */}
+          <filter id="glow-brand" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="5" result="coloredBlur"/>
+            <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="glow-sm" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+            <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
 
-      {/* Graph group (pan + zoom) */}
-      <g transform={`translate(${pan.x},${pan.y}) scale(${zoom})`}>
+        {/* Background & HUD Crosshairs */}
+        <rect width={width} height={height} fill="transparent" className="canvas-bg" />
+        <rect width={width} height={height} fill="url(#grid)" className="canvas-bg" />
 
-        {/* ── Edges ── */}
-        {edges.map(edge => {
-          const src = getLayoutNode(edge.source);
-          const tgt = getLayoutNode(edge.target);
-          if (!src || !tgt) return null;
+        {/* Tactical Corner HUD Accents */}
+        <path d="M 12 28 L 12 12 L 28 12" fill="none" stroke="var(--border)" strokeWidth="1.5" opacity="0.5" />
+        <path d={`M ${width - 28} 12 L ${width - 12} 12 L ${width - 12} 28`} fill="none" stroke="var(--border)" strokeWidth="1.5" opacity="0.5" />
+        <path d={`M 12 ${height - 28} L 12 ${height - 12} L 28 ${height - 12}`} fill="none" stroke="var(--border)" strokeWidth="1.5" opacity="0.5" />
+        <path d={`M ${width - 28} ${height - 12} L ${width - 12} ${height - 12} L ${width - 12} ${height - 28}`} fill="none" stroke="var(--border)" strokeWidth="1.5" opacity="0.5" />
 
-          const isCS = edge.isCrossStation;
-          const isAI = edge.isAiDiscovered;
-          const edgeColor = isCS ? 'var(--danger-bright)' : isAI ? 'var(--accent-bright)' : 'var(--border-soft)';
-          const edgeOpacity = isHighlighted(edge.source) && isHighlighted(edge.target) ? 0.85 : 0.2;
+        {/* Graph World Group (Pan & Zoom) */}
+        <g transform={`translate(${pan.x},${pan.y}) scale(${zoom})`}>
 
-          // Midpoint for label
-          const mx = (src.x + tgt.x) / 2;
-          const my = (src.y + tgt.y) / 2;
+          {/* ── EDGES ── */}
+          {edges.map(edge => {
+            const src = getLayoutNode(edge.source);
+            const tgt = getLayoutNode(edge.target);
+            if (!src || !tgt) return null;
 
-          // Adjust endpoints to node radius
-          const dx = tgt.x - src.x;
-          const dy = tgt.y - src.y;
-          const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-          const srcR = NODE_RADIUS[src.type as NodeType] + 2;
-          const tgtR = NODE_RADIUS[tgt.type as NodeType] + 6;
-          const sx = src.x + (dx / dist) * srcR;
-          const sy = src.y + (dy / dist) * srcR;
-          const tx = tgt.x - (dx / dist) * tgtR;
-          const ty = tgt.y - (dy / dist) * tgtR;
+            const isCS = edge.isCrossStation;
+            const isAI = edge.isAiDiscovered;
+            const edgeColor = isCS ? 'var(--danger-bright)' : isAI ? 'var(--accent-bright)' : 'var(--border-soft)';
+            const edgeOpacity = isHighlighted(edge.source) && isHighlighted(edge.target) ? 0.85 : 0.18;
 
-          return (
-            <g key={edge.id} opacity={edgeOpacity}>
-              <line
-                x1={sx} y1={sy} x2={tx} y2={ty}
-                stroke={edgeColor}
-                strokeWidth={isCS ? 2 : 1.5}
-                strokeDasharray={isAI ? '5 3' : isCS ? '8 4' : undefined}
-                markerEnd={isCS ? 'url(#arrow-cross)' : isAI ? 'url(#arrow-ai)' : 'url(#arrow-default)'}
-              />
-              {/* Edge label */}
-              {(isCS || isAI) && (
-                <text
-                  x={mx} y={my - 6}
-                  textAnchor="middle"
-                  fontSize="9"
-                  fontFamily="monospace"
-                  fill={edgeColor}
-                  className="pointer-events-none"
-                >
-                  {isCS ? 'CROSS-STATION' : 'AI DISCOVERED'}
-                </text>
-              )}
-            </g>
-          );
-        })}
+            const dx = tgt.x - src.x;
+            const dy = tgt.y - src.y;
+            const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+            const srcR = (NODE_RADIUS[src.type as NodeType] || 22) + 3;
+            const tgtR = (NODE_RADIUS[tgt.type as NodeType] || 22) + 8;
 
-        {/* ── Nodes ── */}
-        {layoutNodes.map(node => {
-          const r = NODE_RADIUS[node.type as NodeType];
-          const color = NODE_COLOR[node.type as NodeType] || '#888';
-          const isSelected = node.id === selectedNodeId;
-          const isRestricted = node.accessStatus === 'RESTRICTED';
-          const dimmed = !isHighlighted(node.id);
+            const sx = src.x + (dx / dist) * srcR;
+            const sy = src.y + (dy / dist) * srcR;
+            const tx = tgt.x - (dx / dist) * tgtR;
+            const ty = tgt.y - (dy / dist) * tgtR;
 
-          return (
-            <g
-              key={node.id}
-              transform={`translate(${node.x},${node.y})`}
-              style={{ cursor: 'pointer', opacity: dimmed ? 0.3 : 1 }}
-              onMouseDown={e => handleNodeMouseDown(e, node.id)}
-              onClick={() => onNodeClick(node)}
-            >
-              {/* Selection ring */}
-              {isSelected && (
-                <circle r={r + 8} fill="none" stroke={color} strokeWidth="2" opacity="0.5"
-                  className="animate-pulse" filter="url(#glow-sm)" />
-              )}
+            // Midpoint coordinates for relationship badge
+            const mx = (sx + tx) / 2;
+            const my = (sy + ty) / 2;
 
-              {/* Cross-station ring */}
-              {node.isCrossStation && !isRestricted && (
-                <circle r={r + 5} fill="none" stroke="var(--accent-bright)" strokeWidth="1.5"
-                  strokeDasharray="4 3" opacity="0.6" />
-              )}
+            return (
+              <g key={edge.id} opacity={edgeOpacity}>
+                {/* Edge line */}
+                <line
+                  x1={sx} y1={sy} x2={tx} y2={ty}
+                  stroke={edgeColor}
+                  strokeWidth={isCS ? 2.2 : isAI ? 1.8 : 1.4}
+                  strokeDasharray={isCS ? '8 4' : isAI ? '5 3' : undefined}
+                  markerEnd={isCS ? 'url(#arrow-cross)' : isAI ? 'url(#arrow-ai)' : 'url(#arrow-default)'}
+                />
 
-              {/* Node background */}
-              <circle
-                r={r}
-                fill={isRestricted ? 'var(--bg-elev)' : color}
-                stroke={isRestricted ? 'var(--danger-bright)' : isSelected ? color : 'transparent'}
-                strokeWidth={isSelected ? 3 : isRestricted ? 2 : 0}
-                opacity={isRestricted ? 0.5 : 0.9}
-                filter={isSelected ? 'url(#glow-sm)' : undefined}
-              />
+                {/* Tactical Edge Pill Badge */}
+                {(isCS || isAI) && (
+                  <g transform={`translate(${mx}, ${my})`}>
+                    <rect
+                      x="-44"
+                      y="-9"
+                      width="88"
+                      height="18"
+                      rx="9"
+                      fill="var(--bg)"
+                      stroke={edgeColor}
+                      strokeWidth="1"
+                      opacity="0.95"
+                    />
+                    <text
+                      y="3.5"
+                      textAnchor="middle"
+                      fontSize="8"
+                      fontWeight="bold"
+                      fontFamily="monospace"
+                      fill={edgeColor}
+                      className="pointer-events-none"
+                    >
+                      {isCS ? '⚡ CROSS-PS' : '✦ AI LINK'}
+                    </text>
+                  </g>
+                )}
+              </g>
+            );
+          })}
 
-              {/* Icon */}
-              {isRestricted ? (
-                // Lock icon for restricted
-                <g transform={`translate(-8,-9)`}>
-                  <path
-                    d="M3 10H1V7a5 5 0 0110 0v3h-2V7a3 3 0 00-6 0v3zm9 0H2a1 1 0 00-1 1v6a1 1 0 001 1h10a1 1 0 001-1v-6a1 1 0 00-1-1zm-5 4a1 1 0 11.001 2.001A1 1 0 016 14z"
-                    fill="var(--danger-bright)"
-                    transform="scale(0.85)"
-                  />
-                </g>
-              ) : (
-                <g transform={`translate(-9,-9)`} className="pointer-events-none">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                    stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.9">
-                    <path d={ICON_PATHS[node.type as NodeType]} />
-                  </svg>
-                </g>
-              )}
+          {/* ── NODES ── */}
+          {layoutNodes.map(node => {
+            const r = NODE_RADIUS[node.type as NodeType] || 22;
+            const color = NODE_COLOR[node.type as NodeType] || '#888';
+            const isSelected = node.id === selectedNodeId;
+            const isRestricted = node.accessStatus === 'RESTRICTED';
+            const dimmed = !isHighlighted(node.id);
 
-              {/* Label */}
-              <text
-                y={r + 14}
-                textAnchor="middle"
-                fontSize="10"
-                fontWeight="bold"
-                fontFamily="monospace"
-                fill={isRestricted ? 'var(--danger-bright)' : 'var(--text)'}
-                className="pointer-events-none"
+            const labelText = node.label.length > 20 ? node.label.slice(0, 18) + '…' : node.label;
+            const badgeWidth = Math.max(70, labelText.length * 7 + 16);
+
+            return (
+              <g
+                key={node.id}
+                transform={`translate(${node.x},${node.y})`}
+                style={{ cursor: 'pointer', opacity: dimmed ? 0.25 : 1 }}
+                onMouseDown={e => handleNodeMouseDown(e, node.id)}
+                onClick={() => onNodeClick(node)}
               >
-                {node.label.length > 18 ? node.label.slice(0, 16) + '…' : node.label}
-              </text>
-              {node.sublabel && (
-                <text
-                  y={r + 25}
-                  textAnchor="middle"
-                  fontSize="8.5"
-                  fontFamily="monospace"
-                  fill={isRestricted ? 'var(--danger-bright)' : 'var(--text-dim)'}
-                  className="pointer-events-none"
-                >
-                  {node.sublabel.length > 20 ? node.sublabel.slice(0, 18) + '…' : node.sublabel}
-                </text>
-              )}
-            </g>
-          );
-        })}
-      </g>
+                {/* Glowing Outer Selection Ring */}
+                {isSelected && (
+                  <circle
+                    r={r + 9}
+                    fill="none"
+                    stroke={color}
+                    strokeWidth="2.5"
+                    opacity="0.8"
+                    filter="url(#glow-brand)"
+                    className="animate-pulse"
+                  />
+                )}
 
-      {/* ── Fit / Zoom controls ── */}
-      <g transform={`translate(${width - 48},16)`}>
-        <rect width="34" height="104" rx="6" fill="var(--surface)" stroke="var(--border)" />
-        {[
-          { label: '+', dy: 0, action: () => setZoom(z => Math.min(2.5, z + 0.15)) },
-          { label: '−', dy: 34, action: () => setZoom(z => Math.max(0.3, z - 0.15)) },
-          { label: '⌖', dy: 68, action: fitGraph },
-        ].map(btn => (
-          <g key={btn.dy} transform={`translate(0,${btn.dy})`} onClick={btn.action} style={{ cursor: 'pointer' }}>
-            <rect width="34" height="34" rx="6" fill="transparent" className="hover:fill-surface-hover" />
-            <text x="17" y="21" textAnchor="middle" fontSize="14" fontFamily="monospace" fill="var(--text-dim)">{btn.label}</text>
-          </g>
-        ))}
-      </g>
-    </svg>
+                {/* Cross-station Dashed Orbit */}
+                {node.isCrossStation && !isRestricted && (
+                  <circle
+                    r={r + 6}
+                    fill="none"
+                    stroke="var(--accent-bright)"
+                    strokeWidth="1.5"
+                    strokeDasharray="5 3"
+                    opacity="0.75"
+                  />
+                )}
+
+                {/* Node Solid Circle */}
+                <circle
+                  r={r}
+                  fill={isRestricted ? 'var(--bg-elev)' : color}
+                  stroke={isRestricted ? 'var(--danger-bright)' : isSelected ? '#ffffff' : 'rgba(255,255,255,0.2)'}
+                  strokeWidth={isSelected ? 2.5 : isRestricted ? 2 : 1}
+                  opacity={isRestricted ? 0.6 : 0.95}
+                  filter={isSelected ? 'url(#glow-sm)' : undefined}
+                />
+
+                {/* Node Icon */}
+                {isRestricted ? (
+                  <g transform={`translate(-8,-9)`}>
+                    <path
+                      d="M3 10H1V7a5 5 0 0110 0v3h-2V7a3 3 0 00-6 0v3zm9 0H2a1 1 0 00-1 1v6a1 1 0 001 1h10a1 1 0 001-1v-6a1 1 0 00-1-1zm-5 4a1 1 0 11.001 2.001A1 1 0 016 14z"
+                      fill="var(--danger-bright)"
+                      transform="scale(0.85)"
+                    />
+                  </g>
+                ) : (
+                  <g transform={`translate(-9,-9)`} className="pointer-events-none">
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="white"
+                      strokeWidth="2.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      opacity="0.95"
+                    >
+                      <path d={ICON_PATHS[node.type as NodeType]} />
+                    </svg>
+                  </g>
+                )}
+
+                {/* Readable Label Pill Background */}
+                <g transform={`translate(0, ${r + 6})`}>
+                  <rect
+                    x={-badgeWidth / 2}
+                    y="0"
+                    width={badgeWidth}
+                    height={node.sublabel ? "28" : "18"}
+                    rx="6"
+                    fill="var(--bg-elev)"
+                    stroke={isSelected ? color : "var(--border-soft)"}
+                    strokeWidth={isSelected ? "1.5" : "1"}
+                    opacity="0.95"
+                    className="shadow-sm"
+                  />
+                  <text
+                    y="12"
+                    textAnchor="middle"
+                    fontSize="10"
+                    fontWeight="bold"
+                    fontFamily="monospace"
+                    fill={isRestricted ? 'var(--danger-bright)' : isSelected ? 'var(--accent-bright)' : 'var(--text)'}
+                    className="pointer-events-none"
+                  >
+                    {labelText}
+                  </text>
+                  {node.sublabel && (
+                    <text
+                      y="23"
+                      textAnchor="middle"
+                      fontSize="8"
+                      fontFamily="monospace"
+                      fill={isRestricted ? 'var(--danger-bright)' : 'var(--text-dim)'}
+                      className="pointer-events-none"
+                    >
+                      {node.sublabel.length > 22 ? node.sublabel.slice(0, 20) + '…' : node.sublabel}
+                    </text>
+                  )}
+                </g>
+              </g>
+            );
+          })}
+        </g>
+
+        {/* ── HUD Fit & Zoom Controls ── */}
+        <g transform={`translate(${width - 48}, 16)`}>
+          <rect width="36" height="108" rx="8" fill="var(--surface)" stroke="var(--border)" opacity="0.9" />
+          {[
+            { label: '+', dy: 0, action: () => setZoom(z => Math.min(2.5, z + 0.18)), title: 'Zoom In' },
+            { label: '−', dy: 36, action: () => setZoom(z => Math.max(0.4, z - 0.18)), title: 'Zoom Out' },
+            { label: '⌖', dy: 72, action: fitGraph, title: 'Reset View' },
+          ].map(btn => (
+            <g key={btn.dy} transform={`translate(0,${btn.dy})`} onClick={btn.action} style={{ cursor: 'pointer' }}>
+              <rect width="36" height="36" rx="8" fill="transparent" className="hover:fill-surface-hover transition-colors" />
+              <text x="18" y="23" textAnchor="middle" fontSize="16" fontFamily="monospace" fontWeight="bold" fill="var(--text-dim)">{btn.label}</text>
+            </g>
+          ))}
+        </g>
+      </svg>
+    </div>
   );
 }
