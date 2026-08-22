@@ -1,3 +1,5 @@
+import { CaseRecord, Station, Evidence } from '../mockServices/types';
+
 export interface KarenContext {
   currentUser?: string;
   station?: string;
@@ -5,6 +7,9 @@ export interface KarenContext {
   currentPage?: string;
   selectedEntity?: string;
   role?: string;
+  cases?: CaseRecord[];
+  stations?: Station[];
+  evidence?: Evidence[];
 }
 
 export interface KarenAction {
@@ -22,17 +27,47 @@ export interface KarenResponse {
 
 export function processKarenQuery(query: string, context: KarenContext): KarenResponse {
   const q = query.trim().toLowerCase();
+  const cases = context.cases || [];
+  const stations = context.stations || [];
 
-  // 1. Command: "Tell me about FIR 541"
-  if (q.includes('fir 541') || q.includes('541')) {
+  // Helper to extract case references or number from query
+  const findMatchingCase = (): CaseRecord | undefined => {
+    // Look for exact ID matches first
+    const idMatch = q.match(/(cr|od)-[a-z0-9-]+/);
+    if (idMatch) {
+      const matchId = idMatch[0].toUpperCase();
+      const found = cases.find(c => c.id.toUpperCase() === matchId || c.id.replace(/-/g, '').toUpperCase() === matchId.replace(/-/g, ''));
+      if (found) return found;
+    }
+
+    // Look for numerical matches (e.g. 541)
+    const numberMatch = q.match(/\d+/);
+    if (numberMatch) {
+      const numStr = numberMatch[0];
+      const found = cases.find(c => c.firNumber.includes(numStr) || c.id.includes(numStr));
+      if (found) return found;
+    }
+
+    // Context fallback
+    if (context.currentCaseId) {
+      const found = cases.find(c => c.id === context.currentCaseId);
+      if (found) return found;
+    }
+
+    return undefined;
+  };
+
+  // Helper to resolve navigation path aliases
+  const getCaseRoute = (caseId: string) => `/cases/${caseId}`;
+
+  // ==========================================
+  // DIRECT COMMAND ROUTER (Precedence Rules)
+  // ==========================================
+
+  if (q.includes('tell me about') && q.includes('541')) {
     return {
       intent: 'CASE_LOOKUP',
-      response: `FIR 541 details:
-• Case ID: **CR-KHD-2026-00541**
-• Crime: **Vehicle Theft**
-• Police Station: **Khandagiri PS**
-• Officer: **Inspector Vikram**
-• Status: **Investigation Ongoing**`,
+      response: 'FIR 541 identified.',
       actions: [
         { label: 'OPEN CASE', route: '/investigations/CR-KHD-2026-00541', primary: true },
         { label: 'VIEW NETWORK', route: '/network' },
@@ -40,108 +75,238 @@ export function processKarenQuery(query: string, context: KarenContext): KarenRe
       ]
     };
   }
-
-  // 2. Command: "Show my pending cases"
-  if (q.includes('pending cases') || q.includes('my pending') || q.includes('case desk')) {
+  
+  if (q.includes('open fir 541') || q.includes('open case 541')) {
     return {
-      intent: 'PENDING_CASES',
-      response: `You have:
-• **12 Active Cases**
-• **4 Pending Investigations**
-• **2 High Priority Cases**`,
-      actions: [
-        { label: 'OPEN CASE DESK', route: '/investigations', primary: true }
-      ],
+      intent: 'OPEN_CASE',
+      response: 'Opening case file for FIR 541.',
+      route: '/investigations/CR-KHD-2026-00541'
+    };
+  }
+
+  if (q.includes('show my cases') || q.includes('show cases')) {
+    return {
+      intent: 'OPEN_CASES_LIST',
+      response: 'Opening your active investigations desk.',
       route: '/investigations'
     };
   }
 
-  // 3. Command: "Open this case"
-  if (q.includes('open this case') || q.includes('open case')) {
-    const targetCaseId = context.currentCaseId || 'CR-KHD-2026-00541';
+  if (q.includes('show pending cases') || q.includes('pending cases')) {
     return {
-      intent: 'OPEN_CASE',
-      response: `Opening case workspace for **${targetCaseId}**.`,
-      actions: [
-        { label: 'OPEN CASE WORKSPACE', route: `/investigations/${targetCaseId}`, primary: true }
-      ],
-      route: `/investigations/${targetCaseId}`
+      intent: 'OPEN_PENDING_CASES',
+      response: 'Loading all pending investigations.',
+      route: '/investigations?status=pending'
     };
   }
 
-  // 4. Command: "Show linked cases"
-  if (q.includes('linked cases') || q.includes('related cases') || q.includes('linked') || q.includes('relationship')) {
+  if (q.includes('show linked cases') || q.includes('linked cases')) {
     return {
-      intent: 'LINKED_CASES',
-      response: `I found **3 related investigations** in the central intelligence registry.
-Highest relationship: **CR-CTC-2026-00981**
-Similarity Score: **94%**`,
-      actions: [
-        { label: 'OPEN NETWORK', route: '/network', primary: true }
-      ],
+      intent: 'OPEN_NETWORK',
+      response: 'Opening network relationship graph.',
       route: '/network'
     };
   }
 
-  // 5. Command: "Find similar crimes"
-  if (q.includes('similar crimes') || q.includes('similar cases') || q.includes('find similar')) {
+  if (q.includes('find similar crimes') || q.includes('similar crimes')) {
     return {
-      intent: 'SIMILAR_CRIMES',
-      response: `Scanning Odisha database for similar crime patterns...
-Matched **2 cases** with vehicle theft characteristics.`,
-      actions: [
-        { label: 'VIEW SIMILAR CASES', route: '/legal', primary: true }
-      ],
-      route: '/legal'
+      intent: 'OPEN_SIMILAR_CRIMES',
+      response: 'Opening crime similarity network.',
+      route: '/network?mode=similarity'
     };
   }
 
-  // 6. Command: "Open CCTV footage" / "Open CCTV"
-  if (q.includes('cctv') || q.includes('camera') || q.includes('footage') || q.includes('surveillance')) {
+  if (q.includes('open cctv') || q.includes('cctv')) {
     return {
-      intent: 'CCTV_LOOKUP',
-      response: `I found CCTV streams connected to this investigation.
-• Location: **Patrapada Junction**
-• Time bounds: **22:30 - 23:30**`,
-      actions: [
-        { label: 'OPEN CCTV', route: '/cctv', primary: true }
-      ],
+      intent: 'OPEN_CCTV',
+      response: 'Opening CCTV feeds console.',
       route: '/cctv'
     };
   }
 
-  // 7. Command: "Show BNS sections"
-  if (q.includes('bns sections') || q.includes('bns') || q.includes('sections') || q.includes('provisions') || q.includes('legal')) {
+  if (q.includes('what bns applies') || q.includes('what bns') || q.includes('bns')) {
     return {
-      intent: 'LEGAL_INFO',
-      response: `Possible applicable provisions:
-• **BNS Section 303** (Theft)
-• **BNS Section 316** (Criminal breach of trust)`,
-      actions: [
-        { label: 'OPEN LEGAL INTELLIGENCE', route: '/legal', primary: true }
-      ],
+      intent: 'OPEN_LEGAL',
+      response: 'Accessing Bharatiya Nyaya Sanhita legal provisions.',
       route: '/legal'
     };
   }
 
-  // 8. Command: "Generate report"
-  if (q.includes('generate report') || q.includes('report') || q.includes('draft report')) {
+  if (q.includes('generate report') || q.includes('report') || q.includes('generate report')) {
     return {
-      intent: 'GENERATE_REPORT',
-      response: `Preparing investigation report draft. Redirecting to reports...`,
-      actions: [
-        { label: 'VIEW REPORTS', route: '/reports', primary: true }
-      ],
+      intent: 'OPEN_REPORTS',
+      response: 'Opening reports desk.',
       route: '/reports'
     };
   }
 
-  // 9. Command: "Show crime hotspots"
-  if (q.includes('hotspots') || q.includes('crime hotspots') || q.includes('hotspot')) {
+  if (q.includes('open evidence vault') || q.includes('evidence vault') || q.includes('evidence')) {
+    return {
+      intent: 'OPEN_EVIDENCE',
+      response: 'Opening evidence locker.',
+      route: '/evidence'
+    };
+  }
+
+  if (q.includes('show case timeline') || q.includes('timeline')) {
+    const activeId = context.currentCaseId || 'CR-KHD-2026-00541';
+    return {
+      intent: 'OPEN_TIMELINE',
+      response: 'Opening case timeline logs.',
+      route: `/cases/${activeId}?tab=overview`
+    };
+  }
+
+  if (q.includes('investigation progress') || q.includes('progress')) {
+    const activeId = context.currentCaseId || 'CR-KHD-2026-00541';
+    return {
+      intent: 'OPEN_PROGRESS',
+      response: 'Opening case investigation progress logs.',
+      route: `/cases/${activeId}?tab=overview`
+    };
+  }
+
+  // General Page Navigation Commands
+  if (q.includes('go to dashboard') || q.includes('open dashboard') || q.includes('dashboard')) {
+    return {
+      intent: 'NAVIGATE',
+      response: 'Navigating to Dashboard.',
+      route: '/dashboard'
+    };
+  }
+  if (q.includes('go to register fir') || q.includes('new case') || q.includes('register case') || q.includes('register fir')) {
+    return {
+      intent: 'NAVIGATE',
+      response: 'Opening Register FIR page.',
+      route: '/cases/new'
+    };
+  }
+  if (q.includes('go to station intelligence') || q.includes('station intelligence') || q.includes('open alerts') || q.includes('show alerts') || q.includes('state alerts') || q.includes('intelligence alerts') || q.includes('alerts')) {
+    return {
+      intent: 'NAVIGATE',
+      response: 'Opening State Alerts page.',
+      route: '/intelligence/alerts'
+    };
+  }
+  if (q.includes('go to officers') || q.includes('open officers') || q.includes('go to investigators') || q.includes('investigators') || q.includes('officers')) {
+    return {
+      intent: 'NAVIGATE',
+      response: 'Opening Officers listing.',
+      route: '/investigators'
+    };
+  }
+  if (q.includes('go to access requests') || q.includes('open access requests') || q.includes('access requests') || q.includes('requests')) {
+    return {
+      intent: 'NAVIGATE',
+      response: 'Opening Access Requests page.',
+      route: '/requests'
+    };
+  }
+  if (q.includes('go to stations') || q.includes('open stations') || q.includes('stations')) {
+    return {
+      intent: 'NAVIGATE',
+      response: 'Opening Stations overview.',
+      route: '/stations'
+    };
+  }
+  if (q.includes('go to cases') || q.includes('open cases') || q.includes('cases')) {
+    return {
+      intent: 'NAVIGATE',
+      response: 'Opening Cases database.',
+      route: '/cases'
+    };
+  }
+
+  // ==========================================
+  // DYNAMIC INTELLIGENCE BACKUP SCANNER
+  // ==========================================
+
+  // Next investigation query / Pending cases advice
+  if (q.includes('next') || q.includes('investigate next') || q.includes('workload')) {
+    const pendingCases = cases.filter(c => c.status === 'INVESTIGATING');
+    const myPending = pendingCases.filter(c => c.investigatorId === 'INV-BBSR-001' || c.description.toLowerCase().includes('vikram'));
+    
+    if (myPending.length > 0) {
+      const topPriorityCase = myPending.find(c => c.priority === 'CRITICAL' || c.priority === 'HIGH') || myPending[0];
+      return {
+        intent: 'PENDING_WORKLOAD',
+        response: `Inspector, you have **${myPending.length} active investigations** assigned.
+Recommended next step:
+• Case: **${topPriorityCase.title}** (${topPriorityCase.firNumber})
+• Priority: **${topPriorityCase.priority}**
+• Task: Review newly correlation evidence regarding suspect **Ranga Mohanty**.`,
+        actions: [
+          { label: 'OPEN CASE', route: getCaseRoute(topPriorityCase.id), primary: true },
+          { label: 'VIEW ALL CASES', route: '/cases?filter=pending' }
+        ],
+        route: `/cases?filter=pending`
+      };
+    }
+  }
+
+  // Network links / Criminal relationships
+  if (q.includes('correlation') || q.includes('similar')) {
+    const activeCase = findMatchingCase() || cases.find(c => c.id === 'CR-KHD-2026-00541');
+    if (activeCase) {
+      const vehicleVals = activeCase.entities?.filter(e => e.type === 'VEHICLE').map(e => e.value) || [];
+      const phoneVals = activeCase.entities?.filter(e => e.type === 'PHONE').map(e => e.value) || [];
+      
+      const relatedByVehicle = cases.filter(c => c.id !== activeCase.id && c.entities?.some(e => e.type === 'VEHICLE' && vehicleVals.includes(e.value)));
+      const relatedByPhone = cases.filter(c => c.id !== activeCase.id && c.entities?.some(e => e.type === 'PHONE' && phoneVals.includes(e.value)));
+      
+      let linkSummary = `I analyzed the intelligence graph for Case **${activeCase.firNumber}**:\n`;
+      
+      if (relatedByVehicle.length > 0) {
+        linkSummary += `• **Vehicle Link**: Matched plate **${vehicleVals[0]}** with Case **${relatedByVehicle[0].id}** (Jewelry Heist at Badambadi)\n`;
+      }
+      if (relatedByPhone.length > 0) {
+        linkSummary += `• **Phone Link**: Matched contact number **${phoneVals[0]}** with Case **${relatedByPhone[0].id}**\n`;
+      }
+      if (activeCase.suspects && activeCase.suspects.length > 0) {
+        linkSummary += `• **Suspect Link**: **${activeCase.suspects[0]}** is also associated with **2 other cases** in Cuttack district.\n`;
+      }
+
+      if (relatedByVehicle.length === 0 && relatedByPhone.length === 0) {
+        linkSummary += `• Discovery: Identified **94% similarity correlation** with Case **OD-CTC-2026-00981** in Cuttack.\n`;
+      }
+
+      return {
+        intent: 'CASE_NETWORK',
+        response: linkSummary,
+        actions: [
+          { label: 'VIEW NETWORK EXPLORER', route: `/network`, primary: true },
+          { label: 'OPEN MATCH CASE', route: relatedByVehicle[0] ? getCaseRoute(relatedByVehicle[0].id) : '/cases' }
+        ],
+        route: `/network`
+      };
+    }
+  }
+
+  // Hotspots / Analytics
+  if (q.includes('hotspot') || q.includes('highest pending') || q.includes('performance') || q.includes('trends') || q.includes('analytics')) {
+    const counts: { [key: string]: number } = {};
+    cases.forEach(c => {
+      if (c.status === 'INVESTIGATING' || c.status === 'PENDING') {
+        counts[c.stationId] = (counts[c.stationId] || 0) + 1;
+      }
+    });
+
+    let maxStationId = '';
+    let maxCount = 0;
+    Object.entries(counts).forEach(([sid, cnt]) => {
+      if (cnt > maxCount) {
+        maxCount = cnt;
+        maxStationId = sid;
+      }
+    });
+
+    const highestStation = stations.find(s => s.id === maxStationId)?.name || 'Khandagiri Police Station';
+
     return {
       intent: 'CRIME_HOTSPOTS',
-      response: `Crime hot-spot analytics loaded.
-High activity detected in **Khordha district** (18% increase).`,
+      response: `Crime Analytics & Workload Distribution:
+• **Highest Active Workload**: **${highestStation}** with **${maxCount} active investigations**.
+• Khordha District shows an **18% increase** in vehicle theft indices over the last quarter.`,
       actions: [
         { label: 'VIEW HOTSPOT ANALYTICS', route: '/reports', primary: true }
       ],
@@ -149,54 +314,66 @@ High activity detected in **Khordha district** (18% increase).`,
     };
   }
 
-  // 10. Context Awareness Mock: "Show network" with active case
-  if (q.includes('show network') || q.includes('open network')) {
-    if (context.currentCaseId) {
-      return {
-        intent: 'CONTEXT_NETWORK',
-        response: `Opening network graph for active case **${context.currentCaseId}**.`,
-        actions: [
-          { label: 'OPEN CASE GRAPH', route: `/investigations/${context.currentCaseId}`, primary: true }
-        ],
-        route: `/investigations/${context.currentCaseId}`
-      };
-    } else {
-      return {
-        intent: 'GLOBAL_NETWORK',
-        response: `Opening State Network Explorer.`,
-        actions: [
-          { label: 'OPEN STATE NETWORK', route: '/network', primary: true }
-        ],
-        route: '/network'
-      };
-    }
+  // Generic Case details / Case ID queries
+  const matchedCase = findMatchingCase();
+  if (matchedCase) {
+    const investigatorName = matchedCase.investigatorId === 'INV-BBSR-001' ? 'Inspector Vikram' : 'SI Ranjan Samal';
+    const stationName = stations.find(s => s.id === matchedCase.stationId)?.name || 'Khandagiri Police Station';
+
+    return {
+      intent: 'CASE_LOOKUP',
+      response: `I found details for case **${matchedCase.firNumber}**:
+• Case ID: **${matchedCase.id}**
+• Crime: **${matchedCase.crimeType}**
+• Station: **${stationName}**
+• Officer: **${investigatorName}**
+• Status: **${matchedCase.status}**`,
+      actions: [
+        { label: 'OPEN CASE WORKSPACE', route: getCaseRoute(matchedCase.id), primary: true },
+        { label: 'VIEW RELATIONSHIPS', route: `/network` }
+      ],
+      route: getCaseRoute(matchedCase.id)
+    };
   }
 
-  // 11. Role Awareness & General Fallbacks
+  // Role-based fallback
   const role = context.role || 'OFFICER';
   if (role === 'SUPER_ADMIN') {
     return {
-      intent: 'ROLE_GREETING',
-      response: `State Admin console active. Cyber crime has increased 18% in Khordha district. How can I assist you with state analytics?`,
+      intent: 'COMMISSIONER_DASHBOARD',
+      response: `Good morning Commissioner.
+State Registry is online:
+• Active Stations: **${stations.length || 12}**
+• Registered cases: **${cases.length || 75}**
+• District alert: High activity profile in Khordha district.`,
       actions: [
-        { label: 'VIEW DISTRICT REPORTS', route: '/reports' }
+        { label: 'VIEW STATE PERFORMANCE', route: '/reports', primary: true },
+        { label: 'VIEW ALL STATIONS', route: '/stations' }
       ]
     };
   } else if (role === 'STATION_ADMIN') {
+    const stationName = context.station || 'Khandagiri PS';
     return {
-      intent: 'ROLE_GREETING',
-      response: `Station Admin console active. 3 investigations require attention at your station. How can I assist you today?`,
+      intent: 'STATION_DASHBOARD',
+      response: `Good morning IIC Ramesh.
+**${stationName}** workload status:
+• Active officers: **5**
+• Pending investigations: **4**
+• Average resolution speed: **4.2 days**`,
       actions: [
-        { label: 'VIEW STATION CASES', route: '/investigations' }
+        { label: 'VIEW ASSIGNED CASES', route: '/cases', primary: true },
+        { label: 'VIEW STATION OFFICERS', route: '/investigators' }
       ]
     };
   } else {
-    // Default Investigator / Officer role
+    // Default Investigator / Officer fallback
     return {
-      intent: 'ROLE_GREETING',
-      response: `Investigator companion online. New related case detected. How can I assist you in your investigations today?`,
+      intent: 'INVESTIGATOR_DASHBOARD',
+      response: `Good morning Inspector Vikram.
+I am Karen, your CrimeLens Investigation Assistant. How can I help you scan cases, check evidence, or discover linked networks today?`,
       actions: [
-        { label: 'VIEW SIMILAR CASES', route: '/legal' }
+        { label: 'OPEN MY CASE DESK', route: '/cases', primary: true },
+        { label: 'VIEW LIVE ALERTS', route: '/dashboard' }
       ]
     };
   }

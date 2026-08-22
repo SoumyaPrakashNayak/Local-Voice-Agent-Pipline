@@ -46,6 +46,13 @@ export interface CaseRecord {
   priority: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
   createdAt: string;
   entities: Entity[];
+  bnsSections?: string[];
+  suspects?: string[];
+  vehicles?: string[];
+  locations?: string[];
+  evidenceRefs?: string[];
+  cctvRefs?: string[];
+  linkedCaseIds?: string[];
 }
 
 export type RequestStatus = 'PENDING' | 'APPROVED' | 'REJECTED';

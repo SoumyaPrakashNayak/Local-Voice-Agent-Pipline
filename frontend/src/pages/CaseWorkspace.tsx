@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useMockState } from '../mockServices/MockStateContext';
 import { CaseKnowledgeGraph } from '../components/graph/CaseKnowledgeGraph';
 import { Shield, FileText, Share2, AlertTriangle, FileBarChart, Scale, Bot, Lock, CheckCircle, Clock, Network, AlertCircle, ChevronRight, HelpCircle, Eye } from 'lucide-react';
@@ -10,8 +10,17 @@ export function CaseWorkspace() {
   const { id } = useParams<{ id: string }>();
   const { state, dispatch } = useMockState();
   const navigate = useNavigate();
+  const location = useLocation();
   
   const [activeTab, setActiveTab] = useState<'overview' | 'graph' | 'legal' | 'reports'>('overview');
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const tabParam = searchParams.get('tab');
+    if (tabParam === 'overview' || tabParam === 'graph' || tabParam === 'legal' || tabParam === 'reports') {
+      setActiveTab(tabParam);
+    }
+  }, [location.search]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [draftGenerated, setDraftGenerated] = useState(false);
 

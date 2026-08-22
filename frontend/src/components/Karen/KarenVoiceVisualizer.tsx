@@ -68,6 +68,36 @@ export function KarenVoiceVisualizer({ state }: KarenVoiceVisualizerProps) {
         </div>
       )}
 
+      {/* SPEAKING STATE: Radiating voice wave lines around the orb */}
+      {state === 'SPEAKING' && (
+        <div className="relative w-48 h-48 flex items-center justify-center">
+          <style>{`
+            @keyframes waveform-pulse {
+              0% { transform: scale(0.8); opacity: 0.8; filter: drop-shadow(0 0 5px rgba(0, 243, 255, 0.5)); }
+              50% { transform: scale(1.2); opacity: 0.3; filter: drop-shadow(0 0 20px rgba(0, 243, 255, 0.8)); }
+              100% { transform: scale(1.5); opacity: 0; }
+            }
+            @keyframes wave-rotate {
+              from { transform: rotate(0deg); }
+              to { transform: rotate(360deg); }
+            }
+            .voice-wave {
+              border: 2px dashed rgba(0, 243, 255, 0.45);
+              animation: waveform-pulse 2s cubic-bezier(0.25, 0.8, 0.25, 1) infinite;
+            }
+            .voice-wave-ring {
+              border: 1px dotted rgba(112, 0, 255, 0.4);
+              animation: wave-rotate 10s linear infinite;
+            }
+          `}</style>
+          <div className="voice-wave absolute w-24 h-24 rounded-full" style={{ animationDelay: '0s' }} />
+          <div className="voice-wave absolute w-24 h-24 rounded-full" style={{ animationDelay: '0.6s' }} />
+          <div className="voice-wave absolute w-24 h-24 rounded-full" style={{ animationDelay: '1.2s' }} />
+          <div className="voice-wave-ring absolute w-36 h-36 rounded-full" />
+          <div className="voice-wave-ring absolute w-44 h-44 rounded-full" style={{ animationDirection: 'reverse', animationDuration: '15s' }} />
+        </div>
+      )}
+
       {/* 4. RESPONDING STATE: Radiating sound wave rings */}
       {state === 'RESPONDING' && (
         <div className="relative w-44 h-44 flex items-center justify-center">

@@ -601,7 +601,14 @@ const cases: CaseRecord[] = [
         "type": "VEHICLE",
         "value": "OD-02-AB-1234"
       }
-    ]
+    ],
+    "bnsSections": ["BNS Section 303 (Theft)", "BNS Section 317"],
+    "suspects": ["Ranga Mohanty", "Sibu Jena"],
+    "vehicles": ["OD-02-AB-1234"],
+    "locations": ["Khandagiri Junction", "Patrapada"],
+    "evidenceRefs": ["GPS Tracker Log", "Tire Track Plasters"],
+    "cctvRefs": ["Patrapada Camera 4"],
+    "linkedCaseIds": ["OD-CTC-2026-00981", "OD-BBSR-2026-0001"]
   },
   {
     "id": "OD-CTC-2026-00981",
@@ -625,7 +632,14 @@ const cases: CaseRecord[] = [
         "type": "PHONE",
         "value": "+91-9876543210"
       }
-    ]
+    ],
+    "bnsSections": ["BNS Section 309 (Robbery)", "BNS Section 310"],
+    "suspects": ["Ranga Mohanty", "Kalia Patra"],
+    "vehicles": ["OD-02-AB-1234"],
+    "locations": ["Badambadi Market", "Link Road"],
+    "evidenceRefs": ["Recovered Jewelry Bag", "CCTV Footage"],
+    "cctvRefs": ["Badambadi Square Cam 1"],
+    "linkedCaseIds": ["CR-KHD-2026-00541", "OD-BBSR-2026-0001"]
   },
   {
     "id": "OD-BBSR-2026-0001",
@@ -644,7 +658,14 @@ const cases: CaseRecord[] = [
         "type": "VEHICLE",
         "value": "OD-02-AB-1234"
       }
-    ]
+    ],
+    "bnsSections": ["BNS Section 305 (Burglary)"],
+    "suspects": ["Sibu Jena", "Mantu Sahoo"],
+    "vehicles": ["OD-02-AB-1234"],
+    "locations": ["Unit IV Commercial Block"],
+    "evidenceRefs": ["Lock-pick Tools", "Footprint Dusting"],
+    "cctvRefs": ["Unit IV Lane 2 Cam"],
+    "linkedCaseIds": ["CR-KHD-2026-00541", "OD-CTC-2026-00981"]
   },
   {
     "id": "OD-BBSR-2026-0001",

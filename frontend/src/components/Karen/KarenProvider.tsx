@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useMockState } from '../../mockServices/MockStateContext';
 import { processKarenQuery, KarenResponse, KarenContext } from '../../services/karenService';
 
-export type KarenListeningState = 'IDLE' | 'LISTENING' | 'PROCESSING' | 'RESPONDING';
+export type KarenListeningState = 'IDLE' | 'SPEAKING' | 'LISTENING' | 'PROCESSING' | 'RESPONDING';
 
 export interface KarenMessage {
   sender: 'USER' | 'KAREN';
@@ -30,6 +30,7 @@ interface KarenContextType {
   handleSubmitQuery: (query: string) => void;
   speechSupported: boolean;
   resetKaren: () => void;
+  speak: (text: string, callback?: () => void) => void;
 }
 
 const KarenContextObj = createContext<KarenContextType | undefined>(undefined);
@@ -80,7 +81,7 @@ export const KarenProvider = ({ children }: { children: ReactNode }) => {
       setSpeechSupported(true);
       const rec = new SpeechRecognition();
       rec.continuous = false;
-      rec.interimResults = false;
+      rec.interimResults = true;
       rec.lang = 'en-US';
 
       rec.onstart = () => {
@@ -89,9 +90,27 @@ export const KarenProvider = ({ children }: { children: ReactNode }) => {
       };
 
       rec.onresult = (event: any) => {
-        const resultText = event.results[0][0].transcript;
-        setTranscript(resultText);
-        handleSubmitQuery(resultText);
+        let interimTranscript = '';
+        let finalTranscript = '';
+        
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            finalTranscript += event.results[i][0].transcript;
+          } else {
+            interimTranscript += event.results[i][0].transcript;
+          }
+        }
+        
+        const liveText = finalTranscript || interimTranscript;
+        if (liveText) {
+          setTranscript(liveText);
+        }
+
+        if (event.results[event.results.length - 1].isFinal) {
+          const finalResultText = event.results[event.results.length - 1][0].transcript;
+          setTranscript(finalResultText);
+          handleSubmitQuery(finalResultText);
+        }
       };
 
       rec.onerror = (event: any) => {
@@ -100,13 +119,146 @@ export const KarenProvider = ({ children }: { children: ReactNode }) => {
       };
 
       rec.onend = () => {
-        // Only reset if it didn't transition to PROCESSING
         setListeningState(prev => prev === 'LISTENING' ? 'IDLE' : prev);
       };
 
       setRecognition(rec);
     }
   }, []);
+
+  // 1. Background Wake Word Listener (looks for "hello karen" or "karen" when Karen is closed)
+  useEffect(() => {
+    if (!state.currentUser) return;
+    if (location.pathname === '/' || location.pathname === '/login') return;
+    if (isOpen) return; // Only listen in background when closed
+
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) return;
+
+    let bgRec: any = null;
+    let shouldRestart = true;
+
+    const startBgRec = () => {
+      try {
+        bgRec = new SpeechRecognition();
+        bgRec.continuous = true;
+        bgRec.interimResults = true;
+        bgRec.lang = 'en-US';
+
+        bgRec.onresult = (event: any) => {
+          for (let i = event.resultIndex; i < event.results.length; ++i) {
+            const spoken = event.results[i][0].transcript.toLowerCase();
+            if (spoken.includes('hello karen') || spoken.includes('karen')) {
+              shouldRestart = false;
+              bgRec.stop();
+              setIsOpen(true);
+              break;
+            }
+          }
+        };
+
+        bgRec.onerror = (e: any) => {
+          // Ignore background errors
+        };
+
+        bgRec.onend = () => {
+          if (shouldRestart && !isOpen) {
+            setTimeout(() => {
+              if (shouldRestart && !isOpen) startBgRec();
+            }, 1000);
+          }
+        };
+
+        bgRec.start();
+      } catch (err) {
+        console.warn('Bg SpeechRecognition failed to initialize:', err);
+      }
+    };
+
+    startBgRec();
+
+    return () => {
+      shouldRestart = false;
+      if (bgRec) {
+        bgRec.onend = null;
+        try {
+          bgRec.stop();
+        } catch (e) {}
+      }
+    };
+  }, [isOpen, state.currentUser, location.pathname]);
+
+  // 2. Background Clap Activation (detects sudden loud spike in microphone volume when closed)
+  useEffect(() => {
+    if (!state.currentUser) return;
+    if (location.pathname === '/' || location.pathname === '/login') return;
+    if (isOpen) return; // Only run when closed
+
+    let audioContext: AudioContext | null = null;
+    let mediaStream: MediaStream | null = null;
+    let source: MediaStreamAudioSourceNode | null = null;
+    let processor: ScriptProcessorNode | null = null;
+    let active = true;
+
+    const startClapDetector = async () => {
+      try {
+        mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        if (!active) {
+          mediaStream.getTracks().forEach(track => track.stop());
+          return;
+        }
+
+        const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+        audioContext = new AudioContextClass();
+        source = audioContext.createMediaStreamSource(mediaStream);
+        
+        processor = audioContext.createScriptProcessor(2048, 1, 1);
+        
+        let lastClapTime = 0;
+        processor.onaudioprocess = (e) => {
+          if (!active) return;
+          const inputData = e.inputBuffer.getChannelData(0);
+          let peak = 0;
+          for (let i = 0; i < inputData.length; i++) {
+            const val = Math.abs(inputData[i]);
+            if (val > peak) peak = val;
+          }
+
+          if (peak > 0.85) {
+            const now = Date.now();
+            if (now - lastClapTime > 1500) {
+              lastClapTime = now;
+              setIsOpen(true);
+            }
+          }
+        };
+
+        source.connect(processor);
+        processor.connect(audioContext.destination);
+      } catch (err) {
+        console.warn("Background AudioContext clap detector failed:", err);
+      }
+    };
+
+    startClapDetector();
+
+    return () => {
+      active = false;
+      if (processor && source) {
+        try {
+          source.disconnect(processor);
+        } catch (e) {}
+      }
+      if (audioContext) {
+        try {
+          audioContext.close();
+        } catch (e) {}
+      }
+      if (mediaStream) {
+        mediaStream.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, [isOpen, state.currentUser, location.pathname]);
 
   const startListening = () => {
     if (recognition) {
@@ -116,20 +268,25 @@ export const KarenProvider = ({ children }: { children: ReactNode }) => {
         console.warn('SpeechRecognition already running', e);
       }
     } else {
-      // Simulate speech recognition for testing if unsupported or denied (e.g. headless chromium)
+      // Simulate Speech Recognition with typewriter output for visual parity in browser tests
       setListeningState('LISTENING');
       setTranscript('');
       
-      setTimeout(() => {
-        const isCasePage = window.location.pathname.includes('/cases/');
-        const simulatedText = isCasePage ? "Open CCTV" : "Tell me about FIR 541";
-        setTranscript(simulatedText);
-        
-        // Brief pause to display the simulated text before processing
-        setTimeout(() => {
-          handleSubmitQuery(simulatedText);
-        }, 1000);
-      }, 3000);
+      const isCasePage = window.location.pathname.includes('/cases/');
+      const simulatedText = isCasePage ? "Open CCTV" : "Tell me about FIR 541";
+      let currentIndex = 0;
+      
+      const interval = setInterval(() => {
+        if (currentIndex < simulatedText.length) {
+          setTranscript(simulatedText.slice(0, currentIndex + 1));
+          currentIndex++;
+        } else {
+          clearInterval(interval);
+          setTimeout(() => {
+            handleSubmitQuery(simulatedText);
+          }, 800);
+        }
+      }, 70);
     }
   };
 
@@ -141,10 +298,54 @@ export const KarenProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const speak = (text: string, callback?: () => void) => {
+    if (!('speechSynthesis' in window)) {
+      if (callback) callback();
+      return;
+    }
+    window.speechSynthesis.cancel();
+    
+    // Clean text: strip markdown tags for natural pronunciation
+    const cleanText = text
+      .replace(/\*\*/g, '')
+      .replace(/•/g, '')
+      .replace(/✓/g, '')
+      .replace(/>/g, '')
+      .replace(/:/g, '')
+      .trim();
+
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    
+    utterance.onend = () => {
+      if (callback) callback();
+    };
+    utterance.onerror = (e) => {
+      console.error("SpeechSynthesis error:", e);
+      if (callback) callback();
+    };
+
+    // Load available voices and try to match a premium female voice
+    const voices = window.speechSynthesis.getVoices();
+    const femaleVoice = voices.find(v => 
+      v.name.includes('Google US Female') || 
+      v.name.includes('Zira') || 
+      v.name.includes('Samantha') || 
+      v.name.includes('female')
+    );
+    if (femaleVoice) {
+      utterance.voice = femaleVoice;
+    }
+
+    window.speechSynthesis.speak(utterance);
+  };
+
   const resetKaren = () => {
     setListeningState('IDLE');
     setTranscript('');
     setResponse(null);
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
   };
 
   const handleSubmitQuery = (queryText: string) => {
@@ -165,13 +366,20 @@ export const KarenProvider = ({ children }: { children: ReactNode }) => {
       station,
       currentCaseId,
       currentPage: location.pathname,
-      role
+      role,
+      cases: state.cases,
+      stations: state.stations,
+      evidence: state.evidence
     };
 
     setTimeout(() => {
       const resp = processKarenQuery(queryText, context);
       setResponse(resp);
-      setListeningState('RESPONDING');
+      setListeningState('SPEAKING');
+
+      speak(resp.response, () => {
+        setListeningState('RESPONDING');
+      });
 
       // Keep type compliance for history
       setHistory([
@@ -216,7 +424,7 @@ export const KarenProvider = ({ children }: { children: ReactNode }) => {
 
       // Auto expand Karen core
       setIsOpen(true);
-      setListeningState('RESPONDING');
+      setListeningState('SPEAKING');
 
       const currentUser = state.currentUser?.name || 'Inspector';
 
@@ -232,6 +440,10 @@ Cross-station relationship matching identified a related case in Cuttack Sadar.
         ]
       };
       setResponse(mockResponse);
+      speak(mockResponse.response, () => {
+        setListeningState('RESPONDING');
+      });
+
       setHistory([
         {
           sender: 'KAREN',
@@ -265,7 +477,8 @@ Cross-station relationship matching identified a related case in Cuttack Sadar.
         stopListening,
         handleSubmitQuery,
         speechSupported,
-        resetKaren
+        resetKaren,
+        speak
       }}
     >
       {children}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { KarenResponse } from '../../services/karenService';
+import { navigateKaren } from '../../services/karenNavigationService';
 import { ArrowRight, Sparkles } from 'lucide-react';
 
 interface KarenResponseCardProps {
@@ -11,20 +12,8 @@ interface KarenResponseCardProps {
 export function KarenResponseCard({ response, onActionTriggered }: KarenResponseCardProps) {
   const navigate = useNavigate();
 
-  // Helper to map route aliases transparently (e.g. /investigations -> /cases)
-  const resolveRoute = (r: string) => {
-    let target = r;
-    if (r.startsWith('/investigations/')) {
-      target = r.replace('/investigations/', '/cases/');
-    } else if (r === '/investigations') {
-      target = '/cases';
-    }
-    return target;
-  };
-
   const handleActionClick = (route: string) => {
-    const resolved = resolveRoute(route);
-    navigate(resolved);
+    navigateKaren(route, navigate);
     if (onActionTriggered) {
       onActionTriggered();
     }
