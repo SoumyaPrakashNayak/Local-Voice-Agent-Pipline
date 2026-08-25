@@ -345,30 +345,48 @@ export class GeminiLiveService {
       this.callbacks.onStateChange('CONNECTING');
       console.log('[AIRA GEMINI] Fetching secure ephemeral token from backend...');
 
-      // 3. Fetch ephemeral token from server
-      const tokenUrl = import.meta.env.VITE_GEMINI_TOKEN_URL || 'http://localhost:3001/api/gemini/live-token';
-      const tokenRes = await fetch(tokenUrl);
-      if (!tokenRes.ok) {
-        throw new Error(`Token server returned HTTP ${tokenRes.status}`);
-      }
-      const tokenData = await tokenRes.json();
-      if (!tokenData.token) {
-        throw new Error(tokenData.error || 'Empty token received from server');
+      // 3. Fetch ephemeral token from server or use direct VITE_GEMINI_API_KEY for production deployments
+      let apiKeyToUse = import.meta.env.VITE_GEMINI_API_KEY || '';
+      let modelToUse = 'gemini-2.5-flash-native-audio-preview-12-2025';
+      let voiceToUse = 'Puck';
+
+      if (!apiKeyToUse) {
+        const tokenUrl = import.meta.env.VITE_GEMINI_TOKEN_URL || 'http://localhost:3001/api/gemini/live-token';
+        try {
+          const tokenRes = await fetch(tokenUrl);
+          if (!tokenRes.ok) {
+            throw new Error(`Token server returned HTTP ${tokenRes.status}`);
+          }
+          const tokenData = await tokenRes.json();
+          if (!tokenData.token) {
+            throw new Error(tokenData.error || 'Empty token received from server');
+          }
+          apiKeyToUse = tokenData.token;
+          if (tokenData.model) modelToUse = tokenData.model;
+          if (tokenData.voice) voiceToUse = tokenData.voice;
+        } catch (fetchErr: any) {
+          console.warn('[AIRA GEMINI] Token server unreachable:', fetchErr?.message);
+          if (!apiKeyToUse) {
+            throw new Error(
+              'AIRA Voice Assistant requires VITE_GEMINI_API_KEY or a deployed VITE_GEMINI_TOKEN_URL in production env.'
+            );
+          }
+        }
       }
 
       console.log(`[AIRA GEMINI] Voice configuration:`, {
-        model: tokenData.model || 'gemini-2.5-flash-native-audio-preview-12-2025',
-        voice: tokenData.voice || 'Puck',
+        model: modelToUse,
+        voice: voiceToUse,
       });
 
       // 4. Connect to Gemini Live using @google/genai SDK
       const ai = new GoogleGenAI({
-        apiKey: tokenData.token,
+        apiKey: apiKeyToUse,
         httpOptions: { apiVersion: 'v1alpha' },
       });
 
       const session = await ai.live.connect({
-        model: tokenData.model || 'gemini-2.5-flash-native-audio-preview-12-2025',
+        model: modelToUse,
         config: {
           responseModalities: ['AUDIO' as any],
           inputAudioTranscription: {},
