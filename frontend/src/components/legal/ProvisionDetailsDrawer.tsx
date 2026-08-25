@@ -119,7 +119,7 @@ export function ProvisionDetailsDrawer({ provision, onClose }: ProvisionDetailsD
               </div>
               <div className="bg-surface-2 border border-border-soft rounded-xl p-4">
                 <p className="text-[10px] font-bold text-text-dim uppercase tracking-wider mb-1">
-                  Why CrimeLens identified this provision:
+                  Why S.I.R.I.S identified this provision:
                 </p>
                 <p className="text-sm text-text leading-relaxed">{provision.caseReason}</p>
               </div>

@@ -27,7 +27,7 @@ export function CaseWorkspace() {
   // Similar cases modals / states
   const [showSimilarityModal, setShowSimilarityModal] = useState(false);
   const [showRequestAccessModal, setShowRequestAccessModal] = useState(false);
-  const [justificationText, setJustificationText] = useState("CrimeLens detected a 94% relationship based on shared entity and crime signature. Access requested for investigation correlation.");
+  const [justificationText, setJustificationText] = useState("S.I.R.I.S detected a 94% relationship based on shared entity and crime signature. Access requested for investigation correlation.");
 
   const currentCase = state.cases.find(c => c.id === id);
 
@@ -116,7 +116,7 @@ export function CaseWorkspace() {
             </span>
             {isHeroCase && (
               <span className="text-[10px] font-bold uppercase tracking-wider bg-brand/20 text-brand px-2 py-0.5 rounded border border-brand/30 animate-pulse">
-                CrimeLens Linkage Detected
+                S.I.R.I.S Linkage Detected
               </span>
             )}
           </div>

@@ -80,7 +80,7 @@ export function CCTVModule() {
 
   // Live timer simulation
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: any;
     if (isPlaying) {
       interval = setInterval(() => {
         setSystemTime(prev => {

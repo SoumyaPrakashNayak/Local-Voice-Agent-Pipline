@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, ReactNode } from 'react';
-import { AppState, User, CaseRecord, Evidence, AccessRequest, IntelligenceAlert } from './types';
+import { AppState, User, Station, CaseRecord, Evidence, AccessRequest, IntelligenceAlert } from './types';
 import { initialState } from './initialData';
 
 type Action =

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Shield, Building, User, Lock, Globe, KeyRound, Brain, Video, BarChart3, Car, Fingerprint, ScanFace, Network as NetworkIcon, Mic, FileText, TrendingUp, MapPin, Folder, Share2 } from 'lucide-react';
+import { Shield, Building, User, Lock, Globe, KeyRound, Brain, Video, BarChart3, Car, Fingerprint, ScanFace, Network as NetworkIcon, Folder } from 'lucide-react';
 import { useMockState } from '../mockServices/MockStateContext';
 import { UserRole } from '../mockServices/types';
 
@@ -14,6 +14,13 @@ export function Login() {
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('Demo@123');
   const [error, setError] = useState('');
+
+  // Ensure Hero / Role Selection page always runs in Dark Mode
+  useEffect(() => {
+    const root = window.document.documentElement;
+    root.classList.remove('theme-light');
+    root.classList.add('theme-dark', 'dark');
+  }, []);
 
   // Prefill logic with Odisha credentials
   useEffect(() => {
@@ -52,82 +59,79 @@ export function Login() {
     return <RoleSelectionScreen onSelect={setSelectedRole} />;
   }
 
-  // ARGUS / VERITAS ORIGINAL LOGIN UI
+  // ARGUS / VERITAS ORIGINAL DARK LOGIN UI
   return (
-    <div className="min-h-screen bg-bg flex items-center justify-center p-4 relative font-sans">
-      <div className="w-[380px] bg-surface border border-border rounded-xl relative overflow-hidden shadow-card animate-fade-in">
+    <div className="min-h-screen bg-[#0A0E17] text-[#E8EAF1] flex items-center justify-center p-4 relative font-sans select-none">
+      <div className="w-[390px] bg-[#111827] border border-[#263244] rounded-xl relative overflow-hidden shadow-2xl animate-fade-in">
         {/* Top gold bar from Argus */}
-        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-brand to-transparent" />
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#B88922] to-transparent" />
         
         <div className="p-[38px_36px_32px]">
           <button 
             onClick={() => { setSelectedRole(null); setError(''); }}
-            className="text-[10px] text-text-dim hover:text-text font-bold uppercase tracking-wider mb-8 flex items-center gap-1 transition-colors"
+            className="text-[10px] text-[#94A3B8] hover:text-[#F8FAFC] font-bold uppercase tracking-wider mb-8 flex items-center gap-1 transition-colors"
           >
             &larr; Back to Role Selection
           </button>
 
-          {/* Odisha Police Shield Badge */}
-          <svg className="w-[52px] h-[52px] mx-auto mb-[18px] block" viewBox="0 0 60 60" fill="none">
-            <path d="M30 3 L54 14 V30 C54 44 44 53 30 57 C16 53 6 44 6 30 V14 Z" className="stroke-brand" strokeWidth="1.6"/>
-            <circle cx="30" cy="27" r="8.5" className="stroke-brand" strokeWidth="1.4"/>
-            <circle cx="30" cy="27" r="3" className="fill-brand"/>
-            <path d="M18 27 Q30 15 42 27" className="stroke-brand" strokeWidth="1.2" opacity="0.55"/>
-          </svg>
+          {/* S.I.R.I.S Logo Badge */}
+          <div className="w-[58px] h-[58px] mx-auto mb-[18px] flex items-center justify-center p-1">
+            <img src="/siris.png" alt="S.I.R.I.S" className="w-full h-full object-contain" />
+          </div>
           
-          <div className="font-display text-[22px] font-bold text-center tracking-[0.04em] text-text">CRIMELENS</div>
-          <div className="font-mono text-[10.5px] text-text-faint text-center tracking-[0.12em] uppercase mt-[6px] mb-[30px]">
+          <div className="font-display text-[22px] font-bold text-center tracking-[0.04em] text-[#F8FAFC]">S.I.R.I.S</div>
+          <div className="font-mono text-[10.5px] text-[#94A3B8] text-center tracking-[0.12em] uppercase mt-[6px] mb-[30px]">
             Odisha Police · {selectedRole === 'SUPER_ADMIN' ? 'State Command Login' : selectedRole === 'STATION_ADMIN' ? 'Station Command Login' : 'Investigator Login'}
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
             {selectedRole !== 'SUPER_ADMIN' && (
               <div>
-                <label className="block text-[11.5px] text-text-dim font-bold tracking-[0.02em] mb-[6px] uppercase">Station Code</label>
+                <label className="block text-[11.5px] text-[#94A3B8] font-bold tracking-[0.02em] mb-[6px] uppercase">Station Code</label>
                 <input 
                   type="text" 
                   value={stationCode} 
                   onChange={e => setStationCode(e.target.value)}
-                  className="w-full p-[11px_12px] bg-bg-elev border border-border rounded text-[13px] font-mono text-text focus:outline-none focus:border-brand/70"
+                  className="w-full p-[11px_12px] bg-[#0A0E17] border border-[#263244] rounded text-[13px] font-mono text-[#F8FAFC] focus:outline-none focus:border-[#B88922]/70"
                   required
                 />
               </div>
             )}
             
             <div>
-              <label className="block text-[11.5px] text-text-dim font-bold tracking-[0.02em] mb-[6px] uppercase">
+              <label className="block text-[11.5px] text-[#94A3B8] font-bold tracking-[0.02em] mb-[6px] uppercase">
                 {selectedRole === 'SUPER_ADMIN' ? 'State Police ID' : selectedRole === 'STATION_ADMIN' ? 'IIC / Admin ID' : 'Officer ID'}
               </label>
               <input 
                 type="text" 
                 value={userId} 
                 onChange={e => setUserId(e.target.value)}
-                className="w-full p-[11px_12px] bg-bg-elev border border-border rounded text-[13px] font-mono text-text focus:outline-none focus:border-brand/70"
+                className="w-full p-[11px_12px] bg-[#0A0E17] border border-[#263244] rounded text-[13px] font-mono text-[#F8FAFC] focus:outline-none focus:border-[#B88922]/70"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-[11.5px] text-text-dim font-bold tracking-[0.02em] mb-[6px] uppercase">Password</label>
+              <label className="block text-[11.5px] text-[#94A3B8] font-bold tracking-[0.02em] mb-[6px] uppercase">Password</label>
               <input 
                 type="password" 
                 value={password} 
                 onChange={e => setPassword(e.target.value)}
-                className="w-full p-[11px_12px] bg-bg-elev border border-border rounded text-[13px] font-mono text-text focus:outline-none focus:border-brand/70"
+                className="w-full p-[11px_12px] bg-[#0A0E17] border border-[#263244] rounded text-[13px] font-mono text-[#F8FAFC] focus:outline-none focus:border-[#B88922]/70"
                 required
               />
             </div>
 
             {error && (
-              <div className="text-[11px] text-danger-bright text-center mt-2 font-bold">{error}</div>
+              <div className="text-[11px] text-[#DC2626] text-center mt-2 font-bold">{error}</div>
             )}
 
-            <button type="submit" className="w-full mt-2 bg-brand text-bg py-[11px] font-bold text-[13.5px] rounded hover:bg-brand-bright transition-colors flex items-center justify-center gap-2">
+            <button type="submit" className="w-full mt-2 bg-[#B88922] text-[#0A0E17] py-[11px] font-bold text-[13.5px] rounded hover:bg-[#D1A33A] transition-colors flex items-center justify-center gap-2 shadow-sm">
               <Shield size={16} /> Secure Sign In
             </button>
           </form>
 
-          <div className="mt-[22px] pt-[16px] border-t border-border-soft flex justify-between text-[11px] text-text-faint font-mono">
+          <div className="mt-[22px] pt-[16px] border-t border-[#263244] flex justify-between text-[11px] text-[#64748B] font-mono">
             <span>v2.4.0 · ODISHA POLICE</span>
             <span>Authorized Use Only</span>
           </div>
@@ -200,7 +204,7 @@ function RoleSelectionScreen({ onSelect }: { onSelect: (role: UserRole) => void 
   }, [capabilities.length]);
 
   return (
-    <div className="min-h-screen bg-bg flex items-center justify-center p-4 relative overflow-hidden text-text font-sans">
+    <div className="min-h-screen bg-[#0A0E17] text-[#E8EAF1] flex items-center justify-center p-4 relative overflow-hidden font-sans select-none">
       <style>{`
         @keyframes twinkle {
           0%, 100% { opacity: 0.15; transform: scale(0.7); }
@@ -228,12 +232,12 @@ function RoleSelectionScreen({ onSelect }: { onSelect: (role: UserRole) => void 
       {/* Orbiting HUD Nodes */}
       <div className="absolute inset-0 pointer-events-none z-0">
         <svg className="absolute inset-0 w-full h-full">
-          <ellipse cx="50%" cy="calc(50% + 50px)" rx="44vw" ry="32vh" fill="none" stroke="rgba(79, 168, 184, 0.15)" strokeWidth="1.5" strokeDasharray="6 4" />
+          <ellipse cx="50%" cy="calc(50% + 50px)" rx="44vw" ry="32vh" fill="none" stroke="rgba(79, 168, 184, 0.2)" strokeWidth="1.5" strokeDasharray="6 4" />
         </svg>
         {capabilities.map((cap, idx) => {
           const Icon = cap.icon;
           return (
-            <div key={idx} ref={(el) => { nodeRefs.current[idx] = el; }} className="absolute p-2 rounded-xl border border-brand/20 bg-surface/80 backdrop-blur-md flex items-center gap-2 text-brand">
+            <div key={idx} ref={(el) => { nodeRefs.current[idx] = el; }} className="absolute p-2 rounded-xl border border-[#B88922]/30 bg-[#111827]/85 backdrop-blur-md flex items-center gap-2 text-[#D1A33A]">
               <Icon size={16} />
               <div className="font-mono text-[10px] font-bold tracking-wider">{cap.label}</div>
             </div>
@@ -243,16 +247,16 @@ function RoleSelectionScreen({ onSelect }: { onSelect: (role: UserRole) => void 
 
       <div className="relative z-10 max-w-4xl w-full text-center space-y-12 animate-fade-in">
         <div>
-          <div className="inline-flex items-center justify-center h-20 w-20 rounded-2xl bg-surface/50 backdrop-blur-md border border-brand/30 mb-6 shadow-glow">
-            <Globe size={40} className="text-brand animate-pulse" />
+          <div className="inline-flex items-center justify-center h-24 w-24 rounded-2xl bg-[#111827]/80 backdrop-blur-md border border-[#B88922]/40 mb-6 shadow-glow p-2">
+            <img src="/siris.png" alt="S.I.R.I.S" className="w-full h-full object-contain" />
           </div>
           <h1 className="text-5xl font-display font-bold text-white tracking-tight mb-2 drop-shadow-lg">
-            CRIMELENS
+            S.I.R.I.S
           </h1>
-          <p className="text-brand font-mono text-sm tracking-[0.3em] uppercase drop-shadow-md">
+          <p className="text-[#B88922] font-mono text-sm tracking-[0.3em] uppercase drop-shadow-md">
             Odisha Police Intelligence Network
           </p>
-          <p className="text-white/40 font-mono text-[10px] tracking-[0.2em] uppercase mt-2">
+          <p className="text-white/50 font-mono text-[10px] tracking-[0.2em] uppercase mt-2">
             State Crime Intelligence Network · Demonstration Prototype
           </p>
         </div>
@@ -269,12 +273,15 @@ function RoleSelectionScreen({ onSelect }: { onSelect: (role: UserRole) => void 
 
 function RoleCard({ icon: Icon, title, desc, onClick }: any) {
   return (
-    <button onClick={onClick} className="glass bg-surface/40 hover:bg-surface/60 p-6 rounded-2xl border border-border-soft hover:border-brand hover:shadow-glow transition-all group flex flex-col items-center text-center backdrop-blur-md">
-      <div className="h-12 w-12 rounded-full bg-surface flex items-center justify-center mb-4 group-hover:bg-brand/20 group-hover:text-brand text-text-dim transition-colors border border-transparent group-hover:border-brand/30">
+    <button 
+      onClick={onClick} 
+      className="bg-[#111827]/85 hover:bg-[#1A2338]/95 p-6 rounded-2xl border border-[#263244] hover:border-[#B88922] hover:shadow-glow transition-all group flex flex-col items-center text-center backdrop-blur-md"
+    >
+      <div className="h-12 w-12 rounded-full bg-[#1E293B] flex items-center justify-center mb-4 group-hover:bg-[#B88922]/20 text-[#94A3B8] group-hover:text-[#D1A33A] transition-colors border border-[#334155] group-hover:border-[#B88922]/40">
         <Icon size={24} />
       </div>
-      <h3 className="text-lg font-bold text-white tracking-wider">{title}</h3>
-      <p className="text-sm text-text-dim mt-2 font-mono uppercase">{desc}</p>
+      <h3 className="text-lg font-bold text-[#F8FAFC] tracking-wider">{title}</h3>
+      <p className="text-sm text-[#94A3B8] mt-2 font-mono uppercase">{desc}</p>
     </button>
   );
 }

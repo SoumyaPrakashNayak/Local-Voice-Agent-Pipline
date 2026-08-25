@@ -1,7 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { Sidebar } from "./Sidebar";
 import { TopNav } from "./TopNav";
-import { VoiceCommander } from "../dashboard/VoiceCommander";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -27,7 +26,6 @@ export function DashboardLayout({ children, mainClassName }: DashboardLayoutProp
           {children}
         </main>
       </div>
-      <VoiceCommander sidebarCollapsed={sidebarCollapsed} />
     </div>
   );
 }

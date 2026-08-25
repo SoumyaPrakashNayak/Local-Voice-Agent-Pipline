@@ -3,8 +3,49 @@
 @tailwind utilities;
 
 @layer base {
+  /* Default: State Police Intelligence Workstation — Light Theme */
   :root {
-    /* DEFAULT (Argus Dark Theme) */
+    --bg: #F5F7FA;
+    --bg-elev: #FFFFFF;
+    --surface: #FFFFFF;
+    --surface-2: #F8FAFC;
+    --surface-hover: #F1F5F9;
+    --border: #D9E0E8;
+    --border-soft: #E4E7EC;
+    --border-strong: #C5CED9;
+    --text: #172033;
+    --text-dim: #5B6678;
+    --text-faint: #7A8699;
+    --disabled: #A5AFBD;
+    
+    --brand: #B88922; /* Institutional Gold */
+    --brand-bright: #D1A33A;
+    
+    --accent: #1D4ED8; /* Institutional Blue */
+    --accent-bright: #2563EB;
+    
+    --danger: #B91C1C;
+    --danger-bright: #DC2626;
+    --success: #15803D;
+    --warning: #B45309;
+    --info: #0369A1;
+
+    /* Semantic Navigation Tokens - Light */
+    --nav-bg: transparent;
+    --nav-text: #5B6678;
+    --nav-hover-bg: #F1F5F9;
+    --nav-hover-text: #172033;
+    --nav-active-bg: #EFF6FF;
+    --nav-active-text: #1D4ED8;
+    --nav-active-icon: #1D4ED8;
+    --nav-active-border: #BFDBFE;
+    --nav-active-indicator: #1D4ED8;
+  }
+
+  /* Dark Theme Tokens */
+  .theme-dark,
+  html.dark,
+  :root.dark {
     --bg: #0A0E17;
     --bg-elev: #0F1522;
     --surface: #141B2B;
@@ -12,45 +53,73 @@
     --surface-hover: #202A42;
     --border: #26314A;
     --border-soft: #1D2740;
+    --border-strong: #334155;
     --text: #E8EAF1;
     --text-dim: #8891A8;
     --text-faint: #5B6479;
+    --disabled: #475569;
     
     --brand: #C6A15B; /* Gold */
     --brand-bright: #E3C077;
     
-    --accent: #4FA8B8; /* Teal */
+    --accent: #38BDF8; /* Cyan/Sky */
     --accent-bright: #7CCBDA;
     
     --danger: #C4453A;
     --danger-bright: #E36D5F;
     --success: #4C9A6A;
     --warning: #D69A3E;
+    --info: #38BDF8;
+
+    /* Semantic Navigation Tokens - Dark */
+    --nav-bg: transparent;
+    --nav-text: #8891A8;
+    --nav-hover-bg: #1A2338;
+    --nav-hover-text: #E8EAF1;
+    --nav-active-bg: #1E293B;
+    --nav-active-text: #F8FAFC;
+    --nav-active-icon: #38BDF8;
+    --nav-active-border: #334155;
+    --nav-active-indicator: #38BDF8;
   }
 
+  /* Explicit light class */
   .theme-light {
-    /* Veritas Light Theme */
-    --bg: #E7E5DD;
-    --bg-elev: #F1EFE7;
-    --surface: #FBFAF6;
-    --surface-2: #F1EFE7;
-    --surface-hover: #E7E5DD;
-    --border: #D3D0C4;
-    --border-soft: #B8B4A4;
-    --text: #1C2333;
-    --text-dim: #4A5063;
-    --text-faint: #8A8D9B;
+    --bg: #F5F7FA;
+    --bg-elev: #FFFFFF;
+    --surface: #FFFFFF;
+    --surface-2: #F8FAFC;
+    --surface-hover: #F1F5F9;
+    --border: #D9E0E8;
+    --border-soft: #E4E7EC;
+    --border-strong: #C5CED9;
+    --text: #172033;
+    --text-dim: #5B6678;
+    --text-faint: #7A8699;
+    --disabled: #A5AFBD;
     
-    --brand: #93732E; /* Gold */
-    --brand-bright: #B3915A;
+    --brand: #B88922;
+    --brand-bright: #D1A33A;
     
-    --accent: #1F2E4D; /* Navy */
-    --accent-bright: #33487A;
+    --accent: #1D4ED8;
+    --accent-bright: #2563EB;
     
-    --danger: #8E3A30; /* Brick */
-    --danger-bright: #B14E41;
-    --success: #4A6B4F;
-    --warning: #D69A3E;
+    --danger: #B91C1C;
+    --danger-bright: #DC2626;
+    --success: #15803D;
+    --warning: #B45309;
+    --info: #0369A1;
+
+    /* Semantic Navigation Tokens - Light */
+    --nav-bg: transparent;
+    --nav-text: #5B6678;
+    --nav-hover-bg: #F1F5F9;
+    --nav-hover-text: #172033;
+    --nav-active-bg: #EFF6FF;
+    --nav-active-text: #1D4ED8;
+    --nav-active-icon: #1D4ED8;
+    --nav-active-border: #BFDBFE;
+    --nav-active-indicator: #1D4ED8;
   }
 
   * {
@@ -60,7 +129,7 @@
   body {
     background-color: var(--bg);
     color: var(--text);
-    @apply antialiased transition-colors duration-300;
+    @apply antialiased transition-colors duration-200;
     min-height: 100vh;
   }
 
@@ -82,18 +151,17 @@
 @layer components {
   .glass {
     background-color: var(--surface);
-    border: 1px solid var(--border-soft);
-    @apply shadow-sm;
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
   }
 
   .glass-hover {
-    @apply transition-all duration-300 hover:shadow-md;
-    border-color: var(--border);
+    @apply transition-all duration-200 hover:shadow-sm;
+    border-color: var(--border-strong, #C5CED9);
   }
 
   .text-gradient {
-    background: linear-gradient(to right, var(--brand), var(--brand-bright));
-    -webkit-background-clip: text;
-    color: transparent;
+    color: var(--brand);
+    font-weight: 700;
   }
 }

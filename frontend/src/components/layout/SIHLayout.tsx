@@ -7,21 +7,30 @@ import {
 } from 'lucide-react';
 import { useMockState } from '../../mockServices/MockStateContext';
 import { useLanguage, LanguageCode } from '../../context/LanguageContext';
+import { AiraProvider } from '../Aira/AiraProvider';
+import { AiraOrb } from '../Aira/AiraOrb';
+import { AiraVoicePanel } from '../Aira/AiraVoicePanel';
 
 export function SIHLayout() {
   const { state, dispatch } = useMockState();
   const { language, setLanguage, t, languages } = useLanguage();
   const navigate = useNavigate();
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    return (localStorage.getItem('crimelens_theme') as 'dark' | 'light') || 'light';
+  });
   const [langMenuOpen, setLangMenuOpen] = useState(false);
   const langMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const root = window.document.documentElement;
-    root.classList.remove('theme-light', 'dark');
+    root.classList.remove('theme-light', 'theme-dark', 'dark');
     if (theme === 'light') {
       root.classList.add('theme-light');
+    } else {
+      root.classList.add('theme-dark', 'dark');
     }
+    localStorage.setItem('crimelens_theme', theme);
   }, [theme]);
 
   // Close language menu on outside click
@@ -38,7 +47,7 @@ export function SIHLayout() {
   const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark');
 
   if (!state.currentUser) {
-    return <div className="p-8 text-white">Redirecting to login...</div>;
+    return <div className="p-8 text-text">Redirecting to login...</div>;
   }
 
   const role = state.currentUser.role;
@@ -59,130 +68,145 @@ export function SIHLayout() {
   const currentLangObj = languages.find(l => l.code === language) || languages[0];
 
   return (
-    <div className="flex h-screen bg-bg text-text font-sans">
+    <AiraProvider>
+      <div className="flex h-screen bg-bg text-text font-sans selection:bg-accent/15 selection:text-accent">
       {/* Sidebar Navigation */}
-      <aside className="w-64 flex flex-col bg-bg-elev border-r border-border-soft">
+      <aside className="w-64 flex flex-col bg-surface border-r border-border shadow-[1px_0_2px_rgba(16,24,40,0.02)]">
         <div className="p-5 border-b border-border-soft">
-          <h1 className="text-xl font-display font-bold text-gradient tracking-tight">{t('brand.name', 'CRIMELENS')}</h1>
-          <p className="text-[10px] text-text-dim uppercase tracking-wider font-mono mt-1">{t('brand.tagline', 'Odisha Police Intelligence')}</p>
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg overflow-hidden bg-slate-950/40 border border-brand/30 flex items-center justify-center p-0.5 shadow-sm">
+              <img src="/siris.png" alt="S.I.R.I.S" className="w-full h-full object-contain" />
+            </div>
+            <div>
+              <h1 className="text-lg font-display font-bold text-brand tracking-tight leading-none">{t('brand.name', 'S.I.R.I.S')}</h1>
+              <p className="text-[9px] text-text-dim uppercase tracking-widest font-mono mt-1">{t('brand.tagline', 'Odisha Police Intel')}</p>
+            </div>
+          </div>
         </div>
 
         <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
           {isSuperAdmin && (
             <>
-              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">{t('nav.section.stateCommand', 'STATE COMMAND')}</div>
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-3 mb-1.5 tracking-wider">{t('nav.section.stateCommand', 'STATE COMMAND')}</div>
               <NavItem to="/dashboard" icon={LayoutDashboard} label={t('nav.commandCenter', 'Command Center')} />
               
-              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">{t('nav.section.policeAdmin', 'POLICE ADMINISTRATION')}</div>
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-1.5 tracking-wider">{t('nav.section.policeAdmin', 'POLICE ADMINISTRATION')}</div>
               <NavItem to="/stations" icon={Building} label={t('nav.policeStations', 'Police Stations')} />
               
-              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">{t('nav.section.caseIntel', 'CASE INTELLIGENCE')}</div>
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-1.5 tracking-wider">{t('nav.section.caseIntel', 'CASE INTELLIGENCE')}</div>
               <NavItem to="/cases" icon={Search} label={t('nav.caseSearch', 'State Case Registry')} />
               <NavItem to="/intelligence/alerts" icon={ShieldAlert} label={t('nav.notifications', 'State Alerts')} badge={unreadAlerts} />
               
-              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">{t('nav.section.networkIntel', 'NETWORK INTELLIGENCE')}</div>
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-1.5 tracking-wider">{t('nav.section.networkIntel', 'NETWORK INTELLIGENCE')}</div>
               <NavItem to="/network" icon={Network} label={t('nav.networkExplorer', 'State Network Explorer')} />
               
-              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">{t('nav.section.reports', 'REPORTS')}</div>
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-1.5 tracking-wider">{t('nav.section.reports', 'REPORTS')}</div>
               <NavItem to="/reports" icon={FileBarChart} label={t('nav.monthlyReports', 'Monthly Crime Reports')} />
             </>
           )}
 
           {role === 'STATION_ADMIN' && (
             <>
-              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">{t('nav.section.myDesk', 'COMMAND')}</div>
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-3 mb-1.5 tracking-wider">{t('nav.section.myDesk', 'COMMAND')}</div>
               <NavItem to="/dashboard" icon={LayoutDashboard} label={t('nav.dashboard', 'Dashboard')} />
               
-              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">{t('nav.section.investigate', 'INVESTIGATIONS')}</div>
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-1.5 tracking-wider">{t('nav.section.investigate', 'INVESTIGATIONS')}</div>
               <NavItem to="/cases" icon={Search} label={t('nav.allCases', 'All Cases')} />
               <NavItem to="/cases/new" icon={FilePlus} label={t('nav.registerFir', 'Register FIR')} />
               <NavItem to="/evidence" icon={FileText} label={t('nav.evidenceVault', 'Evidence Vault')} />
               
-              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">{t('nav.section.intelligence', 'INTELLIGENCE')}</div>
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-1.5 tracking-wider">{t('nav.section.intelligence', 'INTELLIGENCE')}</div>
               <NavItem to="/network" icon={Network} label={t('nav.networkExplorer', 'Network Explorer')} />
               <NavItem to="/legal" icon={Scale} label={t('nav.legalIntelligence', 'Legal Intelligence')} />
               <NavItem to="/assistant" icon={Sparkles} label={t('nav.aiAssistant', 'AI Assistant')} />
               
-              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">{t('nav.section.operations', 'OPERATIONS')}</div>
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-1.5 tracking-wider">{t('nav.section.operations', 'OPERATIONS')}</div>
               <NavItem to="/investigators" icon={Users} label={t('nav.officers', 'Officers')} />
               <NavItem to="/requests" icon={Lock} label={t('nav.accessRequests', 'Access Requests')} badge={pendingRequests} />
               
-              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">{t('nav.section.reports', 'REPORTS')}</div>
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-1.5 tracking-wider">{t('nav.section.reports', 'REPORTS')}</div>
               <NavItem to="/reports" icon={FileBarChart} label={t('nav.caseReports', 'Case Reports')} />
             </>
           )}
 
           {role === 'OFFICER' && (
             <>
-              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">{t('nav.section.myDesk', 'MY DESK')}</div>
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-3 mb-1.5 tracking-wider">{t('nav.section.myDesk', 'MY DESK')}</div>
               <NavItem to="/dashboard" icon={LayoutDashboard} label={t('nav.dashboard', 'Dashboard')} />
               <NavItem to="/cases" icon={Briefcase} label={t('nav.myInvestigations', 'My Investigations')} />
               <NavItem to="/requests" icon={Lock} label={t('nav.accessRequests', 'Access Requests')} badge={outgoingRequestsCount} />
               
-              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">{t('nav.section.investigate', 'INVESTIGATE')}</div>
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-1.5 tracking-wider">{t('nav.section.investigate', 'INVESTIGATE')}</div>
               <NavItem to="/cases/new" icon={FilePlus} label={t('nav.registerFir', 'Register FIR')} />
               <NavItem to="/evidence" icon={FileText} label={t('nav.evidenceVault', 'Evidence Vault')} />
               <NavItem to="/case-search" icon={Search} label={t('nav.caseSearch', 'Case Search')} />
               
-              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">{t('nav.section.intelligence', 'INTELLIGENCE')}</div>
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-1.5 tracking-wider">{t('nav.section.intelligence', 'INTELLIGENCE')}</div>
               <NavItem to="/network" icon={Network} label={t('nav.networkExplorer', 'Network Explorer')} />
               <NavItem to="/reports" icon={FileBarChart} label={t('nav.crimeIntelligence', 'Crime Intelligence')} />
               <NavItem to="/legal" icon={Scale} label={t('nav.legalIntelligence', 'Legal Intelligence')} />
               
-              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">{t('nav.section.assistance', 'ASSISTANCE')}</div>
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-1.5 tracking-wider">{t('nav.section.assistance', 'ASSISTANCE')}</div>
               <NavItem to="/assistant" icon={Sparkles} label={t('nav.aiAssistant', 'AI Assistant')} />
 
-              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-2 tracking-wider">{t('nav.section.reports', 'REPORTS')}</div>
+              <div className="text-[10px] uppercase font-bold text-text-faint px-3 mt-4 mb-1.5 tracking-wider">{t('nav.section.reports', 'REPORTS')}</div>
               <NavItem to="/reports" icon={FileBarChart} label={t('nav.caseReports', 'Case Reports')} />
             </>
           )}
         </nav>
 
-        <div className="p-4 border-t border-border-soft">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="h-8 w-8 rounded-full bg-brand/20 flex items-center justify-center text-brand font-bold border border-brand/30">
+        <div className="p-3.5 border-t border-border-soft bg-surface-2/60">
+          <div className="flex items-center gap-3 mb-3 px-1">
+            <div className="h-8 w-8 rounded-lg bg-brand/10 flex items-center justify-center text-brand font-bold border border-brand/30 shrink-0 shadow-sm">
               {state.currentUser.name.charAt(0)}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold text-text truncate">{state.currentUser.name}</p>
-              <p className="text-[10px] font-mono text-brand truncate">{state.currentUser.rank}</p>
+              <p className="text-xs font-bold text-text truncate">{state.currentUser.name}</p>
+              <p className="text-[10px] font-mono text-brand truncate font-medium">{state.currentUser.rank}</p>
             </div>
           </div>
           
-          <div className="flex items-center justify-between">
-            <button onClick={toggleTheme} className="p-2 text-text-dim hover:text-text transition-colors" title="Toggle Theme">
-              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+          <div className="flex items-center justify-between pt-1 border-t border-border-soft">
+            <button
+              onClick={toggleTheme}
+              className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-text-dim hover:text-text hover:bg-surface-hover rounded-md transition-colors"
+              title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+            >
+              {theme === 'dark' ? <Sun size={15} className="text-warning" /> : <Moon size={15} className="text-text-dim" />}
+              <span className="text-[11px] font-medium">{theme === 'dark' ? 'Light' : 'Dark'}</span>
             </button>
             <button 
               onClick={() => { dispatch({ type: 'SET_USER', payload: null as any }); navigate('/'); }}
-              className="p-2 text-text-dim hover:text-danger-bright transition-colors" title="Secure Logout"
+              className="p-1.5 text-text-dim hover:text-danger hover:bg-danger/10 rounded-md transition-colors"
+              title="Secure Logout"
             >
-              <LogOut size={18} />
+              <LogOut size={16} />
             </button>
           </div>
         </div>
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
-        <header className="h-14 bg-surface border-b border-border-soft flex items-center justify-between px-6 shrink-0 z-20">
-          <div className="flex items-center gap-4">
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden relative bg-bg">
+        <header className="h-14 bg-surface border-b border-border flex items-center justify-between px-6 shrink-0 z-20 shadow-[0_1px_2px_rgba(16,24,40,0.02)]">
+          <div className="flex items-center gap-3">
             {state.currentUser.stationId ? (
-              <div className="flex items-center gap-2 text-xs font-mono bg-bg-elev px-3 py-1.5 rounded-md border border-border">
-                <span className="text-text-dim">{t('header.station', 'STATION')}:</span>
-                <span className="font-bold text-accent-bright">
-                  {state.stations.find(s => s.id === state.currentUser?.stationId)?.name} [{state.currentUser.stationId}]
+              <div className="flex items-center gap-2 text-xs font-mono bg-surface-2 px-3 py-1.5 rounded-lg border border-border">
+                <span className="text-text-faint font-semibold uppercase text-[10px]">{t('header.station', 'STATION')}:</span>
+                <span className="font-bold text-text">
+                  {state.stations.find(s => s.id === state.currentUser?.stationId)?.name}
                 </span>
+                <span className="text-text-dim text-[10px]">[{state.currentUser.stationId}]</span>
               </div>
             ) : (
-              <div className="flex items-center gap-2 text-xs font-mono bg-brand/10 text-brand px-3 py-1.5 rounded-md border border-brand/30">
+              <div className="flex items-center gap-2 text-xs font-mono bg-brand/10 text-brand px-3 py-1.5 rounded-lg border border-brand/30 font-semibold">
                 <Shield size={14} /> {t('header.stateCommand', 'ODISHA POLICE · STATE COMMAND')}
               </div>
             )}
             
             {state.isProcessingIntelligence && (
-              <div className="flex items-center gap-2 text-[10px] font-bold text-brand animate-pulse uppercase tracking-wider">
-                <Sparkles size={14} /> {t('header.engineRunning', 'Intelligence Engine Running...')}
+              <div className="flex items-center gap-2 text-[10px] font-bold text-brand animate-pulse uppercase tracking-wider bg-brand/5 border border-brand/20 px-2.5 py-1 rounded-md">
+                <Sparkles size={13} /> {t('header.engineRunning', 'Intelligence Engine Running...')}
               </div>
             )}
           </div>
@@ -193,7 +217,7 @@ export function SIHLayout() {
               <button
                 type="button"
                 onClick={() => setLangMenuOpen(prev => !prev)}
-                className="flex items-center gap-2 bg-surface-2 hover:bg-surface-hover border border-border-soft hover:border-brand/40 px-3 py-1.5 rounded-lg text-xs font-semibold text-text transition-all shadow-sm"
+                className="flex items-center gap-2 bg-surface hover:bg-surface-hover border border-border hover:border-brand/40 px-3 py-1.5 rounded-lg text-xs font-semibold text-text transition-all shadow-sm"
                 title="Change language"
               >
                 <Globe size={14} className="text-brand shrink-0" />
@@ -202,7 +226,7 @@ export function SIHLayout() {
               </button>
 
               {langMenuOpen && (
-                <div className="absolute right-0 mt-1.5 w-44 bg-surface border border-border rounded-xl shadow-glass py-1.5 z-50 animate-fade-in divide-y divide-border-soft/40">
+                <div className="absolute right-0 mt-1.5 w-44 bg-surface border border-border rounded-xl shadow-lg py-1.5 z-50 animate-fade-in divide-y divide-border-soft">
                   <div className="px-3 py-1 text-[10px] font-bold font-mono uppercase tracking-wider text-text-faint">
                     {t('header.language', 'Select Language')}
                   </div>
@@ -232,10 +256,14 @@ export function SIHLayout() {
               )}
             </div>
 
-            <button onClick={() => navigate('/intelligence/alerts')} className="relative p-2 text-text-dim hover:text-text transition-colors">
-              <Bell size={20} />
+            <button 
+              onClick={() => navigate('/intelligence/alerts')} 
+              className="relative p-2 text-text-dim hover:text-text hover:bg-surface-hover rounded-lg transition-colors border border-border-soft"
+              title="Intelligence Alerts"
+            >
+              <Bell size={17} />
               {unreadAlerts > 0 && (
-                <span className="absolute top-1 right-1 w-2 h-2 bg-danger-bright rounded-full"></span>
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-danger rounded-full ring-2 ring-surface"></span>
               )}
             </button>
           </div>
@@ -244,14 +272,14 @@ export function SIHLayout() {
         {/* Global Alert Banner */}
         {unreadAlerts > 0 && (
           <div className="bg-danger/10 border-b border-danger/20 px-6 py-2 flex items-center justify-between z-10 shrink-0">
-            <div className="flex items-center gap-2 text-sm text-danger-bright">
-              <ShieldAlert size={16} />
-              <span className="font-bold uppercase tracking-wider text-[10px]">{t('header.newIntel', 'NEW INTELLIGENCE DISCOVERED:')}</span>
-              <span className="text-sm">{state.alerts.find(a => !a.isRead)?.message}</span>
+            <div className="flex items-center gap-2 text-sm text-danger font-medium">
+              <ShieldAlert size={16} className="text-danger shrink-0" />
+              <span className="font-bold uppercase tracking-wider text-[10px] text-danger">{t('header.newIntel', 'NEW INTELLIGENCE DISCOVERED:')}</span>
+              <span className="text-xs text-text">{state.alerts.find(a => !a.isRead)?.message}</span>
             </div>
             <button 
               onClick={() => navigate('/intelligence/alerts')}
-              className="text-xs font-bold text-text hover:underline uppercase tracking-wider"
+              className="text-xs font-bold text-danger hover:underline uppercase tracking-wider"
             >
               {t('header.viewDetails', 'VIEW DETAILS')}
             </button>
@@ -262,7 +290,10 @@ export function SIHLayout() {
           <Outlet />
         </div>
       </main>
+      <AiraOrb />
+      <AiraVoicePanel />
     </div>
+    </AiraProvider>
   );
 }
 
@@ -271,21 +302,33 @@ function NavItem({ to, icon: Icon, label, badge }: { to: string, icon: any, labe
     <NavLink
       to={to}
       className={({ isActive }) => `
-        flex items-center justify-between px-3 py-2.5 rounded-lg text-sm transition-all
+        group relative flex items-center justify-between px-3 py-2 rounded-lg text-[13.5px] transition-all
         ${isActive 
-          ? 'bg-surface-hover text-accent-bright font-semibold border border-border shadow-sm' 
-          : 'text-text-dim hover:bg-surface-hover hover:text-text border border-transparent'
+          ? 'bg-[var(--nav-active-bg)] text-[var(--nav-active-text)] font-semibold border border-[var(--nav-active-border)] shadow-xs' 
+          : 'text-[var(--nav-text)] hover:bg-[var(--nav-hover-bg)] hover:text-[var(--nav-hover-text)] border border-transparent'
         }
       `}
     >
       {({ isActive }) => (
         <>
-          <div className="flex items-center gap-3">
-            <Icon size={18} className={badge ? 'text-danger-bright' : isActive ? 'text-accent-bright' : ''} />
-            <span>{label}</span>
+          {isActive && (
+            <span className="absolute left-0 top-1.5 bottom-1.5 w-[3px] rounded-r bg-[var(--nav-active-indicator)] transition-all" />
+          )}
+          <div className="flex items-center gap-2.5 pl-0.5">
+            <Icon 
+              size={17} 
+              className={`shrink-0 transition-colors ${
+                badge 
+                  ? 'text-danger' 
+                  : isActive 
+                  ? 'text-[var(--nav-active-icon)]' 
+                  : 'text-[var(--nav-text)] group-hover:text-[var(--nav-hover-text)]'
+              }`} 
+            />
+            <span className="font-medium truncate">{label}</span>
           </div>
           {(badge !== undefined && badge > 0) && (
-            <span className="bg-danger text-white px-2 py-0.5 rounded-full text-[10px] font-bold">
+            <span className="bg-danger text-white px-2 py-0.2 rounded-full text-[10px] font-bold shadow-xs">
               {badge}
             </span>
           )}

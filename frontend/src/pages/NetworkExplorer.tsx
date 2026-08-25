@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import {
   NETWORK_NODES, NETWORK_EDGES, ACTIVITY_TIMELINE, GRAPH_SUMMARY,
-  NetworkNode, NetworkEdge, NodeType, searchNodes, getConnectedNodes
+  NetworkNode, NodeType, searchNodes, getConnectedNodes
 } from '../mockServices/networkGraphData';
 import { IntelligenceGraph } from '../components/graph/IntelligenceGraph';
 import { NodeDetailPanel } from '../components/graph/NodeDetailPanel';
@@ -21,13 +21,13 @@ type AccessFilter = 'ALL' | 'AUTHORIZED' | 'RESTRICTED';
 // ─── Legend ───────────────────────────────────────────────────────────────────
 function GraphLegend() {
   const nodeTypes = [
-    { color: 'var(--brand)', label: 'Station' },
-    { color: 'var(--accent-bright)', label: 'Case' },
-    { color: '#f59e0b', label: 'Person' },
-    { color: '#10b981', label: 'Phone' },
-    { color: '#8b5cf6', label: 'Vehicle' },
-    { color: '#f97316', label: 'Location' },
-    { color: '#64748b', label: 'Evidence' },
+    { color: '#C08A18', label: 'Station' },
+    { color: '#2563EB', label: 'Case' },
+    { color: '#DB2777', label: 'Person' },
+    { color: '#059669', label: 'Phone' },
+    { color: '#7C3AED', label: 'Vehicle' },
+    { color: '#EA580C', label: 'Location' },
+    { color: '#64748B', label: 'Evidence' },
   ];
 
   return (
@@ -132,11 +132,12 @@ function FilterSelect({ label, value, options, onChange }: {
   label: string;
   value: string;
   options: { value: string; label: string }[];
-  onChange: (v: string) => void;
+  onChange: (v: any) => void;
 }) {
   return (
     <div className="relative">
       <select
+        aria-label={label}
         value={value}
         onChange={e => onChange(e.target.value)}
         className="appearance-none bg-surface border border-border-soft text-xs text-text rounded-lg pl-3 pr-7 py-2 focus:border-brand outline-none cursor-pointer"

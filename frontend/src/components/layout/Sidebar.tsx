@@ -45,13 +45,13 @@ export function Sidebar({
   const sidebarContent = (
     <>
       <div className="flex h-16 items-center gap-3 border-b border-white/10 px-4">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-accent to-cyan-glow shadow-glow">
-          <FileText className="h-5 w-5 text-navy-950" />
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-950/60 border border-cyan-500/30 p-1 shadow-glow overflow-hidden">
+          <img src="/siris.png" alt="S.I.R.I.S" className="h-full w-full object-contain" />
         </div>
         {!collapsed && (
           <div className="animate-fade-in overflow-hidden">
             <p className="truncate text-sm font-semibold text-white">
-              CrimeLens
+              S.I.R.I.S
             </p>
             <p className="truncate text-xs text-slate-500">Odisha Police Intelligence</p>
           </div>

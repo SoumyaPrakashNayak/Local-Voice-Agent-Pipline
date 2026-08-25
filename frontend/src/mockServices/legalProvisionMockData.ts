@@ -1,5 +1,5 @@
 /**
- * CrimeLens — Odisha Police Intelligence Network
+ * S.I.R.I.S — Odisha Police Intelligence Network
  * Mock BNS Legal Provision Dataset
  *
  * DEMONSTRATION DATA ONLY.

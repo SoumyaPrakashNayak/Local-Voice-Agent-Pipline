@@ -1,7 +1,7 @@
-import { initialConversations } from "../data/chatMockData";
 import type { Conversation } from "../types/chat";
 
 const STORAGE_KEY = "fir-chat-conversations";
+const initialConversations: Conversation[] = [];
 
 export function loadConversations(): Conversation[] {
   try {

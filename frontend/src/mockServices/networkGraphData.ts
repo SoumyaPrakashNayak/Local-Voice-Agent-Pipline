@@ -1,5 +1,5 @@
 /**
- * CrimeLens — Odisha Police Intelligence Network
+ * S.I.R.I.S — Odisha Police Intelligence Network
  * Network Graph Mock Dataset
  *
  * This is the centralized intelligence graph used by:

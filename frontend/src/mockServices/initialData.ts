@@ -585,6 +585,42 @@ const users: User[] = [
 ];
 const cases: CaseRecord[] = [
   {
+    "id": "CR-KHD-2026-00504",
+    "firNumber": "FIR 504",
+    "stationId": "OP-BBSR-CAP",
+    "investigatorId": "INV-BBSR-001",
+    "title": "Residential Burglary (Unit IV)",
+    "description": "Burglary investigation registered at Khandagiri Police Station. Night-time forced entry, jewelry and electronics stolen. Suspects fled in a white commercial van.",
+    "crimeType": "Burglary",
+    "status": "INVESTIGATING",
+    "priority": "HIGH",
+    "createdAt": "2026-08-21T11:00:00.000Z",
+    "entities": [
+      {
+        "id": "ENT-V-504",
+        "type": "VEHICLE",
+        "value": "OD-02-AB-1234"
+      },
+      {
+        "id": "ENT-P-504",
+        "type": "PHONE",
+        "value": "+91-9876543210"
+      },
+      {
+        "id": "ENT-L-504",
+        "type": "LOCATION",
+        "value": "Unit IV, Bhubaneswar"
+      }
+    ],
+    "bnsSections": ["BNS Section 305 (Theft in dwelling house)", "BNS Section 331 (House-trespass)"],
+    "suspects": ["Ranga Mohanty", "Kalia Patra"],
+    "vehicles": ["OD-02-AB-1234"],
+    "locations": ["Unit IV Market", "Khandagiri"],
+    "evidenceRefs": ["CCTV Feed Cam 2", "Recovered Phone CDR"],
+    "cctvRefs": ["Unit IV Junction Cam 1"],
+    "linkedCaseIds": ["OD-CTC-2026-00981", "OD-BBSR-2026-0001", "CR-KHD-2026-00541"]
+  },
+  {
     "id": "CR-KHD-2026-00541",
     "firNumber": "FIR 541",
     "stationId": "OP-BBSR-CAP",

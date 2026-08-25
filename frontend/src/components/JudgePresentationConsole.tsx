@@ -94,7 +94,7 @@ export default function JudgePresentationConsole() {
               </div>
               <div>
                 <h3 className="text-xs font-bold uppercase tracking-wider text-white">Judge Presentation Flow</h3>
-                <span className="text-[9px] font-semibold text-slate-400">Odisha Police · CrimeLens Intelligence Network</span>
+                <span className="text-[9px] font-semibold text-slate-400">Odisha Police · S.I.R.I.S Intelligence Network</span>
               </div>
             </div>
             

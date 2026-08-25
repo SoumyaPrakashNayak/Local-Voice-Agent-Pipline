@@ -13,13 +13,13 @@ interface NodeDetailPanelProps {
 // Type color badge
 function TypeBadge({ type }: { type: NetworkNode['type'] }) {
   const styles: Record<string, string> = {
-    CASE: 'bg-accent/15 text-accent-bright border-accent/30',
-    PERSON: 'bg-amber-500/15 text-amber-400 border-amber-500/30',
-    PHONE: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
-    VEHICLE: 'bg-purple-500/15 text-purple-400 border-purple-500/30',
-    LOCATION: 'bg-orange-500/15 text-orange-400 border-orange-500/30',
-    EVIDENCE: 'bg-slate-500/15 text-slate-400 border-slate-500/30',
-    STATION: 'bg-brand/15 text-brand border-brand/30',
+    CASE: 'bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 border-blue-200 dark:border-blue-800',
+    PERSON: 'bg-pink-50 text-pink-700 dark:bg-pink-950/40 dark:text-pink-300 border-pink-200 dark:border-pink-800',
+    PHONE: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800',
+    VEHICLE: 'bg-purple-50 text-purple-700 dark:bg-purple-950/40 dark:text-purple-300 border-purple-200 dark:border-purple-800',
+    LOCATION: 'bg-orange-50 text-orange-700 dark:bg-orange-950/40 dark:text-orange-300 border-orange-200 dark:border-orange-800',
+    EVIDENCE: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-300 dark:border-slate-700',
+    STATION: 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border-amber-200 dark:border-amber-800',
   };
   return (
     <span className={`text-[9px] font-bold uppercase tracking-[0.15em] px-2 py-0.5 rounded border ${styles[type] || 'bg-surface-2 text-text-dim border-border'}`}>
@@ -120,7 +120,7 @@ export function NodeDetailPanel({ node, onClose, onExpandNode }: NodeDetailPanel
               <span className="text-xs font-bold text-danger-bright uppercase tracking-wide">Restricted Intelligence Record</span>
             </div>
             <p className="text-[11px] text-text-dim leading-relaxed">
-              Related record detected by CrimeLens Intelligence Engine. Sensitive case details are restricted
+              Related record detected by S.I.R.I.S Intelligence Engine. Sensitive case details are restricted
               until access is authorized by the target station.
             </p>
             {confidence && (
@@ -231,7 +231,7 @@ export function NodeDetailPanel({ node, onClose, onExpandNode }: NodeDetailPanel
         {node.type === 'CASE' && !isRestricted && (
           <button
             onClick={handleOpenCase}
-            className="w-full bg-brand text-bg text-xs font-bold px-4 py-2.5 rounded-lg hover:bg-brand-bright transition-colors flex items-center justify-center gap-2"
+            className="w-full bg-accent text-white text-xs font-bold px-4 py-2.5 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 shadow-xs"
           >
             <ExternalLink size={13} /> Open Case Workspace
           </button>
