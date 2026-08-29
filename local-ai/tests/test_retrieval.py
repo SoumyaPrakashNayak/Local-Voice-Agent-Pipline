@@ -1,6 +1,6 @@
 """
-AIRA CrimeLens Local Data Retrieval Unit Test — Phase 6
-Tests read-only SQLite retrieval, case extraction, entity linkages, legal provisions, non-existent entity handling, and read-only enforcement.
+AIRA CrimeLens Local Data Retrieval Unit Test — Phase 6 & Phase 6.1
+Tests relocated database integrity, read-only SQLite retrieval, case extraction, entity linkages, legal provisions, non-existent entity handling, and read-only enforcement.
 """
 
 import os
@@ -16,11 +16,29 @@ from app.retriever import CrimeLensRetriever, RetrievalRequest, RetrievalResult
 
 def test_retrieval_layer():
     print("========================================")
-    print("CRIMELENS DATA RETRIEVAL TEST (PHASE 6)")
+    print("CRIMELENS DATA RETRIEVAL TEST (PHASE 6 & 6.1)")
     print("========================================")
 
     retriever = CrimeLensRetriever()
-    print(f"Connected to SQLite database: {retriever.db_path}\n")
+    print(f"Active SQLite Database Path: {retriever.db_path}\n")
+
+    # -------------------------------------------------------------------------
+    # TEST 0: Verify Single Authoritative Relocated Database Location
+    # -------------------------------------------------------------------------
+    print("----------------------------------------")
+    print("TEST 0: Verify Database Location & Single Active Instance")
+    print("----------------------------------------")
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+    expected_relocated_db = os.path.join(project_root, "database", "crimelens.db")
+    old_db_path = os.path.join(project_root, "local-ai", "crimelens.db")
+
+    assert os.path.exists(expected_relocated_db), f"Relocated database not found at {expected_relocated_db}"
+    assert not os.path.exists(old_db_path), f"Old database duplicate still exists at {old_db_path}"
+    assert os.path.normpath(retriever.db_path) == os.path.normpath(expected_relocated_db), "Retriever is not using the relocated database."
+
+    print(f"Relocated Database: {expected_relocated_db} [EXISTS]")
+    print(f"Old Database Path:  {old_db_path} [REMOVED/INACTIVE]")
+    print("-> TEST 0 PASSED: Verified exactly ONE authoritative database in project database/ directory.\n")
 
     # -------------------------------------------------------------------------
     # TEST 1: Retrieve Existing FIR (FIR-2026-00541 / "541")
@@ -113,7 +131,7 @@ def test_retrieval_layer():
     print("-> TEST 6 PASSED: Read-only enforcement verified (PRAGMA query_only = ON).\n")
 
     print("========================================")
-    print("ALL RETRIEVAL TESTS PASSED (PHASE 6 VERIFIED)")
+    print("ALL RETRIEVAL & RELOCATION TESTS PASSED")
     print("========================================")
 
 

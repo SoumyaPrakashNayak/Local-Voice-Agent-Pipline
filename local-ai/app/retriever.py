@@ -46,9 +46,14 @@ class CrimeLensRetriever:
 
     def __init__(self, db_path: Optional[str] = None):
         if db_path is None:
-            # Default to crimelens.db in local-ai root
-            base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-            self.db_path = os.path.join(base_dir, "crimelens.db")
+            # Default to authoritative database in project root: E:\SIH2026\C.R.I.M.E\database\crimelens.db
+            project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+            main_db = os.path.join(project_root, "database", "crimelens.db")
+            if os.path.exists(main_db):
+                self.db_path = main_db
+            else:
+                fallback_db = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "crimelens.db"))
+                self.db_path = fallback_db
         else:
             self.db_path = db_path
 

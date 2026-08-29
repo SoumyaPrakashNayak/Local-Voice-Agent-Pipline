@@ -1,6 +1,8 @@
+import os
 import sqlite3
 
-conn = sqlite3.connect("crimelens.db")
+db_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "database", "crimelens.db"))
+conn = sqlite3.connect(db_path)
 cursor = conn.cursor()
 
 # --- Clean slate on every run ---

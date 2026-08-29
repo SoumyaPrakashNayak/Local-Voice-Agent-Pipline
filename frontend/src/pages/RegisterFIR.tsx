@@ -109,7 +109,7 @@ export function RegisterFIR() {
                 onClick={handleAnalyze}
                 className="bg-brand text-bg px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-brand-bright transition-colors flex items-center gap-2"
               >
-                <Sparkles size={16} /> Run AI Analysis
+                <FileText size={16} /> Register FIR
               </button>
             </div>
           </div>
