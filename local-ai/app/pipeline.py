@@ -1,6 +1,6 @@
 """
-AIRA Local Voice Pipeline — Phase 4 & Phase 5
-Full local end-to-end voice assistant: STT (Whisper + VAD) -> Gateway / Intent Router -> (ACTION or LLM -> Piper TTS).
+AIRA Local Voice Pipeline — Phase 4, Phase 5 & Phase 6 (Pre-Synthesis + Natural Cadence TTS)
+Full local end-to-end voice assistant: STT (Whisper + VAD) -> Gateway / Intent Router -> (ACTION or CrimeLens Data Retrieval -> Llama 3.2 -> Pre-Synthesized Piper TTS -> Speakers).
 """
 
 import re
@@ -11,11 +11,13 @@ import threading
 from dataclasses import dataclass, field
 from typing import List, Optional, Callable, Dict, Any, Tuple
 import numpy as np
+import sounddevice as sd
 
 from .stt import LocalSTT, TranscriptionResult
 from .llm import LocalLLM, LLMResult
 from .tts import LocalTTS, TTSResult
 from .gateway import LocalGateway, IntentResult
+from .retriever import CrimeLensRetriever, RetrievalRequest, RetrievalResult
 
 
 @dataclass
@@ -24,6 +26,17 @@ class SentenceEvent:
     index: int
     text: str
     created_at: float
+
+
+@dataclass
+class SynthesizedSentence:
+    """An in-memory pre-synthesized PCM sentence chunk ready for seamless audio playback."""
+    index: int
+    text: str
+    pcm_bytes: bytes
+    tts_result: TTSResult
+    created_at: float
+    synth_time_ms: float
 
 
 @dataclass
@@ -39,6 +52,14 @@ class PipelineResult:
     intent_parameters: Dict[str, Any] = field(default_factory=dict)
     intent_confidence: float = 0.0
     gateway_latency_ms: float = 0.0
+
+    # Data Retrieval properties
+    retrieval_performed: bool = False
+    retrieval_resource: Optional[str] = None
+    retrieval_identifier: Optional[str] = None
+    retrieval_success: bool = False
+    retrieval_latency_ms: float = 0.0
+    retrieval_records_count: int = 0
 
     # Latencies in milliseconds
     recording_duration_s: float = 0.0
@@ -68,16 +89,17 @@ class PipelineResult:
 
 class LocalVoicePipeline:
     """
-    Complete local voice pipeline orchestrating STT, Intent Gateway, LLM, and TTS.
+    Complete local voice assistant pipeline orchestrating STT, Intent Gateway, CrimeLens Data Retrieval, LLM, and Pre-Synthesized Streaming TTS.
     
     Features:
     - Zero cloud APIs (100% local on RTX 3050 GPU + CPU).
-    - Local AI Gateway: Sub-millisecond deterministic operational command routing (bypasses LLM for actions).
-    - Automatic speech-end detection (VAD): Stops recording naturally when the user finishes speaking.
-    - Overlapped streaming: Sentence 1 begins synthesizing/speaking while Llama continues generating Sentence 2+.
+    - Local AI Gateway: Sub-millisecond deterministic operational command routing.
+    - Grounded Data Retrieval: Deterministic read-only SQLite retrieval for verified case, evidence, and entity facts.
+    - Zero SQL Exposure: Llama 3.2 never touches database or generates SQL.
+    - Automatic speech-end detection (VAD): Stops recording naturally when user finishes speaking.
+    - Pre-Synthesis + Natural Cadence: Synthesizes upcoming sentences in the background while previous sentence plays, with an exact 200ms natural conversational pause.
     - Zero temporary audio files written to disk (in-memory S16LE PCM stream).
     - Precise end-to-end latency measurement across all pipeline boundaries.
-    - Graceful cancellation and cleanup on interruption.
     """
 
     def __init__(
@@ -86,43 +108,40 @@ class LocalVoicePipeline:
         llm: Optional[LocalLLM] = None,
         tts: Optional[LocalTTS] = None,
         gateway: Optional[LocalGateway] = None,
+        retriever: Optional[CrimeLensRetriever] = None,
         system_prompt: Optional[str] = None,
+        inter_sentence_pause_s: float = 0.20,
     ):
         print("[PIPELINE] Initializing local voice pipeline components...")
         
-        # 1. Initialize or assign STT
-        if stt is not None:
-            self.stt = stt
-        else:
-            self.stt = LocalSTT(model_size="small", device="cuda", compute_type="float16")
+        # 1. Initialize STT
+        self.stt = stt if stt is not None else LocalSTT(model_size="small", device="cuda", compute_type="float16")
 
-        # 2. Initialize or assign LLM
-        if llm is not None:
-            self.llm = llm
-        else:
-            self.llm = LocalLLM(host="http://127.0.0.1:11434", model="llama3.2:latest")
+        # 2. Initialize LLM
+        self.llm = llm if llm is not None else LocalLLM(host="http://127.0.0.1:11434", model="llama3.2:latest")
 
-        # 3. Initialize or assign TTS
-        if tts is not None:
-            self.tts = tts
-        else:
-            self.tts = LocalTTS(
-                piper_path=r"D:\piper\piper.exe",
-                model_path=r"D:\piper\en_US-amy-low.onnx",
-                sample_rate=16000,
-                channels=1,
-            )
+        # 3. Initialize TTS
+        self.tts = tts if tts is not None else LocalTTS(
+            piper_path=r"D:\piper\piper.exe",
+            model_path=r"D:\piper\en_US-amy-low.onnx",
+            sample_rate=16000,
+            channels=1,
+        )
 
         # 4. Initialize Local Gateway / Intent Router
-        if gateway is not None:
-            self.gateway = gateway
-        else:
-            self.gateway = LocalGateway(action_threshold=0.85)
+        self.gateway = gateway if gateway is not None else LocalGateway(action_threshold=0.85)
+
+        # 5. Initialize CrimeLens Data Retrieval Service
+        self.retriever = retriever if retriever is not None else CrimeLensRetriever()
+
+        self.inter_sentence_pause_s = inter_sentence_pause_s
 
         self.system_prompt = system_prompt or (
             "You are AIRA, a local police investigation assistant. "
             "Answer clearly and concisely in 2 to 3 short sentences. "
-            "Do not invent facts. Avoid markdown asterisks, bullets, or headers."
+            "Base your answer strictly on the verified CrimeLens records provided. "
+            "If a record or detail is missing, state clearly that it is not available. "
+            "Do not invent facts or case details. Avoid markdown asterisks, bullets, or headers."
         )
 
         self.stop_event = threading.Event()
@@ -161,7 +180,7 @@ class LocalVoicePipeline:
         2. Transcribe using faster-whisper on CUDA.
         3. Route transcript through Local Gateway:
            - If ACTION: Return structured action result immediately (LLM & TTS bypassed).
-           - If LLM: Stream prompt to local Llama 3.2 -> Sentence streaming -> Piper TTS.
+           - If LLM: Deterministically retrieve relevant CrimeLens data -> Inject grounded context -> Stream Llama 3.2 -> Sentence streaming -> Pre-Synthesized Piper TTS.
         4. Measure and record full latency breakdown.
         """
         self.stop_event.clear()
@@ -299,76 +318,155 @@ class LocalVoicePipeline:
         log_status(f"[GATEWAY] Routing -> CONVERSATIONAL / LLM ({intent_res.latency_ms:.3f} ms)")
 
         # ---------------------------------------------------------------------
-        # STAGE 3: Setup Concurrent Overlapped TTS Worker (Conversational Mode)
+        # STAGE 3: CrimeLens Local Data Retrieval & Grounded Context Creation
         # ---------------------------------------------------------------------
-        tts_queue: queue.Queue = queue.Queue()
+        retrieval_performed = False
+        retrieval_resource = None
+        retrieval_identifier = None
+        retrieval_success = False
+        retrieval_lat_ms = 0.0
+        retrieval_records_count = 0
+        prompt_with_context = transcript
+
+        if intent_res.retrieval_request:
+            req = intent_res.retrieval_request
+            retrieval_performed = True
+            retrieval_resource = req.resource
+            retrieval_identifier = req.identifier
+            
+            log_status(f"[RETRIEVER] Querying CrimeLens database for {req.resource} '{req.identifier}'...")
+            t_ret_start = time.perf_counter()
+            ret_res = self.retriever.retrieve(req)
+            t_ret_end = time.perf_counter()
+            retrieval_lat_ms = (t_ret_end - t_ret_start) * 1000.0
+            retrieval_success = ret_res.success
+            retrieval_records_count = ret_res.raw_records_count
+
+            log_status(f"[RETRIEVER] Retrieved {retrieval_records_count} records in {retrieval_lat_ms:.2f} ms")
+            
+            if ret_res.formatted_context:
+                prompt_with_context = f"{ret_res.formatted_context}\n\nUser Question: {transcript}"
+
+        # ---------------------------------------------------------------------
+        # STAGE 4: Two-Stage TTS Pipeline: Pre-Synthesis + Natural Cadence Playback
+        # ---------------------------------------------------------------------
+        synthesis_queue: queue.Queue = queue.Queue()
+        playback_queue: queue.Queue = queue.Queue()
+        
         sentences_collected: List[str] = []
         tts_results: List[TTSResult] = []
         
         t_first_sentence_ready: Optional[float] = None
-        t_first_tts_start: Optional[float] = None
         t_first_tts_pcm: Optional[float] = None
         t_first_audio_playback: Optional[float] = None
-        t_tts_worker_done: Optional[float] = None
-        tts_worker_error: List[Exception] = []
+        tts_pipeline_error: List[Exception] = []
 
-        def tts_worker():
-            nonlocal t_first_tts_start, t_first_tts_pcm, t_first_audio_playback, t_tts_worker_done
-            sentence_count = 0
-
+        # 1. Background Synthesis Worker (Runs Piper in memory as soon as LLM emits sentence)
+        def synthesis_worker():
+            nonlocal t_first_tts_pcm
             while not self.stop_event.is_set():
                 try:
-                    event: Optional[SentenceEvent] = tts_queue.get(timeout=0.1)
+                    event: Optional[SentenceEvent] = synthesis_queue.get(timeout=0.1)
                 except queue.Empty:
                     continue
 
                 if event is None:
-                    tts_queue.task_done()
+                    synthesis_queue.task_done()
+                    playback_queue.put(None)
                     break
 
-                sentence_count += 1
-                sentence_text = event.text
-
-                log_status(f"[TTS] Speaking sentence {sentence_count}: \"{sentence_text}\"")
-
-                t_synth_start = time.perf_counter()
-                if t_first_tts_start is None:
-                    t_first_tts_start = t_synth_start
-
                 try:
-                    stream = self.tts.speak_stream(
-                        text=sentence_text,
-                        play_audio=play_audio,
-                        block_until_playback_finished=True,
+                    t_s0 = time.perf_counter()
+                    pcm_bytes, res = self.tts.synthesize_to_memory(event.text)
+                    t_s1 = time.perf_counter()
+                    synth_ms = (t_s1 - t_s0) * 1000.0
+
+                    if t_first_tts_pcm is None:
+                        t_first_tts_pcm = t_s1
+
+                    playback_queue.put(
+                        SynthesizedSentence(
+                            index=event.index,
+                            text=event.text,
+                            pcm_bytes=pcm_bytes,
+                            tts_result=res,
+                            created_at=event.created_at,
+                            synth_time_ms=synth_ms,
+                        )
                     )
-                    
-                    while True:
-                        try:
-                            chunk = next(stream)
-                            now = time.perf_counter()
-                            if t_first_tts_pcm is None:
-                                t_first_tts_pcm = now
-                            if t_first_audio_playback is None and play_audio:
-                                t_first_audio_playback = now
-                        except StopIteration as e:
-                            res: TTSResult = e.value
-                            tts_results.append(res)
-                            break
-
-                    log_status(f"[TTS] Finished sentence {sentence_count}")
-
                 except Exception as e:
-                    tts_worker_error.append(e)
+                    tts_pipeline_error.append(e)
                 finally:
-                    tts_queue.task_done()
+                    synthesis_queue.task_done()
 
-            t_tts_worker_done = time.perf_counter()
+        # 2. Sequential Playback Worker (Streams pre-synthesized PCM to speakers with natural pause)
+        def playback_worker():
+            nonlocal t_first_audio_playback
+            raw_stream = None
+            if play_audio:
+                try:
+                    raw_stream = sd.RawOutputStream(
+                        samplerate=self.tts.sample_rate,
+                        channels=self.tts.channels,
+                        dtype="int16",
+                    )
+                    raw_stream.start()
+                except Exception as e:
+                    tts_pipeline_error.append(e)
+                    return
 
-        tts_thread = threading.Thread(target=tts_worker, daemon=True)
-        tts_thread.start()
+            try:
+                while not self.stop_event.is_set():
+                    try:
+                        synth_item: Optional[SynthesizedSentence] = playback_queue.get(timeout=0.1)
+                    except queue.Empty:
+                        continue
+
+                    if synth_item is None:
+                        playback_queue.task_done()
+                        break
+
+                    # Natural conversational cadence pause between sentences
+                    if synth_item.index > 1 and play_audio and self.inter_sentence_pause_s > 0:
+                        time.sleep(self.inter_sentence_pause_s)
+
+                    log_status(f"[TTS] Speaking sentence {synth_item.index}: \"{synth_item.text}\"")
+
+                    now = time.perf_counter()
+                    if t_first_audio_playback is None and play_audio:
+                        t_first_audio_playback = now
+
+                    if play_audio and raw_stream is not None:
+                        # Stream PCM chunks to sound card
+                        chunk_size = 4096
+                        pcm = synth_item.pcm_bytes
+                        for offset in range(0, len(pcm), chunk_size):
+                            if self.stop_event.is_set():
+                                break
+                            raw_stream.write(pcm[offset : offset + chunk_size])
+
+                    log_status(f"[TTS] Finished sentence {synth_item.index}")
+                    tts_results.append(synth_item.tts_result)
+                    playback_queue.task_done()
+
+            except Exception as e:
+                tts_pipeline_error.append(e)
+            finally:
+                if raw_stream is not None:
+                    try:
+                        raw_stream.stop()
+                        raw_stream.close()
+                    except Exception:
+                        pass
+
+        synth_thread = threading.Thread(target=synthesis_worker, daemon=True)
+        play_thread = threading.Thread(target=playback_worker, daemon=True)
+        
+        synth_thread.start()
+        play_thread.start()
 
         # ---------------------------------------------------------------------
-        # STAGE 4: Stream from LLM & Split Sentences in Real-Time
+        # STAGE 5: Stream from LLM with Grounded Context & Split Sentences
         # ---------------------------------------------------------------------
         t_llm_start = time.perf_counter()
         t_llm_first_token: Optional[float] = None
@@ -376,11 +474,11 @@ class LocalVoicePipeline:
         buffer = ""
         sentence_index = 0
 
-        log_status("[LLM] Generating response...")
+        log_status("[LLM] Generating grounded response...")
 
         try:
             llm_stream = self.llm.stream_response(
-                prompt=transcript,
+                prompt=prompt_with_context,
                 system_prompt=self.system_prompt,
             )
 
@@ -404,7 +502,7 @@ class LocalVoicePipeline:
                             t_first_sentence_ready = time.perf_counter()
                         
                         log_status(f"[LLM] Sentence {sentence_index} ready: \"{sentence}\"")
-                        tts_queue.put(SentenceEvent(index=sentence_index, text=sentence, created_at=time.perf_counter()))
+                        synthesis_queue.put(SentenceEvent(index=sentence_index, text=sentence, created_at=time.perf_counter()))
 
             # Flush any remaining buffer text
             remaining = buffer.strip()
@@ -414,28 +512,30 @@ class LocalVoicePipeline:
                 if t_first_sentence_ready is None:
                     t_first_sentence_ready = time.perf_counter()
                 log_status(f"[LLM] Sentence {sentence_index} ready (final): \"{remaining}\"")
-                tts_queue.put(SentenceEvent(index=sentence_index, text=remaining, created_at=time.perf_counter()))
+                synthesis_queue.put(SentenceEvent(index=sentence_index, text=remaining, created_at=time.perf_counter()))
 
         except Exception as e:
             self.stop_event.set()
-            tts_queue.put(None)
-            tts_thread.join(timeout=1.0)
+            synthesis_queue.put(None)
+            synth_thread.join(timeout=1.0)
+            play_thread.join(timeout=1.0)
             raise RuntimeError(f"LLM streaming failed: {e}") from e
 
         t_llm_done = time.perf_counter()
         full_response = "".join(full_llm_tokens).strip()
 
-        # Signal TTS worker and wait for playback
-        tts_queue.put(None)
-        tts_thread.join(timeout=30.0)
+        # Signal background workers and wait for playback to finish
+        synthesis_queue.put(None)
+        synth_thread.join(timeout=20.0)
+        play_thread.join(timeout=30.0)
 
         t_all_complete = time.perf_counter()
 
-        if tts_worker_error:
-            raise RuntimeError(f"TTS playback worker error: {tts_worker_error[0]}") from tts_worker_error[0]
+        if tts_pipeline_error:
+            raise RuntimeError(f"TTS playback worker error: {tts_pipeline_error[0]}") from tts_pipeline_error[0]
 
         # ---------------------------------------------------------------------
-        # STAGE 5: Latency Calculations & Diagnostics
+        # STAGE 6: Latency Calculations & Diagnostics
         # ---------------------------------------------------------------------
         t_llm_first_tok = t_llm_first_token or t_llm_start
         t_first_sent = t_first_sentence_ready or t_llm_done
@@ -463,6 +563,12 @@ class LocalVoicePipeline:
             intent_parameters={},
             intent_confidence=0.0,
             gateway_latency_ms=intent_res.latency_ms,
+            retrieval_performed=retrieval_performed,
+            retrieval_resource=retrieval_resource,
+            retrieval_identifier=retrieval_identifier,
+            retrieval_success=retrieval_success,
+            retrieval_latency_ms=round(retrieval_lat_ms, 2),
+            retrieval_records_count=retrieval_records_count,
             recording_duration_s=round(actual_rec_duration_s, 2),
             stt_latency_ms=round(stt_latency_ms, 1),
             speech_end_to_transcript_ms=round(max(0.0, speech_end_to_transcript_ms), 1),

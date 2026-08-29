@@ -1,7 +1,7 @@
 """
-AIRA Local Voice Pipeline Test Script — Phase 5 (Gateway & Intent Routing Integration)
+AIRA Local Voice Pipeline Test Script — Phase 6 (Data Retrieval Integration)
 Tests the complete end-to-end local voice assistant pipeline:
-Microphone (VAD) -> faster-whisper (CUDA) -> Local Gateway (Sub-ms Intent Routing) -> (ACTION or Llama 3.2 -> Piper PCM -> Speakers).
+Microphone (VAD) -> faster-whisper (CUDA) -> Local Gateway (Sub-ms Intent Routing) -> (ACTION or CrimeLens Data Retrieval -> Llama 3.2 -> Piper PCM -> Speakers).
 """
 
 import os
@@ -23,7 +23,7 @@ def run_pipeline_test(
     play_audio: bool = True,
 ):
     print("========================================")
-    print("AIRA LOCAL VOICE PIPELINE (PHASE 5 - GATEWAY)")
+    print("AIRA LOCAL VOICE PIPELINE (PHASE 6 - RETRIEVAL)")
     print("========================================")
 
     # Snapshot existing audio files in current directory to verify zero files created
@@ -55,7 +55,8 @@ def run_pipeline_test(
         else:
             print(f"\n[INPUT] Speak into microphone when ready (recording stops automatically when you finish speaking)...")
             print("Action suggestion: \"Open FIR 212\"")
-            print("Conversational suggestion: \"Explain what an FIR is in three short sentences.\"\n")
+            print("Case retrieval suggestion: \"Tell me about FIR 541\"")
+            print("Non-existent case suggestion: \"Tell me about FIR 212\"\n")
             result = pipeline.run_turn(
                 max_record_seconds=max_record_seconds,
                 trailing_silence_s=trailing_silence_s,
@@ -102,19 +103,27 @@ def run_pipeline_test(
     print(f"Confidence:                      {result.intent_confidence:.2f}")
     print(f"Parameters:                      {result.intent_parameters}")
 
+    if result.retrieval_performed:
+        print(f"\n[CRIMELENS DATA RETRIEVAL LAYER]")
+        print(f"Resource:                        {result.retrieval_resource}")
+        print(f"Identifier:                      {result.retrieval_identifier}")
+        print(f"Records Retrieved:               {result.retrieval_records_count}")
+        print(f"Retrieval Latency:               {result.retrieval_latency_ms:.2f} ms")
+        print(f"Record Found in DB:              {'YES' if result.retrieval_success else 'NO (Missing entity handled cleanly)'}")
+        print(f"Read-Only Enforcement:           ACTIVE (PRAGMA query_only = ON)")
+
     if result.mode == "ACTION":
         print(f"\n[ACTION EXECUTION]")
         print(f"Action dispatched:               {result.intent}")
         print(f"LLM / TTS bypassed:              YES (Deterministic fast path)")
         print(f"Total action dispatch time:      {result.speech_start_to_complete_response_ms:.1f} ms")
     else:
-        print(f"\n[LLM CONVERSATIONAL]")
+        print(f"\n[LLM CONVERSATIONAL & GROUNDING]")
         print(f"Transcript -> first token:       {result.llm_first_token_latency_ms:.1f} ms")
         print(f"First token -> first sentence:   {result.llm_first_sentence_latency_ms:.1f} ms")
         print(f"Total generation time:           {result.llm_total_generation_ms:.1f} ms")
         print(f"Sentences generated:             {len(result.sentences)}")
-        if result.sentences:
-            print(f"First sentence:\n\"{result.sentences[0]}\"")
+        print(f"Full Grounded Response:\n\"{result.full_response}\"")
 
         print(f"\n[TTS]")
         print(f"Sentence -> first PCM:           {result.tts_first_pcm_latency_ms:.1f} ms")
@@ -133,12 +142,12 @@ def run_pipeline_test(
 
     print(f"Audio storage:                   MEMORY ONLY (0 WAV files)")
     print(f"WAV files created:               {'YES (' + str(new_audio_files) + ')' if new_audio_files else 'NO (0 files)'}")
-    print(f"Cloud APIs used:                 NONE (100% Local: Whisper CUDA + Local Gateway + Llama 3.2 + Piper)")
+    print(f"Cloud APIs used:                 NONE (100% Local: Whisper CUDA + Local Gateway + SQLite Read-Only + Llama 3.2 + Piper)")
     print("========================================\n")
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="AIRA Local Voice Pipeline Test (Phase 5 - Gateway)")
+    parser = argparse.ArgumentParser(description="AIRA Local Voice Pipeline Test (Phase 6 - Retrieval)")
     parser.add_argument("--seconds", "--max-seconds", dest="max_seconds", type=float, default=15.0, help="Maximum recording safety cap in seconds (default: 15.0)")
     parser.add_argument("--trailing-silence", type=float, default=1.2, help="Trailing silence threshold in seconds (default: 1.2)")
     parser.add_argument("--initial-timeout", type=float, default=5.0, help="Initial silence timeout in seconds (default: 5.0)")
