@@ -1,6 +1,6 @@
 """
-AIRA Local Voice Pipeline — Phase 4 & Phase 4.1
-Full local end-to-end voice assistant: STT (Whisper + VAD) -> LLM (Llama 3.2) -> Overlapped Sentence Streaming -> TTS (Piper S16LE).
+AIRA Local Voice Pipeline — Phase 4 & Phase 5
+Full local end-to-end voice assistant: STT (Whisper + VAD) -> Gateway / Intent Router -> (ACTION or LLM -> Piper TTS).
 """
 
 import re
@@ -15,6 +15,7 @@ import numpy as np
 from .stt import LocalSTT, TranscriptionResult
 from .llm import LocalLLM, LLMResult
 from .tts import LocalTTS, TTSResult
+from .gateway import LocalGateway, IntentResult
 
 
 @dataclass
@@ -32,22 +33,29 @@ class PipelineResult:
     full_response: str
     sentences: List[str]
     
+    # Gateway / Intent properties
+    mode: str = "LLM"                             # "ACTION" or "LLM"
+    intent: str = "CONVERSATIONAL"                # e.g., "OPEN_FIR", "OPEN_EVIDENCE_VAULT", "CONVERSATIONAL"
+    intent_parameters: Dict[str, Any] = field(default_factory=dict)
+    intent_confidence: float = 0.0
+    gateway_latency_ms: float = 0.0
+
     # Latencies in milliseconds
-    recording_duration_s: float
-    stt_latency_ms: float
-    speech_end_to_transcript_ms: float
-    llm_first_token_latency_ms: float
-    llm_first_sentence_latency_ms: float
-    tts_first_pcm_latency_ms: float
-    tts_first_playback_latency_ms: float
+    recording_duration_s: float = 0.0
+    stt_latency_ms: float = 0.0
+    speech_end_to_transcript_ms: float = 0.0
+    llm_first_token_latency_ms: float = 0.0
+    llm_first_sentence_latency_ms: float = 0.0
+    tts_first_pcm_latency_ms: float = 0.0
+    tts_first_playback_latency_ms: float = 0.0
     
     # Key perceived responsiveness metrics
-    speech_start_to_first_audio_ms: float
-    speech_start_to_complete_response_ms: float
+    speech_start_to_first_audio_ms: float = 0.0
+    speech_start_to_complete_response_ms: float = 0.0
     
     # Component totals
-    llm_total_generation_ms: float
-    tts_total_synthesis_ms: float
+    llm_total_generation_ms: float = 0.0
+    tts_total_synthesis_ms: float = 0.0
     
     # Diagnostics
     timed_out: bool = False
@@ -60,10 +68,11 @@ class PipelineResult:
 
 class LocalVoicePipeline:
     """
-    Complete local voice pipeline orchestrating STT, LLM, and TTS with sentence streaming and local VAD.
+    Complete local voice pipeline orchestrating STT, Intent Gateway, LLM, and TTS.
     
     Features:
     - Zero cloud APIs (100% local on RTX 3050 GPU + CPU).
+    - Local AI Gateway: Sub-millisecond deterministic operational command routing (bypasses LLM for actions).
     - Automatic speech-end detection (VAD): Stops recording naturally when the user finishes speaking.
     - Overlapped streaming: Sentence 1 begins synthesizing/speaking while Llama continues generating Sentence 2+.
     - Zero temporary audio files written to disk (in-memory S16LE PCM stream).
@@ -76,6 +85,7 @@ class LocalVoicePipeline:
         stt: Optional[LocalSTT] = None,
         llm: Optional[LocalLLM] = None,
         tts: Optional[LocalTTS] = None,
+        gateway: Optional[LocalGateway] = None,
         system_prompt: Optional[str] = None,
     ):
         print("[PIPELINE] Initializing local voice pipeline components...")
@@ -102,6 +112,12 @@ class LocalVoicePipeline:
                 sample_rate=16000,
                 channels=1,
             )
+
+        # 4. Initialize Local Gateway / Intent Router
+        if gateway is not None:
+            self.gateway = gateway
+        else:
+            self.gateway = LocalGateway(action_threshold=0.85)
 
         self.system_prompt = system_prompt or (
             "You are AIRA, a local police investigation assistant. "
@@ -143,10 +159,10 @@ class LocalVoicePipeline:
         Steps:
         1. Capture speech from microphone using automatic VAD speech-end detection.
         2. Transcribe using faster-whisper on CUDA.
-        3. Stream prompt to local Llama 3.2.
-        4. Detect sentence boundaries in real time.
-        5. Concurrently synthesize & play each sentence via Piper without waiting for LLM completion.
-        6. Measure and record full latency breakdown.
+        3. Route transcript through Local Gateway:
+           - If ACTION: Return structured action result immediately (LLM & TTS bypassed).
+           - If LLM: Stream prompt to local Llama 3.2 -> Sentence streaming -> Piper TTS.
+        4. Measure and record full latency breakdown.
         """
         self.stop_event.clear()
 
@@ -242,7 +258,48 @@ class LocalVoicePipeline:
         log_status(f"[STT] You said: \"{transcript}\"")
 
         # ---------------------------------------------------------------------
-        # STAGE 2: Setup Concurrent Overlapped TTS Worker
+        # STAGE 2: Local AI Gateway / Intent Routing
+        # ---------------------------------------------------------------------
+        intent_res = self.gateway.route(transcript)
+        stt_info = self.stt.get_device_info()
+        tts_info = self.tts.get_info()
+
+        if intent_res.mode == "ACTION":
+            log_status(f"[GATEWAY] Routing -> ACTION: {intent_res.intent} (conf: {intent_res.confidence:.2f}, {intent_res.latency_ms:.3f} ms)")
+            log_status(f"[ACTION] Intent: {intent_res.intent} | Parameters: {intent_res.parameters}")
+
+            t_action_complete = time.perf_counter()
+            return PipelineResult(
+                transcript=transcript,
+                full_response=f"[ACTION TRIGGERED] {intent_res.intent}",
+                sentences=[],
+                mode="ACTION",
+                intent=intent_res.intent,
+                intent_parameters=intent_res.parameters,
+                intent_confidence=intent_res.confidence,
+                gateway_latency_ms=intent_res.latency_ms,
+                recording_duration_s=actual_rec_duration_s,
+                stt_latency_ms=stt_latency_ms,
+                speech_end_to_transcript_ms=speech_end_to_transcript_ms,
+                llm_first_token_latency_ms=0.0,
+                llm_first_sentence_latency_ms=0.0,
+                tts_first_pcm_latency_ms=0.0,
+                tts_first_playback_latency_ms=0.0,
+                speech_start_to_first_audio_ms=0.0,
+                speech_start_to_complete_response_ms=round((t_action_complete - t_speech_start) * 1000.0, 1),
+                llm_total_generation_ms=0.0,
+                tts_total_synthesis_ms=0.0,
+                timed_out=False,
+                overlap_achieved=False,
+                stt_device=stt_info.get("device", "cuda").upper(),
+                llm_model=self.llm.model,
+                tts_voice=tts_info.get("model_name", "en_US-amy-low"),
+            )
+
+        log_status(f"[GATEWAY] Routing -> CONVERSATIONAL / LLM ({intent_res.latency_ms:.3f} ms)")
+
+        # ---------------------------------------------------------------------
+        # STAGE 3: Setup Concurrent Overlapped TTS Worker (Conversational Mode)
         # ---------------------------------------------------------------------
         tts_queue: queue.Queue = queue.Queue()
         sentences_collected: List[str] = []
@@ -311,7 +368,7 @@ class LocalVoicePipeline:
         tts_thread.start()
 
         # ---------------------------------------------------------------------
-        # STAGE 3: Stream from LLM & Split Sentences in Real-Time
+        # STAGE 4: Stream from LLM & Split Sentences in Real-Time
         # ---------------------------------------------------------------------
         t_llm_start = time.perf_counter()
         t_llm_first_token: Optional[float] = None
@@ -378,7 +435,7 @@ class LocalVoicePipeline:
             raise RuntimeError(f"TTS playback worker error: {tts_worker_error[0]}") from tts_worker_error[0]
 
         # ---------------------------------------------------------------------
-        # STAGE 4: Latency Calculations & Diagnostics
+        # STAGE 5: Latency Calculations & Diagnostics
         # ---------------------------------------------------------------------
         t_llm_first_tok = t_llm_first_token or t_llm_start
         t_first_sent = t_first_sentence_ready or t_llm_done
@@ -397,13 +454,15 @@ class LocalVoicePipeline:
 
         overlap_achieved = (t_llm_done > t_first_play) or (len(sentences_collected) > 1 and t_llm_done > t_first_sent)
 
-        stt_info = self.stt.get_device_info()
-        tts_info = self.tts.get_info()
-
         return PipelineResult(
             transcript=transcript,
             full_response=full_response,
             sentences=sentences_collected,
+            mode="LLM",
+            intent="CONVERSATIONAL",
+            intent_parameters={},
+            intent_confidence=0.0,
+            gateway_latency_ms=intent_res.latency_ms,
             recording_duration_s=round(actual_rec_duration_s, 2),
             stt_latency_ms=round(stt_latency_ms, 1),
             speech_end_to_transcript_ms=round(max(0.0, speech_end_to_transcript_ms), 1),
