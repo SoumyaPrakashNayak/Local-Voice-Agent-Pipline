@@ -132,7 +132,9 @@ export const AiraProvider = ({ children }: { children: ReactNode }) => {
           const rawFirId = String(args?.fir_id || '504');
           const firNum = rawFirId.replace(/[^0-9]/g, '') || '504';
           route = `/cases/CR-KHD-2026-00504`;
-          if (firNum === '541') {
+          if (firNum === '212') {
+            route = '/cases/CR-KHD-2026-00212';
+          } else if (firNum === '541') {
             route = '/cases/CR-KHD-2026-00541';
           } else if (firNum === '0001' || firNum === '1') {
             route = '/cases/OD-BBSR-2026-0001';
@@ -144,7 +146,9 @@ export const AiraProvider = ({ children }: { children: ReactNode }) => {
           const rawFirId = String(args?.fir_id || '504');
           const firNum = rawFirId.replace(/[^0-9]/g, '') || '504';
           route = `/cases/CR-KHD-2026-00504?tab=graph`;
-          if (firNum === '541') {
+          if (firNum === '212') {
+            route = '/cases/CR-KHD-2026-00212?tab=graph';
+          } else if (firNum === '541') {
             route = '/cases/CR-KHD-2026-00541?tab=graph';
           } else if (firNum === '0001' || firNum === '1') {
             route = '/cases/OD-BBSR-2026-0001?tab=graph';
@@ -155,8 +159,13 @@ export const AiraProvider = ({ children }: { children: ReactNode }) => {
         } else if (name === 'get_fir_details') {
           const rawFirId = String(args?.fir_id || '504');
           const firNum = rawFirId.replace(/[^0-9]/g, '') || '504';
-          route = `/cases/CR-KHD-2026-00504`;
-          spoken = `FIR ${firNum} is an active burglary investigation at Unit IV, Bhubaneswar.`;
+          if (firNum === '212') {
+            route = '/cases/CR-KHD-2026-00212';
+            spoken = 'FIR 212 is an active residential burglary investigation at Khandagiri Sector 4, Bhubaneswar.';
+          } else {
+            route = `/cases/CR-KHD-2026-00504`;
+            spoken = `FIR ${firNum} is an active burglary investigation at Unit IV, Bhubaneswar.`;
+          }
         } else if (name === 'show_my_cases' || name === 'show_pending_cases') {
           route = '/cases';
           spoken = 'Opening case docket.';

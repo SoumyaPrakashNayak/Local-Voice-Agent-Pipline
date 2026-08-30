@@ -85,6 +85,17 @@ export const NETWORK_NODES: NetworkNode[] = [
 
   // ── Cases ───────────────────────────────────────────────────────────────────
   {
+    id: 'CASE-KHD-212',
+    type: 'CASE',
+    label: 'CR-KHD-2026-00212',
+    sublabel: 'Residential Burglary (Sector 4)',
+    stationId: 'OP-BBSR-CAP',
+    caseId: 'CR-KHD-2026-00212',
+    accessStatus: 'AUTHORIZED',
+    isLocal: true,
+    metadata: { status: 'INVESTIGATING', priority: 'HIGH', station: 'Khandagiri Police Station' }
+  },
+  {
     id: 'CASE-BBSR-01',
     type: 'CASE',
     label: 'OD-BBSR-2026-0001',
@@ -152,6 +163,10 @@ export const NETWORK_NODES: NetworkNode[] = [
   },
 
   // ── Persons ─────────────────────────────────────────────────────────────────
+  { id: 'PERSON-212-01', type: 'PERSON', label: 'Subhashree Mohapatra', sublabel: 'Complainant (FIR 212)', accessStatus: 'AUTHORIZED',
+    metadata: { firstSeen: '14 Mar 2026', cases: 1, stations: 1 } },
+  { id: 'PERSON-212-02', type: 'PERSON', label: 'Bikram Das', sublabel: 'Alias "Biku" (Suspect)', accessStatus: 'AUTHORIZED', isAiDiscovered: true,
+    metadata: { firstSeen: '14 Mar 2026', cases: 2, stations: 2 } },
   { id: 'PERSON-01', type: 'PERSON', label: 'Unknown Subject', sublabel: 'Alias "Ranga"', accessStatus: 'AUTHORIZED', isAiDiscovered: true,
     metadata: { firstSeen: '12 Jan 2026', lastSeen: '18 Aug 2026', cases: 3, stations: 2 } },
   { id: 'PERSON-02', type: 'PERSON', label: 'Unknown Associate', sublabel: 'Alias "Billa"', accessStatus: 'AUTHORIZED', isAiDiscovered: true,
@@ -160,6 +175,8 @@ export const NETWORK_NODES: NetworkNode[] = [
     metadata: { firstSeen: '20 Jul 2026', cases: 1, stations: 1 } },
 
   // ── Phone Numbers ───────────────────────────────────────────────────────────
+  { id: 'PHONE-212-01', type: 'PHONE', label: '+91-94371-22819', sublabel: 'Complainant contact', accessStatus: 'AUTHORIZED',
+    metadata: { carrier: 'Airtel', circle: 'Odisha', firstSeen: '2026-03-14', cases: 1, stations: 1 } },
   { id: 'PHONE-01', type: 'PHONE', label: '+91-9876543210', sublabel: 'HERO entity', accessStatus: 'AUTHORIZED',
     metadata: { carrier: 'Airtel', circle: 'Odisha', firstSeen: '2026-07-12', cases: 2, stations: 2, relationships: 4 } },
   { id: 'PHONE-02', type: 'PHONE', label: '+91-9999988888', sublabel: 'Cross-station match', accessStatus: 'AUTHORIZED', isCrossStation: true,
@@ -168,6 +185,8 @@ export const NETWORK_NODES: NetworkNode[] = [
     metadata: { carrier: 'BSNL', circle: 'Odisha', firstSeen: '2026-06-22', cases: 1 } },
 
   // ── Vehicles ─────────────────────────────────────────────────────────────────
+  { id: 'VEH-212-01', type: 'VEHICLE', label: 'OD-02-AK-4412', sublabel: 'Grey Hatchback (FIR 212)', accessStatus: 'AUTHORIZED',
+    metadata: { type: 'Hatchback', color: 'Metallic Grey', firstSeen: '2026-03-14', cases: 1, stations: 1 } },
   { id: 'VEH-01', type: 'VEHICLE', label: 'OD-02-AB-1234', sublabel: 'White van (HERO)', accessStatus: 'AUTHORIZED',
     metadata: { type: 'Van', color: 'White', firstSeen: '2026-07-12', cases: 2, stations: 2 } },
   { id: 'VEH-02', type: 'VEHICLE', label: 'OD-05-XY-7777', sublabel: 'Black SUV', accessStatus: 'AUTHORIZED', isCrossStation: true, isAiDiscovered: true,
@@ -176,6 +195,8 @@ export const NETWORK_NODES: NetworkNode[] = [
     metadata: { type: 'Motorcycle', color: 'Red', firstSeen: '2026-07-28', cases: 1 } },
 
   // ── Locations ─────────────────────────────────────────────────────────────────
+  { id: 'LOC-212-01', type: 'LOCATION', label: 'Sector 4, Khandagiri', sublabel: 'Plot 42 Scene (FIR 212)', accessStatus: 'AUTHORIZED',
+    metadata: { lat: '20.2588', lon: '85.7871', cases: 1 } },
   { id: 'LOC-01', type: 'LOCATION', label: 'Unit IV, Bhubaneswar', sublabel: 'Crime scene 1', accessStatus: 'AUTHORIZED',
     metadata: { lat: '20.2961', lon: '85.8245', cases: 2 } },
   { id: 'LOC-02', type: 'LOCATION', label: 'Badambadi, Cuttack', sublabel: 'Crime scene 2', accessStatus: 'AUTHORIZED', isCrossStation: true,
@@ -186,6 +207,8 @@ export const NETWORK_NODES: NetworkNode[] = [
     metadata: { lat: '22.2604', lon: '84.8536', cases: 1 } },
 
   // ── Evidence ─────────────────────────────────────────────────────────────────
+  { id: 'EV-212-01', type: 'EVIDENCE', label: 'Rear Window Cut Grille', sublabel: 'Tool marks & Glove print', accessStatus: 'AUTHORIZED',
+    metadata: { caseId: 'CR-KHD-2026-00212', uploadedAt: '2026-03-14', entities: 2 } },
   { id: 'EV-01', type: 'EVIDENCE', label: 'CCTV Footage', sublabel: 'Unit IV warehouse', accessStatus: 'AUTHORIZED',
     metadata: { caseId: 'OD-BBSR-2026-0001', uploadedAt: '2026-08-20', entities: 2 } },
   { id: 'EV-02', type: 'EVIDENCE', label: 'Parking Receipt', sublabel: 'OD-02-AB-1234 spotted', accessStatus: 'AUTHORIZED',
@@ -195,6 +218,14 @@ export const NETWORK_NODES: NetworkNode[] = [
 // ─── Edges ─────────────────────────────────────────────────────────────────────
 
 export const NETWORK_EDGES: NetworkEdge[] = [
+  // FIR 212 Case → Entities (Khandagiri Sector 4)
+  { id: 'E-212-01', source: 'CASE-KHD-212', target: 'PERSON-212-01', relationship: 'CONTAINS', label: 'Complainant', confidence: 99, discoveredAt: '2026-03-14T21:45:00Z' },
+  { id: 'E-212-02', source: 'CASE-KHD-212', target: 'PERSON-212-02', relationship: 'INVOLVES', label: 'Suspect', confidence: 88, isAiDiscovered: true, discoveredAt: '2026-03-14T22:00:00Z' },
+  { id: 'E-212-03', source: 'CASE-KHD-212', target: 'VEH-212-01',   relationship: 'CONTAINS', label: 'Getaway Vehicle', confidence: 95, discoveredAt: '2026-03-14T21:50:00Z' },
+  { id: 'E-212-04', source: 'CASE-KHD-212', target: 'PHONE-212-01', relationship: 'CONTAINS', label: 'Contact Phone', confidence: 99, discoveredAt: '2026-03-14T21:45:00Z' },
+  { id: 'E-212-05', source: 'CASE-KHD-212', target: 'LOC-212-01',   relationship: 'LOCATED_AT', label: 'Scene', confidence: 99, discoveredAt: '2026-03-14T21:40:00Z' },
+  { id: 'E-212-06', source: 'CASE-KHD-212', target: 'EV-212-01',    relationship: 'CONTAINS', label: 'Evidence', confidence: 99, discoveredAt: '2026-03-14T22:15:00Z' },
+
   // BBSR Case → Entities
   { id: 'E01', source: 'CASE-BBSR-01', target: 'PHONE-01', relationship: 'CONTAINS', label: 'Contains', confidence: 99, discoveredAt: '2026-08-20T09:35:00Z' },
   { id: 'E02', source: 'CASE-BBSR-01', target: 'VEH-01',   relationship: 'CONTAINS', label: 'Contains', confidence: 99, discoveredAt: '2026-08-20T09:35:00Z' },

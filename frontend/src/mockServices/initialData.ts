@@ -585,6 +585,61 @@ const users: User[] = [
 ];
 const cases: CaseRecord[] = [
   {
+    "id": "CR-KHD-2026-00212",
+    "firNumber": "FIR 212",
+    "stationId": "OP-BBSR-CAP",
+    "investigatorId": "INV-BBSR-001",
+    "title": "Night-time Residential Burglary & House-breaking (Sector 4)",
+    "description": "On 14 March 2026 at approximately 21:40 hrs, complainant Subhashree Mohapatra reported that an unidentified intruder broke the rear window grille of her duplex residence at Plot 42, Sector 4, Khandagiri. Gold ornaments (approx 120 grams), a Dell Latitude laptop (S/N: DL-8842-X), and Rs. 45,000 cash were stolen while the family was away. Complainant's neighbor observed a metallic grey hatchback (Reg: OD-02-AK-4412) fleeing the lane at high speed. A discarded mobile SIM card tray and partial glove print were recovered from the rear garden.",
+    "crimeType": "Burglary",
+    "status": "INVESTIGATING",
+    "priority": "HIGH",
+    "createdAt": "2026-03-14T21:40:00.000Z",
+    "entities": [
+      {
+        "id": "ENT-P-212-1",
+        "type": "PERSON",
+        "value": "Subhashree Mohapatra"
+      },
+      {
+        "id": "ENT-P-212-2",
+        "type": "PERSON",
+        "value": "Bikram Das alias Biku"
+      },
+      {
+        "id": "ENT-V-212",
+        "type": "VEHICLE",
+        "value": "OD-02-AK-4412"
+      },
+      {
+        "id": "ENT-PH-212",
+        "type": "PHONE",
+        "value": "+91-94371-22819"
+      },
+      {
+        "id": "ENT-L-212",
+        "type": "LOCATION",
+        "value": "Plot 42, Sector 4, Khandagiri"
+      },
+      {
+        "id": "ENT-E-212",
+        "type": "DOCUMENT",
+        "value": "Rear Window Cut Iron Grille"
+      }
+    ],
+    "bnsSections": [
+      "BNS Section 305 (Theft in dwelling house)",
+      "BNS Section 331 (House-trespass and house-breaking by night)",
+      "BNS Section 317 (Stolen property concealment)"
+    ],
+    "suspects": ["Bikram Das alias Biku", "Unknown Associate"],
+    "vehicles": ["OD-02-AK-4412"],
+    "locations": ["Plot 42, Sector 4, Khandagiri", "Khandagiri Chhak", "Aiginia Overbridge"],
+    "evidenceRefs": ["Rear Window Grille Tool Marks", "CCTV Lane Footage Cam-04", "Discarded SIM Tray", "Recovered Glove Smear"],
+    "cctvRefs": ["Khandagiri Sector 4 Junction Cam-04", "Aiginia Highway Camera 2"],
+    "linkedCaseIds": ["CR-KHD-2026-00504", "OD-CTC-2026-00981"]
+  },
+  {
     "id": "CR-KHD-2026-00504",
     "firNumber": "FIR 504",
     "stationId": "OP-BBSR-CAP",
@@ -2131,6 +2186,34 @@ const cases: CaseRecord[] = [
 ];
 const evidence: Evidence[] = [
   {
+    "id": "EV-KHD-212-01",
+    "caseId": "CR-KHD-2026-00212",
+    "description": "CCTV Footage Clip — Khandagiri Sector 4 Lane Cam-04 (21:48 hrs showing grey hatchback OD-02-AK-4412)",
+    "type": "VIDEO",
+    "uploadedAt": "2026-03-14T22:15:00.000Z",
+    "entitiesExtracted": [
+      {
+        "id": "ENT-V-212",
+        "type": "VEHICLE",
+        "value": "OD-02-AK-4412"
+      }
+    ]
+  },
+  {
+    "id": "EV-KHD-212-02",
+    "caseId": "CR-KHD-2026-00212",
+    "description": "Forensic Inspection Report — Rear window iron grille with mechanical cut tool marks and glove smear trace",
+    "type": "DOCUMENT",
+    "uploadedAt": "2026-03-15T09:30:00.000Z",
+    "entitiesExtracted": [
+      {
+        "id": "ENT-E-212",
+        "type": "DOCUMENT",
+        "value": "Rear Window Cut Iron Grille"
+      }
+    ]
+  },
+  {
     "id": "EV-BBSR-1",
     "caseId": "OD-BBSR-2026-0001",
     "description": "Collected during preliminary sweep. Initial tagging done.",
@@ -2669,6 +2752,26 @@ export const initialState: AppState = {
   cases,
   evidence,
   accessRequests: [
+    {
+      id: 'REQ-2026-00212-IN',
+      requestingStationId: 'OP-CTC-CITY',
+      requestingOfficerId: 'INV-CTC-006',
+      targetStationId: 'OP-BBSR-CAP',
+      targetCaseId: 'CR-KHD-2026-00212',
+      reason: 'Cross-station intelligence verification of vehicle OD-02-AK-4412 in Badambadi robbery linkage.',
+      status: 'PENDING',
+      createdAt: '2026-03-15T08:30:00.000Z'
+    },
+    {
+      id: 'REQ-2026-00212-OUT',
+      requestingStationId: 'OP-BBSR-CAP',
+      requestingOfficerId: 'INV-BBSR-001',
+      targetStationId: 'OP-CTC-CITY',
+      targetCaseId: 'OD-CTC-2026-00981',
+      reason: 'Cross-station forensic correlation of FIR 212 suspect modus operandi with Cuttack jewelry heist.',
+      status: 'PENDING',
+      createdAt: '2026-03-15T09:15:00.000Z'
+    },
     {
       id: 'REQ-2026-00301',
       requestingStationId: 'OP-BBSR-CAP',
