@@ -63,13 +63,13 @@ class LocalGateway:
         prefix = r"(?:(?:could|can|would)\s+you\s+(?:please\s+)?)?(?:please\s+)?"
         suffix = r"(?:\s+for\s+me|\s+please)?$"
 
-        # 1. OPEN_FIR (e.g., "Open FIR 212", "Show FIR 212", "Could you open FIR 212 for me?")
+        # 1. OPEN_FIR (e.g., "Open FIR 212", "Show FIR 212", "Could you open FIR 212 for me?", "Open F.I.R. 212")
         self.pat_open_fir = re.compile(
-            rf"^{prefix}(?:open|view|show|display|go\s+to|navigate\s+to)\s+(?:the\s+)?(?:fir|case)(?:\s+(?:number|no|#))?\s*([a-zA-Z0-9-]+){suffix}",
+            rf"^{prefix}(?:open|view|show|display|go\s+to|navigate\s+to)\s+(?:the\s+)?(?:fir|f\.i\.r\.|case|for)(?:\s+(?:number|no|#))?\s*([a-zA-Z0-9-]+){suffix}",
             re.IGNORECASE,
         )
         self.pat_direct_fir = re.compile(
-            r"^(?:fir|case)(?:\s+(?:number|no|#))?\s*([a-zA-Z0-9-]+)$",
+            r"^(?:fir|f\.i\.r\.|case)(?:\s+(?:number|no|#))?\s*([a-zA-Z0-9-]+)$",
             re.IGNORECASE,
         )
 
