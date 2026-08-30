@@ -71,7 +71,7 @@ export function Sidebar({
               style={{ animationDelay: `${index * 50}ms` }}
               className={({ isActive }) =>
                 [
-                  "group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300 animate-slide-in",
+                  "group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300 animate-slide-in interactive-nav-item",
                   isActive
                     ? "bg-cyan-accent/10 text-cyan-accent shadow-glow"
                     : "text-slate-400 hover:bg-white/[0.04] hover:text-white",

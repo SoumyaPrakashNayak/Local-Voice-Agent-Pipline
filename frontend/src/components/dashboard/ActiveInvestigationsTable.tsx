@@ -40,15 +40,15 @@ export function ActiveInvestigationsTable() {
     : DEFAULT_INVESTIGATIONS;
 
   return (
-    <div className="bg-surface dark:bg-[#0F1726] border border-border dark:border-[#1E293B] rounded-2xl p-4 flex flex-col justify-between shadow-xs h-full">
+    <div className="bg-surface dark:bg-[#0F1726] border border-border dark:border-[#1E293B] rounded-2xl p-4 flex flex-col justify-between shadow-xs h-full interactive-panel">
       {/* Header */}
       <div className="flex items-center justify-between gap-2 mb-2">
-        <h3 className="text-xs font-bold font-sans text-text dark:text-[#F8FAFC] tracking-wide">
+        <h3 className="text-base font-semibold leading-section text-text dark:text-[#E8ECEF]">
           {t('dashboard.activeInvestigations', 'Active Investigations')}
         </h3>
         <button
           onClick={() => navigate('/cases')}
-          className="text-[11px] font-medium text-sky-600 dark:text-sky-400 hover:underline flex items-center gap-0.5"
+          className="text-xs font-medium text-sky-600 dark:text-sky-400 hover:underline flex items-center gap-0.5"
         >
           <span>{t('dashboard.viewAll', 'View All')}</span>
           <ChevronRight size={12} />
@@ -59,7 +59,7 @@ export function ActiveInvestigationsTable() {
       <div className="overflow-x-auto my-auto">
         <table className="w-full text-left text-xs border-collapse">
           <thead>
-            <tr className="border-b border-border-soft dark:border-[#1E293B] text-[9px] uppercase font-mono tracking-wider text-text-faint dark:text-[#64748B]">
+            <tr className="border-b border-border-soft dark:border-[#1E293B] text-[11px] uppercase font-mono tracking-wider text-text-faint dark:text-[#7A8B99] opacity-80">
               <th className="py-2 px-1 font-semibold">{t('dashboard.caseId', 'Case ID')}</th>
               <th className="py-2 px-1 font-semibold">{t('dashboard.caseTitle', 'Case Title')}</th>
               <th className="py-2 px-1 font-semibold">{t('dashboard.officer', 'Investigating Officer')}</th>
@@ -74,20 +74,20 @@ export function ActiveInvestigationsTable() {
                 <tr
                   key={`${item.caseId}-${idx}`}
                   onClick={() => navigate(`/cases/${item.id}`)}
-                  className="hover:bg-surface-hover dark:hover:bg-[#151E31] cursor-pointer transition-colors group"
+                  className="hover:bg-surface-hover dark:hover:bg-[#151E31] cursor-pointer transition-colors group interactive-table-row"
                 >
-                  <td className="py-2 px-1 font-mono text-[11px] font-bold text-text dark:text-[#F8FAFC] group-hover:text-brand dark:group-hover:text-sky-400 transition-colors">
+                  <td className="py-2 px-1 font-mono text-xs font-semibold text-text dark:text-[#E8ECEF] group-hover:text-brand dark:group-hover:text-sky-400 transition-colors">
                     {item.caseId}
                   </td>
-                  <td className="py-2 px-1 font-sans text-[11px] text-text-dim dark:text-[#94A3B8] font-medium truncate max-w-[110px]">
+                  <td className="py-2 px-1 font-sans text-xs text-text-dim dark:text-[#A8B5C0] font-normal truncate max-w-[110px]">
                     {item.title}
                   </td>
-                  <td className="py-2 px-1 font-sans text-[11px] text-text dark:text-[#E2E8F0] font-medium truncate max-w-[120px]">
+                  <td className="py-2 px-1 font-sans text-xs text-text dark:text-[#E8ECEF] font-normal truncate max-w-[120px]">
                     {item.officer}
                   </td>
                   <td className="py-2 px-1 text-center">
                     <span
-                      className={`text-[8.5px] font-mono font-bold uppercase px-1.5 py-0.5 rounded border ${
+                      className={`text-[9.5px] font-mono font-semibold uppercase px-1.5 py-0.5 rounded border ${
                         item.risk === 'HIGH'
                           ? 'text-rose-600 dark:text-rose-400 bg-rose-500/10 border-rose-500/25'
                           : item.risk === 'MEDIUM'
@@ -98,7 +98,7 @@ export function ActiveInvestigationsTable() {
                       {item.risk}
                     </span>
                   </td>
-                  <td className="py-2 px-1 font-mono text-[10px] text-text-dim dark:text-[#94A3B8]">
+                  <td className="py-2 px-1 font-mono text-xs text-text-dim dark:text-[#A8B5C0]">
                     {item.daysActive} {t('dashboard.days', 'days')}
                   </td>
                   <td className="py-2 px-1">
@@ -109,7 +109,7 @@ export function ActiveInvestigationsTable() {
                           style={{ width: `${item.progress}%` }}
                         />
                       </div>
-                      <span className="text-[10px] font-mono font-bold text-text dark:text-[#F8FAFC]">
+                      <span className="text-xs font-mono font-semibold text-text dark:text-[#E8ECEF]">
                         {item.progress}%
                       </span>
                     </div>

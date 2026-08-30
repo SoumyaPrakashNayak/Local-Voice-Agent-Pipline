@@ -30,6 +30,16 @@ export default {
         serif: ["Source Serif 4", "serif"],
         mono: ["IBM Plex Mono", "monospace"],
       },
+      letterSpacing: {
+        data: "-0.5px",
+        heading: "-0.3px",
+      },
+      lineHeight: {
+        heading: "1.2",
+        section: "1.3",
+        label: "1.4",
+        body: "1.5",
+      },
       boxShadow: {
         glass: "0 8px 32px rgba(0, 0, 0, 0.37)",
         card: "0 4px 24px rgba(0, 0, 0, 0.25)",

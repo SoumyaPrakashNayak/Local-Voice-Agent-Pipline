@@ -142,7 +142,7 @@ export function CrimeHotspotGisMap() {
   };
 
   return (
-    <div className="bg-surface dark:bg-[#0F1726] border border-border dark:border-[#1E293B] rounded-2xl p-4 flex flex-col justify-between shadow-xs h-full relative overflow-hidden font-sans">
+    <div className="bg-surface dark:bg-[#0F1726] border border-border dark:border-[#1E293B] rounded-2xl p-4 flex flex-col justify-between shadow-xs h-full relative overflow-hidden font-sans interactive-panel">
       {/* Header */}
       <div className="flex items-center justify-between gap-2 mb-2 z-10">
         <div className="flex items-center gap-1.5 relative">

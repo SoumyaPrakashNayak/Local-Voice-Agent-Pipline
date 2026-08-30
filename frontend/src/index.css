@@ -5,18 +5,18 @@
 @layer base {
   /* Default: State Police Intelligence Workstation — Light Theme */
   :root {
-    --bg: #F5F7FA;
+    --bg: #F8FAFC;
     --bg-elev: #FFFFFF;
-    --surface: #FFFFFF;
-    --surface-2: #F8FAFC;
-    --surface-hover: #F1F5F9;
-    --border: #D9E0E8;
-    --border-soft: #E4E7EC;
-    --border-strong: #C5CED9;
-    --text: #172033;
-    --text-dim: #5B6678;
-    --text-faint: #7A8699;
-    --disabled: #A5AFBD;
+    --surface: rgba(255, 255, 255, 0.85);
+    --surface-2: rgba(241, 245, 249, 0.7);
+    --surface-hover: rgba(226, 232, 240, 0.85);
+    --border: rgba(203, 213, 225, 0.5);
+    --border-soft: rgba(226, 232, 240, 0.4);
+    --border-strong: rgba(148, 163, 184, 0.6);
+    --text: #0F172A;
+    --text-dim: #475569;
+    --text-faint: #94A3B8;
+    --disabled: #CBD5E1;
     
     --brand: #B88922; /* Institutional Gold */
     --brand-bright: #D1A33A;
@@ -32,71 +32,93 @@
 
     /* Semantic Navigation Tokens - Light */
     --nav-bg: transparent;
-    --nav-text: #5B6678;
-    --nav-hover-bg: #F1F5F9;
-    --nav-hover-text: #172033;
-    --nav-active-bg: #EFF6FF;
+    --nav-text: #475569;
+    --nav-hover-bg: rgba(241, 245, 249, 0.85);
+    --nav-hover-text: #0F172A;
+    --nav-active-bg: rgba(239, 246, 255, 0.9);
     --nav-active-text: #1D4ED8;
     --nav-active-icon: #1D4ED8;
-    --nav-active-border: #BFDBFE;
+    --nav-active-border: rgba(191, 219, 254, 0.6);
     --nav-active-indicator: #1D4ED8;
+
+    /* Globe Variables - Light Mode */
+    --globe-size: clamp(260px, 28vw, 420px);
+    --globe-right: clamp(40px, 6vw, 120px);
+    --globe-top: clamp(100px, 15vh, 220px);
+    --globe-opacity: 0.06;
+    --globe-blend: normal;
+    --globe-filter: saturate(0.2) contrast(1.1) brightness(1.1) grayscale(0.25);
+    --globe-duration: 100s;
+    --globe-glow: rgba(29, 78, 216, 0.05);
+    --globe-border: rgba(29, 78, 216, 0.08);
   }
 
   /* Dark Theme Tokens */
   .theme-dark,
   html.dark,
   :root.dark {
-    --bg: #0A0E17;
-    --bg-elev: #0F1522;
-    --surface: #141B2B;
-    --surface-2: #1A2338;
-    --surface-hover: #202A42;
-    --border: #26314A;
-    --border-soft: #1D2740;
-    --border-strong: #334155;
-    --text: #E8EAF1;
-    --text-dim: #8891A8;
-    --text-faint: #5B6479;
-    --disabled: #475569;
+    --bg: #070A13;
+    --bg-elev: #0C101F;
+    --surface: rgba(16, 22, 40, 0.75);
+    --surface-2: rgba(22, 31, 56, 0.5);
+    --surface-hover: rgba(30, 41, 73, 0.85);
+    --border: rgba(56, 75, 112, 0.35);
+    --border-soft: rgba(56, 75, 112, 0.22);
+    --border-strong: rgba(56, 75, 112, 0.6);
+    --text: #E8ECEF;
+    --text-dim: #A8B5C0;
+    --text-faint: #7A8B99;
+    --disabled: #334155;
     
-    --brand: #C6A15B; /* Gold */
-    --brand-bright: #E3C077;
+    --brand: #FFB800; /* Gold */
+    --brand-bright: #FFE066;
     
-    --accent: #38BDF8; /* Cyan/Sky */
-    --accent-bright: #7CCBDA;
+    --accent: #00D9FF; /* Cyan/Sky */
+    --accent-bright: #66ECFF;
     
-    --danger: #C4453A;
-    --danger-bright: #E36D5F;
+    --danger: #E36D5F;
+    --danger-bright: #F87171;
     --success: #4C9A6A;
     --warning: #D69A3E;
-    --info: #38BDF8;
+    --info: #00D9FF;
 
     /* Semantic Navigation Tokens - Dark */
     --nav-bg: transparent;
-    --nav-text: #8891A8;
-    --nav-hover-bg: #1A2338;
-    --nav-hover-text: #E8EAF1;
-    --nav-active-bg: #1E293B;
+    --nav-text: #94A3B8;
+    --nav-hover-bg: rgba(30, 41, 73, 0.6);
+    --nav-hover-text: #F1F5F9;
+    --nav-active-bg: rgba(30, 41, 73, 0.85);
     --nav-active-text: #F8FAFC;
     --nav-active-icon: #38BDF8;
-    --nav-active-border: #334155;
+    --nav-active-border: rgba(56, 75, 112, 0.5);
     --nav-active-indicator: #38BDF8;
+
+    /* Globe Variables - Dark Mode */
+    --globe-size: clamp(280px, 30vw, 460px);
+    --globe-right: clamp(40px, 6vw, 120px);
+    --globe-top: clamp(100px, 15vh, 220px);
+    --globe-opacity: 0.16;
+    --globe-blend: screen;
+    --globe-filter: none;
+    --globe-duration: 100s;
+    --globe-glow: rgba(56, 189, 248, 0.14);
+    --globe-border: rgba(56, 189, 248, 0.12);
   }
 
   /* Explicit light class */
   .theme-light {
-    --bg: #F5F7FA;
+    --bg: #F8FAFC;
     --bg-elev: #FFFFFF;
-    --surface: #FFFFFF;
-    --surface-2: #F8FAFC;
-    --surface-hover: #F1F5F9;
-    --border: #D9E0E8;
-    --border-soft: #E4E7EC;
-    --border-strong: #C5CED9;
-    --text: #172033;
-    --text-dim: #5B6678;
-    --text-faint: #7A8699;
-    --disabled: #A5AFBD;
+    --surface: rgba(255, 255, 255, 0.85);
+    --surface-2: rgba(241, 245, 249, 0.7);
+    --surface-hover: rgba(226, 232, 240, 0.85);
+    --border: rgba(203, 213, 225, 0.5);
+    --border-soft: rgba(226, 232, 240, 0.4);
+    --border-strong: rgba(148, 163, 184, 0.6);
+    --text: #0F172A;
+    --text-dim: #475569;
+    --text-faint: #94A3B8;
+    --disabled: #CBD5E1;
     
     --brand: #B88922;
     --brand-bright: #D1A33A;
@@ -112,14 +134,25 @@
 
     /* Semantic Navigation Tokens - Light */
     --nav-bg: transparent;
-    --nav-text: #5B6678;
-    --nav-hover-bg: #F1F5F9;
-    --nav-hover-text: #172033;
-    --nav-active-bg: #EFF6FF;
+    --nav-text: #475569;
+    --nav-hover-bg: rgba(241, 245, 249, 0.85);
+    --nav-hover-text: #0F172A;
+    --nav-active-bg: rgba(239, 246, 255, 0.9);
     --nav-active-text: #1D4ED8;
     --nav-active-icon: #1D4ED8;
-    --nav-active-border: #BFDBFE;
+    --nav-active-border: rgba(191, 219, 254, 0.6);
     --nav-active-indicator: #1D4ED8;
+
+    /* Globe Variables - Light Mode (Explicit) */
+    --globe-size: clamp(260px, 28vw, 420px);
+    --globe-right: clamp(40px, 6vw, 120px);
+    --globe-top: clamp(100px, 15vh, 220px);
+    --globe-opacity: 0.06;
+    --globe-blend: normal;
+    --globe-filter: saturate(0.2) contrast(1.1) brightness(1.1) grayscale(0.25);
+    --globe-duration: 100s;
+    --globe-glow: rgba(29, 78, 216, 0.05);
+    --globe-border: rgba(29, 78, 216, 0.08);
   }
 
   * {
@@ -127,10 +160,23 @@
   }
 
   body {
-    background-color: var(--bg);
+    /* Background is provided by body::before (position: fixed) so the
+       animated pseudo-element is visible through transparent layout containers. */
+    background: transparent;
     color: var(--text);
     @apply antialiased transition-colors duration-200;
     min-height: 100vh;
+    font-family: 'Inter', system-ui, sans-serif;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Force tabular numbers for data fields, counts, and numerical grids */
+  .font-mono, 
+  [class*="font-mono"],
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
   }
 
   ::-webkit-scrollbar {
@@ -151,13 +197,15 @@
 @layer components {
   .glass {
     background-color: var(--surface);
-    border: 1px solid var(--border);
-    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-soft);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
   }
 
   .glass-hover {
-    @apply transition-all duration-200 hover:shadow-sm;
-    border-color: var(--border-strong, #C5CED9);
+    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-[2px];
+    border-color: var(--border-strong);
   }
 
   .text-gradient {
@@ -165,3 +213,297 @@
     font-weight: 700;
   }
 }
+
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  transition: background-color 0.2s ease, opacity 0.3s ease;
+}
+
+/* ─── Light Mode: light map + subtle atmospheric fades ─── */
+html.theme-light body::before,
+html:not(.dark) body::before {
+  background-color: #F8FAFC;
+  background-image:
+    /* Atmospheric fades sit on top of the map */
+    radial-gradient(ellipse 70% 60% at 10% 15%, rgba(56, 189, 248, 0.05) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 90% 85%, rgba(139, 92, 246, 0.04) 0%, transparent 68%),
+    radial-gradient(ellipse 50% 40% at 50% 5%, rgba(184, 137, 34, 0.02) 0%, transparent 60%),
+    /* Light world map as the bottom layer */
+    url('/light_world_map.png');
+  background-size: cover, cover, cover, cover;
+  background-position: center, center, center, center;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
+  background-attachment: fixed, fixed, fixed, fixed;
+  /* multiply: white pixels in the map become transparent, 
+     only the blue continents/nodes/lines show through */
+  mix-blend-mode: multiply;
+  opacity: 1;
+  animation: siris-atmosDrift 60s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+/* ─── Dark Mode: dark map + deep navy intelligence glows ─── */
+html.theme-dark body::before,
+html.dark body::before {
+  background-color: #0A0E17;
+  background-image:
+    /* Atmospheric fades on top */
+    radial-gradient(ellipse 72% 56% at 12% 18%, rgba(30, 64, 120, 0.45) 0%, transparent 70%),
+    radial-gradient(ellipse 58% 48% at 88% 84%, rgba(14, 50, 100, 0.38) 0%, transparent 68%),
+    radial-gradient(ellipse 42% 30% at 58% 4%, rgba(184, 137, 34, 0.08) 0%, transparent 58%),
+    /* Dark world map as the bottom layer */
+    url('/dark_world_map.png');
+  background-size: cover, cover, cover, cover;
+  background-position: center, center, center, center;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
+  background-attachment: fixed, fixed, fixed, fixed;
+  /* screen: black pixels in the dark map become transparent,
+     cyan glow nodes and dashed lines shine through */
+  mix-blend-mode: screen;
+  animation: siris-atmosDrift 55s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+/* ================================================================
+ * S.I.R.I.S — MICRO-INTERACTIONS & INTERACTIVE STATES
+ * ================================================================ */
+
+/* ─── KPI Card Interactions ─── */
+.interactive-kpi-card {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.interactive-kpi-card:hover {
+  transform: translateY(-3px);
+}
+
+/* Specific glows per card theme */
+.interactive-kpi-card.border-l-sky-500:hover {
+  border-color: rgba(56, 189, 248, 0.45);
+  box-shadow: 0 4px 18px -2px rgba(56, 189, 248, 0.12);
+}
+.interactive-kpi-card.border-l-purple-500:hover {
+  border-color: rgba(168, 85, 247, 0.45);
+  box-shadow: 0 4px 18px -2px rgba(168, 85, 247, 0.12);
+}
+.interactive-kpi-card.border-l-rose-500:hover {
+  border-color: rgba(239, 68, 68, 0.45);
+  box-shadow: 0 4px 18px -2px rgba(239, 68, 68, 0.12);
+}
+.interactive-kpi-card.border-l-amber-500:hover {
+  border-color: rgba(245, 158, 11, 0.45);
+  box-shadow: 0 4px 18px -2px rgba(245, 158, 11, 0.12);
+}
+
+/* Active / Pressed state */
+.interactive-kpi-card:active {
+  transform: translateY(-1px) scale(0.995);
+  transition-duration: 80ms;
+}
+
+/* Slight content/icon emphasis on card hover */
+.interactive-kpi-card:hover svg {
+  transform: scale(1.05);
+  filter: brightness(1.15);
+}
+.interactive-kpi-card:hover .font-display {
+  filter: brightness(1.15);
+}
+.interactive-kpi-card svg,
+.interactive-kpi-card .font-display {
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+/* ─── Dashboard Panel Interactions ─── */
+.interactive-panel {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.interactive-panel:hover {
+  transform: translateY(-1px);
+  border-color: var(--border-strong);
+  box-shadow: 0 4px 12px rgba(16, 24, 40, 0.04);
+}
+
+/* Active / Pressed state */
+.interactive-panel:active {
+  transform: translateY(0) scale(0.998);
+  transition-duration: 80ms;
+}
+
+/* Slightly brighter headers / icons on hover */
+.interactive-panel:hover h3 {
+  filter: brightness(1.1);
+}
+.interactive-panel:hover svg {
+  filter: brightness(1.1);
+}
+.interactive-panel h3,
+.interactive-panel svg {
+  transition: filter 0.2s ease;
+}
+
+/* ─── Active Investigation Table Row Interactions ─── */
+.interactive-table-row {
+  transition: background-color 0.18s ease-out, transform 0.18s ease-out;
+}
+
+.interactive-table-row:hover {
+  background-color: rgba(241, 245, 249, 0.85) !important;
+  transform: translateX(2px);
+}
+
+.theme-dark .interactive-table-row:hover,
+html.dark .interactive-table-row:hover {
+  background-color: rgba(30, 41, 73, 0.45) !important;
+}
+
+.interactive-table-row:active {
+  transform: translateX(0px);
+  transition-duration: 80ms;
+}
+
+/* ─── Intelligence Alert Feed Item Interactions ─── */
+.interactive-alert-item {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.interactive-alert-item:hover {
+  transform: translateY(-1.5px);
+}
+
+/* High severity hover */
+.interactive-alert-item:hover:has(span.text-rose-450),
+.interactive-alert-item:hover:has(span.text-rose-600) {
+  border-color: rgba(239, 68, 68, 0.45);
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.08);
+}
+
+/* Medium severity hover */
+.interactive-alert-item:hover:has(span.text-amber-400),
+.interactive-alert-item:hover:has(span.text-amber-600) {
+  border-color: rgba(245, 158, 11, 0.45);
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.08);
+}
+
+/* Low severity hover */
+.interactive-alert-item:hover:has(span.text-sky-400),
+.interactive-alert-item:hover:has(span.text-sky-600) {
+  border-color: rgba(56, 189, 248, 0.45);
+  box-shadow: 0 2px 8px rgba(56, 189, 248, 0.08);
+}
+
+/* Active / Pressed state */
+.interactive-alert-item:active {
+  transform: translateY(0) scale(0.99);
+  transition-duration: 80ms;
+}
+
+/* ─── Sidebar Navigation Link Interactions ─── */
+.interactive-nav-item {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+              background-color 0.2s ease, 
+              color 0.2s ease;
+}
+
+.interactive-nav-item:not(.bg-cyan-accent\/10):hover {
+  transform: translateX(2px);
+}
+
+.interactive-nav-item:active {
+  transform: translateX(0) scale(0.98);
+  transition-duration: 80ms;
+}
+
+/* ─── Crime Hotspot GIS Map Marker Interactions ─── */
+.custom-gis-hotspot-marker {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), filter 0.2s ease;
+}
+
+.custom-gis-hotspot-marker > div {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), filter 0.2s ease;
+}
+
+.custom-gis-hotspot-marker:hover > div {
+  transform: translate(-50%, -50%) scale(1.12) !important;
+}
+
+.custom-gis-hotspot-marker:hover div[class*="bg-"] {
+  border-color: #FFFFFF !important;
+  box-shadow: 0 0 14px currentColor, 0 0 0 3px rgba(255, 255, 255, 0.15) !important;
+}
+
+/* ─── Button and Click Feedback ─── */
+button:not([disabled]) {
+  transition: transform 0.1s ease, filter 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+
+button:not([disabled]):active {
+  transform: scale(0.975);
+}
+
+button:focus-visible,
+a:focus-visible,
+select:focus-visible,
+input:focus-visible {
+  outline: 2px solid #38BDF8 !important;
+  outline-offset: 2px !important;
+}
+
+/* ─── Accessibility: Reduced Motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  .interactive-kpi-card,
+  .interactive-panel,
+  .interactive-table-row,
+  .interactive-alert-item,
+  .interactive-nav-item,
+  .custom-gis-hotspot-marker,
+  button {
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ─── Login Page Column Entrance Animations ─── */
+@keyframes slideFromLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideFromBottom {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-left {
+  animation: slideFromLeft 550ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-up {
+  animation: slideFromBottom 550ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+

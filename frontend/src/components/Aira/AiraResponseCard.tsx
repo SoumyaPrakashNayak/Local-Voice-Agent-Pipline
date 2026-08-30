@@ -11,7 +11,7 @@ export function AiraResponseCard({ response, onExecuteAction }: AiraResponseCard
   const caseData = response.caseData;
 
   return (
-    <div className="rounded-xl bg-surface/95 border border-border-soft p-4 shadow-card space-y-3 animate-fade-in text-sm">
+    <div className="rounded-xl bg-surface border border-border-soft p-4 shadow-card space-y-3 animate-fade-in text-sm">
       {/* Header / Intent Badge */}
       <div className="flex items-center justify-between border-b border-border-soft pb-2">
         <div className="flex items-center gap-2">
@@ -41,7 +41,7 @@ export function AiraResponseCard({ response, onExecuteAction }: AiraResponseCard
 
       {/* Structured Case Details Preview (if case was resolved) */}
       {caseData && (
-        <div className="rounded-lg bg-bg-elev/80 border border-border-soft p-3 space-y-2 text-xs">
+        <div className="rounded-lg bg-surface-2 border border-border-soft p-3 space-y-2 text-xs">
           <div className="flex items-center justify-between">
             <span className="font-bold text-brand">{caseData.firNumber}</span>
             <span className={`px-2 py-0.5 rounded font-mono text-[10px] ${

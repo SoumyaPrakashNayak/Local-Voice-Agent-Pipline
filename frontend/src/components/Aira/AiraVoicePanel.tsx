@@ -76,7 +76,7 @@ export function AiraVoicePanel() {
   ];
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 w-[420px] max-w-[calc(100vw-32px)] max-h-[85vh] bg-[#0B1120]/95 backdrop-blur-xl border border-cyan-500/40 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.8),0_0_20px_rgba(6,182,212,0.2)] flex flex-col overflow-hidden animate-slide-up text-text font-sans select-none">
+    <div className="fixed bottom-6 right-6 z-50 w-[420px] max-w-[calc(100vw-32px)] max-h-[85vh] bg-surface backdrop-blur-xl border border-border-strong rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.35)] flex flex-col overflow-hidden animate-slide-up text-text font-sans select-none">
       {/* Top Accent Line */}
       <div className="h-[2px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent" />
 
@@ -143,7 +143,7 @@ export function AiraVoicePanel() {
             <span>AIRA DIAGNOSTICS</span>
             <span className="text-[9px] text-text-dim">{diagnostics.model}</span>
           </div>
-          <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-text-muted">
+          <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-slate-300">
             <div className="flex items-center justify-between">
               <span>Microphone:</span>
               <span className={diagnostics.microphoneReady ? 'text-emerald-400 font-bold' : 'text-rose-400'}>
@@ -190,7 +190,7 @@ export function AiraVoicePanel() {
       )}
 
       {/* ── Status & Waveform Center ── */}
-      <div className="px-5 py-4 bg-gradient-to-b from-surface/80 to-bg-elev/40 border-b border-border-soft/60 flex flex-col items-center gap-3">
+      <div className="px-5 py-4 bg-gradient-to-b from-surface to-bg-elev border-b border-border flex flex-col items-center gap-3">
         {/* Status Pill */}
         <div className="flex items-center gap-2">
           <span
@@ -232,7 +232,7 @@ export function AiraVoicePanel() {
         <AiraVoiceVisualizer state={listeningState} audioLevel={audioLevel} />
 
         {/* Live Streaming Transcript */}
-        <div className="w-full min-h-[36px] bg-bg/70 border border-border-soft rounded-xl px-3 py-2 text-xs flex items-center justify-center text-center">
+        <div className="w-full min-h-[36px] bg-surface-2 border border-border-soft rounded-xl px-3 py-2 text-xs flex items-center justify-center text-center">
           {transcript ? (
             <p className="text-cyan-300 font-mono italic animate-fade-in">"{transcript}"</p>
           ) : isListening ? (
@@ -266,7 +266,7 @@ export function AiraVoicePanel() {
                 <button
                   key={i}
                   onClick={() => handleSubmitQuery(cmd)}
-                  className="text-left px-2.5 py-2 rounded-lg bg-surface/70 border border-border-soft hover:border-cyan-500/50 hover:bg-surface text-[11px] text-text transition-all truncate group flex items-center justify-between"
+                  className="text-left px-2.5 py-2 rounded-lg bg-surface-2 border border-border hover:border-cyan-500/50 hover:bg-surface-hover text-[11px] text-text transition-all truncate group flex items-center justify-between"
                 >
                   <span className="truncate group-hover:text-cyan-300">"{cmd}"</span>
                   <ChevronRight size={10} className="text-text-faint group-hover:text-cyan-400 shrink-0" />
@@ -308,7 +308,7 @@ export function AiraVoicePanel() {
             value={textInput}
             onChange={(e) => setTextInput(e.target.value)}
             placeholder="Or type a query (e.g. 'Open FIR 504')..."
-            className="w-full bg-bg/90 border border-border-soft rounded-xl pl-3 pr-10 py-2 text-xs text-text placeholder:text-text-faint focus:outline-none focus:border-cyan-500 transition-colors"
+            className="w-full bg-bg border border-border-soft rounded-xl pl-3 pr-10 py-2 text-xs text-text placeholder:text-text-faint focus:outline-none focus:border-cyan-500 transition-colors"
           />
           <button
             type="submit"

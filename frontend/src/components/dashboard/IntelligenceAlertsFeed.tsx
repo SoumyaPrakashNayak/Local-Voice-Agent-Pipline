@@ -67,7 +67,7 @@ export function IntelligenceAlertsFeed() {
   const alerts = DEFAULT_ALERTS;
 
   return (
-    <div className="bg-surface dark:bg-[#0F1726] border border-border dark:border-[#1E293B] rounded-2xl p-4 flex flex-col justify-between shadow-xs h-full">
+    <div className="bg-surface dark:bg-[#0F1726] border border-border dark:border-[#1E293B] rounded-2xl p-4 flex flex-col justify-between shadow-xs h-full interactive-panel">
       {/* Header */}
       <div className="flex items-center justify-between gap-2 mb-2">
         <div className="flex items-center gap-1.5">
@@ -93,7 +93,7 @@ export function IntelligenceAlertsFeed() {
             <div
               key={item.id}
               onClick={() => navigate('/intelligence/alerts')}
-              className="flex items-center justify-between gap-3 p-2 rounded-xl bg-surface-2/60 dark:bg-[#151E31]/60 hover:bg-surface-hover dark:hover:bg-[#151E31] border border-border-soft dark:border-[#1E293B]/70 transition-colors cursor-pointer group"
+              className="flex items-center justify-between gap-3 p-2 rounded-xl bg-surface-2/60 dark:bg-[#151E31]/60 hover:bg-surface-hover dark:hover:bg-[#151E31] border border-border-soft dark:border-[#1E293B]/70 transition-colors cursor-pointer group interactive-alert-item"
             >
               {/* Left: Icon + Title + Desc */}
               <div className="flex items-start gap-2.5 min-w-0">

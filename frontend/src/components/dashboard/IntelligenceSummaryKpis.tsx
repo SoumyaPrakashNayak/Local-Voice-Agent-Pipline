@@ -94,17 +94,17 @@ export function IntelligenceSummaryKpis({ stats }: IntelligenceSummaryKpisProps)
                   <div className={`w-6 h-6 rounded-md flex items-center justify-center border shrink-0 ${card.accentClass}`}>
                     <Icon size={13} strokeWidth={2.2} />
                   </div>
-                  <span className="text-[10px] font-mono font-bold tracking-wider text-text-dim dark:text-[#94A3B8] truncate uppercase">
+                  <span className="text-xs font-medium leading-label text-text-dim dark:text-[#A8B5C0] truncate">
                     {card.title}
                   </span>
                 </div>
-                <span className="text-[9px] font-mono font-bold text-emerald-600 dark:text-emerald-400 shrink-0">
+                <span className="text-[11px] font-normal text-emerald-600 dark:text-emerald-400 shrink-0">
                   {card.trend}
                 </span>
               </div>
 
-              <div className="flex items-baseline justify-between gap-2 my-0.5">
-                <span className="text-2xl font-bold font-display text-text dark:text-[#F8FAFC] tracking-tight">
+              <div className="flex items-baseline justify-between gap-2 my-1">
+                <span className="text-3xl sm:text-4xl font-semibold font-mono tracking-data leading-none text-text dark:text-[#E8ECEF]">
                   {card.value}
                 </span>
                 <div className="w-16 h-4 shrink-0 opacity-80">
@@ -112,7 +112,7 @@ export function IntelligenceSummaryKpis({ stats }: IntelligenceSummaryKpisProps)
                 </div>
               </div>
 
-              <div className="text-[9px] font-mono text-text-faint dark:text-[#64748B] truncate">
+              <div className="text-[11px] font-normal text-text-faint dark:text-[#7A8B99] opacity-80 truncate">
                 {card.trendLabel}
               </div>
             </div>

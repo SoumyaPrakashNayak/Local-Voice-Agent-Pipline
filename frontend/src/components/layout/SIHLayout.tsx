@@ -3,7 +3,8 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, Shield, FilePlus, Search, ShieldAlert,
   Network, Sparkles, Scale, FileText, FileBarChart,
-  Bell, LogOut, Moon, Sun, Lock, Building, Users, Globe, ChevronDown, Briefcase
+  Bell, LogOut, Moon, Sun, Lock, Building, Users, Globe, ChevronDown, Briefcase,
+  Menu, X
 } from 'lucide-react';
 import { useMockState } from '../../mockServices/MockStateContext';
 import { useLanguage, LanguageCode } from '../../context/LanguageContext';
@@ -20,6 +21,7 @@ export function SIHLayout() {
     return (localStorage.getItem('crimelens_theme') as 'dark' | 'light') || 'light';
   });
   const [langMenuOpen, setLangMenuOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const langMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -69,18 +71,38 @@ export function SIHLayout() {
 
   return (
     <AiraProvider>
-      <div className="flex h-screen bg-bg text-text font-sans selection:bg-accent/15 selection:text-accent">
+      <div className="flex h-screen bg-transparent text-text font-sans selection:bg-accent/15 selection:text-accent overflow-hidden">
+
+      {/* Mobile navigation overlay — dismisses sidebar on outside tap */}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-30 md:hidden"
+          onClick={() => setMobileOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
       {/* Sidebar Navigation */}
-      <aside className="w-64 flex flex-col bg-surface border-r border-border shadow-[1px_0_2px_rgba(16,24,40,0.02)]">
+      <aside className={`w-64 flex-shrink-0 flex flex-col bg-surface border-r border-border shadow-[1px_0_2px_rgba(16,24,40,0.02)] fixed md:relative inset-y-0 left-0 z-40 md:z-auto transition-transform duration-300 ease-in-out ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
         <div className="p-5 border-b border-border-soft">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg overflow-hidden bg-slate-950/40 border border-brand/30 flex items-center justify-center p-0.5 shadow-sm">
-              <img src="/siris.png" alt="S.I.R.I.S" className="w-full h-full object-contain" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg overflow-hidden bg-slate-950/40 border border-brand/30 flex items-center justify-center p-0.5 shadow-sm">
+                <img src="/siris.png" alt="S.I.R.I.S" className="w-full h-full object-contain" />
+              </div>
+              <div>
+                <h1 className="text-lg font-display font-bold text-brand tracking-tight leading-none">{t('brand.name', 'S.I.R.I.S')}</h1>
+                <p className="text-[9px] text-text-dim uppercase tracking-widest font-mono mt-1">{t('brand.tagline', 'Odisha Police Intel')}</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-lg font-display font-bold text-brand tracking-tight leading-none">{t('brand.name', 'S.I.R.I.S')}</h1>
-              <p className="text-[9px] text-text-dim uppercase tracking-widest font-mono mt-1">{t('brand.tagline', 'Odisha Police Intel')}</p>
-            </div>
+            {/* Mobile close button — only visible on small screens */}
+            <button
+              onClick={() => setMobileOpen(false)}
+              className="md:hidden p-1 text-text-dim hover:text-text hover:bg-surface-hover rounded-md transition-colors"
+              aria-label="Close navigation"
+            >
+              <X size={16} />
+            </button>
           </div>
         </div>
 
@@ -187,9 +209,17 @@ export function SIHLayout() {
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden relative bg-bg">
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden relative bg-transparent">
         <header className="h-14 bg-surface border-b border-border flex items-center justify-between px-6 shrink-0 z-20 shadow-[0_1px_2px_rgba(16,24,40,0.02)]">
           <div className="flex items-center gap-3">
+            {/* Mobile hamburger — only visible on small screens */}
+            <button
+              onClick={() => setMobileOpen(true)}
+              className="md:hidden p-1.5 text-text-dim hover:text-text hover:bg-surface-hover rounded-lg transition-colors -ml-1 mr-1"
+              aria-label="Open navigation"
+            >
+              <Menu size={18} />
+            </button>
             {state.currentUser.stationId ? (
               <div className="flex items-center gap-2 text-xs font-mono bg-surface-2 px-3 py-1.5 rounded-lg border border-border">
                 <span className="text-text-faint font-semibold uppercase text-[10px]">{t('header.station', 'STATION')}:</span>

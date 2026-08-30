@@ -32,7 +32,7 @@ export function OfficerPerformanceAnalytics() {
   const officers: OfficerMetric[] = DEFAULT_OFFICERS;
 
   return (
-    <div className="bg-surface dark:bg-[#0F1726] border border-border dark:border-[#1E293B] rounded-2xl p-4 flex flex-col justify-between shadow-xs h-full">
+    <div className="bg-surface dark:bg-[#0F1726] border border-border dark:border-[#1E293B] rounded-2xl p-4 flex flex-col justify-between shadow-xs h-full interactive-panel">
       {/* Header */}
       <div className="flex items-center justify-between gap-2 mb-3">
         <div className="flex items-center gap-1.5">

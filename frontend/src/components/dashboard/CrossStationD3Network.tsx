@@ -159,8 +159,18 @@ export function CrossStationD3Network() {
       .attr('stroke-dasharray', (d) => (d.strength === 'HIGH' ? null : d.strength === 'MEDIUM' ? '4 3' : '3 3'))
       .attr('opacity', 0.85)
       .attr('cursor', 'pointer')
-      .on('mouseenter', (_, d) => setHoveredLink(d))
-      .on('mouseleave', () => setHoveredLink(null))
+      .on('mouseenter', (event, d) => {
+        setHoveredLink(d);
+        linkGroup.transition().duration(150)
+          .style('opacity', (l: any) => (l.id === d.id ? 1 : 0.15));
+        nodeGroup.transition().duration(150)
+          .style('opacity', (n: any) => (n.id === d.source.id || n.id === d.target.id ? 1 : 0.25));
+      })
+      .on('mouseleave', () => {
+        setHoveredLink(null);
+        nodeGroup.transition().duration(200).style('opacity', 1);
+        linkGroup.transition().duration(200).style('opacity', 0.85);
+      })
       .on('click', (_, d) => setSelectedLink(d));
 
     // Nodes
@@ -190,8 +200,26 @@ export function CrossStationD3Network() {
             d.fy = null;
           })
       )
-      .on('mouseenter', (_, d) => setHoveredNode(d))
-      .on('mouseleave', () => setHoveredNode(null))
+      .on('mouseenter', (event, d) => {
+        setHoveredNode(d);
+        nodeGroup.transition().duration(150)
+          .style('opacity', (n: any) => {
+            const isConnected = n.id === d.id || links.some(l => 
+              (l.source.id === d.id && l.target.id === n.id) || 
+              (l.target.id === d.id && l.source.id === n.id)
+            );
+            return isConnected ? 1 : 0.25;
+          });
+        linkGroup.transition().duration(150)
+          .style('opacity', (l: any) => 
+            (l.source.id === d.id || l.target.id === d.id ? 1 : 0.15)
+          );
+      })
+      .on('mouseleave', () => {
+        setHoveredNode(null);
+        nodeGroup.transition().duration(200).style('opacity', 1);
+        linkGroup.transition().duration(200).style('opacity', 0.85);
+      })
       .on('click', (_, d) => {
         const link = links.find((l: any) => l.source.id === d.id || l.target.id === d.id);
         if (link) setSelectedLink(link);
@@ -256,7 +284,7 @@ export function CrossStationD3Network() {
   const activeLink = hoveredLink || selectedLink;
 
   return (
-    <div className="bg-surface dark:bg-[#0F1726] border border-border dark:border-[#1E293B] rounded-2xl p-4 flex flex-col justify-between shadow-xs h-full relative">
+    <div className="bg-surface dark:bg-[#0F1726] border border-border dark:border-[#1E293B] rounded-2xl p-4 flex flex-col justify-between shadow-xs h-full relative interactive-panel">
       {/* Header */}
       <div className="flex items-center justify-between gap-2 mb-1 z-10">
         <div className="flex items-center gap-1.5">
