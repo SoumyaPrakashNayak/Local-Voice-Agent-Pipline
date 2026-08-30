@@ -5,6 +5,27 @@
 
 // Authoritative Mock FIR / Case Catalog
 export const MOCK_CASES = {
+  '212': {
+    firNumber: '212',
+    caseId: 'CR-KHD-2026-00212',
+    title: 'Night-time Residential Burglary — Khandagiri Sector 4',
+    status: 'INVESTIGATING',
+    station: 'Khandagiri Police Station',
+    district: 'Bhubaneswar Urban',
+    crimeType: 'Burglary / Break-in',
+    incidentDate: '2026-03-14 09:40 PM',
+    registeredDate: '2026-03-14 11:15 PM',
+    investigatingOfficer: 'SI Ranjan Samal (OD-INV-001)',
+    suspects: ['Bikram Das (alias Biku)', 'Unknown accomplice'],
+    vehicles: ['OD-02-AK-4412 (Grey Hatchback)'],
+    phones: ['+91-94371-22819'],
+    evidenceCount: 2,
+    linkedRecordsCount: 2,
+    crossStationLink: 'Cuttack City PS (OD-CTC-2026-00981)',
+    bnsSections: ['BNS 305 (Theft in dwelling)', 'BNS 331 (House-trespass and house-breaking by night)', 'BNS 317 (Stolen property)'],
+    summary: 'FIR 212 is an active residential burglary investigation at Khandagiri Sector 4, Bhubaneswar. A metallic grey hatchback OD-02-AK-4412 was seen fleeing the area with stolen jewelry and laptop.',
+    route: '/cases/CR-KHD-2026-00212',
+  },
   '504': {
     firNumber: '504',
     caseId: 'CR-KHD-2026-00504',
@@ -76,6 +97,7 @@ export function resolveFirRecord(input) {
   if (!input) return null;
   const str = String(input).toUpperCase();
   if (MOCK_CASES[input]) return MOCK_CASES[input];
+  if (str.includes('212')) return MOCK_CASES['212'];
   if (str.includes('504')) return MOCK_CASES['504'];
   if (str.includes('541')) return MOCK_CASES['541'];
   if (str.includes('0001') || str.includes('001')) return MOCK_CASES['0001'];
